@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>活力美髮線上學堂</title>
+    <style>
+        :root {
+            --bg: #080808;
+            --gold: #D4AF37;
+            /* 網格色彩配置 */
+            --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
+            --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
+            color: #fff;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            background: linear-gradient(to bottom, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 14px;
+            padding: 22px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #ddd;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(10px);
+            animation: breathe 4s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { border-color: rgba(212, 175, 55, 0.2); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+            50% { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        }
+
+        .icon { font-size: 26px; margin-bottom: 12px; }
+        .btn-title { font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; }
+
+        /* 懸停動效 */
+        .btn:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.08);
+            animation: none;
+            color: #fff;
+        }
+
+        /* 獨立按鈕顏色分配 */
+        .btn:nth-child(1):hover { border-color: var(--c-1); box-shadow: 0 0 20px var(--c-1); }
+        .btn:nth-child(2):hover { border-color: var(--c-2); box-shadow: 0 0 20px var(--c-2); }
+        .btn:nth-child(3):hover { border-color: var(--c-3); box-shadow: 0 0 20px var(--c-3); }
+        .btn:nth-child(4):hover { border-color: var(--c-4); box-shadow: 0 0 20px var(--c-4); }
+        .btn:nth-child(5):hover { border-color: var(--c-5); box-shadow: 0 0 20px var(--c-5); }
+        .btn:nth-child(6):hover { border-color: var(--c-6); box-shadow: 0 0 20px var(--c-6); }
+        .btn:nth-child(7):hover { border-color: var(--c-7); box-shadow: 0 0 20px var(--c-7); }
+        .btn:nth-child(8):hover { border-color: var(--c-8); box-shadow: 0 0 20px var(--c-8); }
+
+        footer { margin-top: auto; font-size: 0.65rem; color: #444; letter-spacing: 2px; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>學堂隨身助理</h1>
+    </header>
+
+    <div class="menu-grid">
+        <a href="https://www.course1.hairweb.net/首頁" class="btn">
+            <div class="icon">📈</div>
+            <span class="btn-title">經營課程</span>
+        </a>
+        <a href="http://Booking.hairweb.net" class="btn">
+            <div class="icon">📅</div>
+            <span class="btn-title">客戶預約</span>
+        </a>
+        <a href="http://card.hairweb.net/"class="btn">
+            <div class="icon">💳</div>
+            <span class="btn-title">會員卡</span>
+        </a>
+        <a href="http://www.client.hairweb.net" class="btn">
+            <div class="icon">🤝</div>
+            <span class="btn-title">客戶管理</span>
+        </a>
+        <a href="http://pos.hairweb.net/"class="btn">
+            <div class="icon">💰</div>
+            <span class="btn-title">銷售收銀</span>
+        </a>
+        <a href="http://student.hairweb.net/" class="btn">
+            <div class="icon">🏆</div>
+            <span class="btn-title">學員十大關卡</span>
+        </a>
+    </div>
+
+    <footer>VITALITY HAIR ACADEMY © 2025</footer>
+
+</body>
+</html>
