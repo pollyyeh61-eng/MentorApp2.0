@@ -32,8 +32,36 @@
             background: linear-gradient(to bottom, #fff, var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             text-align: center;
+        }
+
+        /* 獨立出來的分享入口樣式 */
+        .share-section {
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+
+        .btn-large {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gold);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-large:hover {
+            background: var(--gold);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
         .menu-grid {
@@ -66,7 +94,7 @@
         }
 
         .icon { font-size: 26px; margin-bottom: 12px; }
-        .btn-title { font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; }
+        .btn-title { font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-align: center; }
 
         .btn:hover {
             transform: translateY(-4px);
@@ -75,12 +103,12 @@
             color: #fff;
         }
 
-        .btn:nth-child(1):hover { border-color: var(--c-1); box-shadow: 0 0 20px var(--c-1); }
-        .btn:nth-child(2):hover { border-color: var(--c-2); box-shadow: 0 0 20px var(--c-2); }
-        .btn:nth-child(3):hover { border-color: var(--c-3); box-shadow: 0 0 20px var(--c-3); }
-        .btn:nth-child(4):hover { border-color: var(--c-4); box-shadow: 0 0 20px var(--c-4); }
-        .btn:nth-child(5):hover { border-color: var(--c-5); box-shadow: 0 0 20px var(--c-5); }
-        .btn:nth-child(6):hover { border-color: var(--c-6); box-shadow: 0 0 20px var(--c-6); }
+        .btn:nth-child(1):hover { border-color: var(--c-1); }
+        .btn:nth-child(2):hover { border-color: var(--c-2); }
+        .btn:nth-child(3):hover { border-color: var(--c-3); }
+        .btn:nth-child(4):hover { border-color: var(--c-4); }
+        .btn:nth-child(5):hover { border-color: var(--c-5); }
+        .btn:nth-child(6):hover { border-color: var(--c-6); }
 
         footer { margin-top: auto; font-size: 0.65rem; color: #444; letter-spacing: 2px; padding: 20px; }
     </style>
@@ -91,12 +119,19 @@
         <h1>學堂隨身助理</h1>
     </header>
 
+    <div class="share-section">
+        <a href="http://entrance.hairweb.net/" class="btn-large">
+            <div class="icon" style="margin-bottom: 0; margin-right: 10px;">🌐</div>
+            <span class="btn-title" style="font-size: 1.1rem;">美學入口平台 (分享專用)</span>
+        </a>
+    </div>
+
     <div class="menu-grid">
         <a href="https://pos.hairweb.net/" class="btn">
             <div class="icon">💰</div>
             <span class="btn-title">銷售收銀</span>
         </a>
-       <a href="https://Booking.hairweb.net" class="btn">
+        <a href="https://Booking.hairweb.net" class="btn">
             <div class="icon">📅</div>
             <span class="btn-title">客戶預約</span>
         </a>
@@ -109,68 +144,50 @@
             <span class="btn-title">客戶管理</span>
         </a>
         <a href="http://store.hairweb.net/" class="btn">
-            <div class="icon">🤝</div>庫存管理</span>
+            <div class="icon">📦</div>
+            <span class="btn-title">庫存管理</span>
         </a>
         <a href="http://points.hairweb.net/" class="btn">
-            <div class="icon">🤝</div>升等集點卡</span>
+            <div class="icon">✨</div>
+            <span class="btn-title">升等集點卡</span>
         </a>
         <a href="https://www.course1.hairweb.net/首頁" class="btn">
             <div class="icon">📈</div>
             <span class="btn-title">經營課程</span>
         </a>
         <a href="http://sale.hairweb.net/" class="btn">
-            <div class="icon">🏆</div>
-            <span class="btn-title">銷售開發<span 
+            <div class="icon">🚀</div>
+            <span class="btn-title">銷售開發</span>
         </a>
         <a href="http://profit.hairweb.net/" class="btn">
-            <div class="icon">🏆</div>
-            <span class="btn-title">講師分潤計算機
-         </a>   
+            <div class="icon">🧮</div>
+            <span class="btn-title">分潤計算機</span>
+        </a>
         <a href="https://student.hairweb.net/" class="btn">
             <div class="icon">🏆</div>
             <span class="btn-title">學員十大關卡</span>
         </a>
     </div>
 
-    <footer>VITALITY HAIR ACADEMY © 2025</footer>
+    <footer>VITALITY HAIR ACADEMY © 2026</footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
-        // 根據您提供的圖片填入的金鑰資訊
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+            authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+            projectId: "holyhairsalon-f73bf",
+            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
+            messagingSenderId: "960169055224",
+            appId: "1:960169055224:web:59f89c0dcf194531bf3c0d",
+            measurementId: "G-JCQZ78GEV2"
+        };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
-  authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-  databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
-  projectId: "holyhairsalon-f73bf",
-  storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
-  messagingSenderId: "960169055224",
-  appId: "1:960169055224:web:59f89c0dcf194531bf3c0d",
-  measurementId: "G-JCQZ78GEV2"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-        // 初始化 Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
     </script>
 </body>
 </html>
-
-
-
-
-
-
