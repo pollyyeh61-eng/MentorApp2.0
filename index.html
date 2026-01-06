@@ -4,11 +4,13 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>活力美髮線上學堂</title>
+    <title>活力美髮線上學堂 2.0</title>
     <style>
         :root {
             --bg: #080808;
             --gold: #D4AF37;
+            --gold-bright: #FFD700;
+            --glass: rgba(255, 255, 255, 0.05);
             --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
             --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
         }
@@ -26,44 +28,82 @@
             padding: 30px 15px;
         }
 
+        /* 奢華金屬漆質感標題 */
         header h1 {
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            background: linear-gradient(to bottom, #fff, var(--gold));
+            font-size: 1.8rem;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
             margin-bottom: 25px;
             text-align: center;
+            font-weight: 700;
         }
 
-        /* 獨立出來的分享入口樣式 */
-        .share-section {
+        /* 磨砂玻璃容器 */
+        .glass-card {
             width: 100%;
             max-width: 350px;
-            margin-bottom: 20px;
-        }
-
-        .btn-large {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid var(--gold);
-            border-radius: 14px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-decoration: none;
-            color: var(--gold);
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
 
-        .btn-large:hover {
-            background: var(--gold);
+        /* 輸入框與金色光暈 */
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            padding: 12px;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* 儲存按鈕樣式與點擊縮放 */
+        .save-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #B38728, #BF953F);
             color: #000;
-            transform: translateY(-3px);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s active, all 0.4s ease;
         }
 
+        .save-btn:active { transform: scale(0.95); }
+
+        /* 智慧感應：金光呼吸效果 */
+        @keyframes goldBreathe {
+            0% { box-shadow: 0 0 5px var(--gold); }
+            50% { box-shadow: 0 0 25px var(--gold-bright); }
+            100% { box-shadow: 0 0 5px var(--gold); }
+        }
+
+        .has-content {
+            animation: goldBreathe 1.5s infinite ease-in-out;
+            background: linear-gradient(135deg, #FCF6BA, #BF953F) !important;
+        }
+
+        /* 網格系統 */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -73,8 +113,8 @@
         }
 
         .btn {
-            position: relative;
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 14px;
             padding: 22px 10px;
@@ -84,33 +124,18 @@
             text-decoration: none;
             color: #ddd;
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(10px);
-            animation: breathe 4s infinite ease-in-out;
         }
-
-        @keyframes breathe {
-            0%, 100% { border-color: rgba(212, 175, 55, 0.2); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
-            50% { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
-        }
-
-        .icon { font-size: 26px; margin-bottom: 12px; }
-        .btn-title { font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-align: center; }
 
         .btn:hover {
             transform: translateY(-4px);
-            background: rgba(255, 255, 255, 0.08);
-            animation: none;
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
 
-        .btn:nth-child(1):hover { border-color: var(--c-1); }
-        .btn:nth-child(2):hover { border-color: var(--c-2); }
-        .btn:nth-child(3):hover { border-color: var(--c-3); }
-        .btn:nth-child(4):hover { border-color: var(--c-4); }
-        .btn:nth-child(5):hover { border-color: var(--c-5); }
-        .btn:nth-child(6):hover { border-color: var(--c-6); }
+        .icon { font-size: 26px; margin-bottom: 12px; }
+        .btn-title { font-size: 0.9rem; font-weight: 500; text-align: center; }
 
-        footer { margin-top: auto; font-size: 0.65rem; color: #444; letter-spacing: 2px; padding: 20px; }
+        footer { margin-top: auto; font-size: 0.65rem; color: #666; letter-spacing: 2px; padding: 20px; }
     </style>
 </head>
 <body>
@@ -119,73 +144,85 @@
         <h1>學堂隨身助理</h1>
     </header>
 
-    <div class="share-section">
-        <a href="http://entrance.hairweb.net/" class="btn-large">
-            <div class="icon" style="margin-bottom: 0; margin-right: 10px;">🌐</div>
-            <span class="btn-title" style="font-size: 1.1rem;">美學入口平台 (分享專用)</span>
+    <div class="glass-card">
+        <a href="http://entrance.hairweb.net/" style="text-decoration:none; display:block; margin-bottom:15px; text-align:center; color:var(--gold); border:1px solid var(--gold); padding:10px; border-radius:8px;">
+            🌐 美學入口平台 (分享專用)
         </a>
+        
+        <textarea id="noteArea" rows="3" placeholder="在這邊輸入給客戶的備註..."></textarea>
+        
+        <button id="saveBtn" class="save-btn" onclick="permanentSave()">永久儲存至手機</button>
+        <div id="status" style="font-size: 0.7rem; color: var(--gold); margin-top: 8px; text-align: center; opacity: 0.7;">即時存檔中...</div>
     </div>
 
     <div class="menu-grid">
-        <a href="https://pos.hairweb.net/" class="btn">
-            <div class="icon">💰</div>
-            <span class="btn-title">銷售收銀</span>
-        </a>
-        <a href="https://Booking.hairweb.net" class="btn">
-            <div class="icon">📅</div>
-            <span class="btn-title">客戶預約</span>
-        </a>
-        <a href="https://card.hairweb.net/" class="btn">
-            <div class="icon">💳</div>
-            <span class="btn-title">會員卡</span>
-        </a>
-        <a href="https://customer.hairweb.net/" class="btn">
-            <div class="icon">🤝</div>
-            <span class="btn-title">客戶管理</span>
-        </a>
-        <a href="http://store.hairweb.net/" class="btn">
-            <div class="icon">📦</div>
-            <span class="btn-title">庫存管理</span>
-        </a>
-        <a href="http://points.hairweb.net/" class="btn">
-            <div class="icon">✨</div>
-            <span class="btn-title">升等集點卡</span>
-        </a>
-        <a href="https://www.course1.hairweb.net/首頁" class="btn">
-            <div class="icon">📈</div>
-            <span class="btn-title">經營課程</span>
-        </a>
-        <a href="http://sale.hairweb.net/" class="btn">
-            <div class="icon">🚀</div>
-            <span class="btn-title">銷售開發</span>
-        </a>
-        <a href="http://profit.hairweb.net/" class="btn">
-            <div class="icon">🧮</div>
-            <span class="btn-title">分潤計算機</span>
-        </a>
-        <a href="https://student.hairweb.net/" class="btn">
-            <div class="icon">🏆</div>
-            <span class="btn-title">學員十大關卡</span>
-        </a>
+        <a href="https://pos.hairweb.net/" class="btn"><div class="icon">💰</div><span class="btn-title">銷售收銀</span></a>
+        <a href="https://Booking.hairweb.net" class="btn"><div class="icon">📅</div><span class="btn-title">客戶預約</span></a>
+        <a href="https://card.hairweb.net/" class="btn"><div class="icon">💳</div><span class="btn-title">會員卡</span></a>
+        <a href="https://customer.hairweb.net/" class="btn"><div class="icon">🤝</div><span class="btn-title">客戶管理</span></a>
+        <a href="http://store.hairweb.net/" class="btn"><div class="icon">📦</div><span class="btn-title">庫存管理</span></a>
+        <a href="http://points.hairweb.net/" class="btn"><div class="icon">✨</div><span class="btn-title">升等集點</span></a>
+        <a href="https://www.course1.hairweb.net/首頁" class="btn"><div class="icon">📈</div><span class="btn-title">經營課程</span></a>
+        <a href="https://student.hairweb.net/" class="btn"><div class="icon">🏆</div><span class="btn-title">學員關卡</span></a>
     </div>
 
     <footer>VITALITY HAIR ACADEMY © 2026</footer>
 
+    <script>
+        const noteArea = document.getElementById('noteArea');
+        const saveBtn = document.getElementById('saveBtn');
+        const statusText = document.getElementById('status');
+
+        // 1. 即時暫存 (Auto-Save): 打一個字存一個字
+        noteArea.oninput = () => {
+            const content = noteArea.value;
+            // 存入臨時空間
+            localStorage.setItem('temp_note', content);
+            
+            // 2. 智慧感應按鈕：有文字就觸發「金光呼吸」
+            if (content.trim().length > 0) {
+                saveBtn.classList.add('has-content');
+                statusText.innerText = "偵測到新內容，建議儲存...";
+            } else {
+                saveBtn.classList.remove('has-content');
+                statusText.innerText = "等待輸入...";
+            }
+        };
+
+        // 3. 永久儲存：點擊按鈕後存檔
+        function permanentSave() {
+            const content = noteArea.value;
+            localStorage.setItem('permanent_note', content);
+            
+            saveBtn.classList.remove('has-content');
+            statusText.innerText = "✅ 已成功存檔至本地空間";
+            
+            // 兩秒後恢復
+            setTimeout(() => {
+                statusText.innerText = "資料安全儲存中";
+            }, 2000);
+        }
+
+        // 4. 初始化讀取：開網頁時自動抓取之前存過的內容
+        window.onload = () => {
+            const savedData = localStorage.getItem('permanent_note') || localStorage.getItem('temp_note');
+            if (savedData) {
+                noteArea.value = savedData;
+                if(savedData.trim().length > 0) saveBtn.classList.add('has-content');
+            }
+        };
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
             authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
             projectId: "holyhairsalon-f73bf",
-            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
-            messagingSenderId: "960169055224",
             appId: "1:960169055224:web:59f89c0dcf194531bf3c0d",
             measurementId: "G-JCQZ78GEV2"
         };
-
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
     </script>
