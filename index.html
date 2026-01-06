@@ -3,46 +3,32 @@
 <head>
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="學堂助理">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>活力美髮線上學堂</title>
     <style>
         :root {
             --bg: #080808;
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
+            /* 網格色彩配置維持原樣，但僅用於懸停邊框 */
             --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
             --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
-        }
-
-        * {
-            /* 禁止手機長按彈出選單、禁止文字選取，這能大幅增加 App 感 */
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent; /* 移除點擊時的藍色外框 */
         }
 
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
-            color: var(--gold);
+            color: var(--gold); /* 全域文字改為金色 */
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: calc(30px + env(safe-area-inset-top)) 15px 20px; /* 避開手機劉海區 */
-            overflow: hidden; /* 防止 App 內出現不必要的滾動 */
+            padding: 30px 15px;
         }
 
-        /* 隱藏滾動條但保持功能 */
-        body::-webkit-scrollbar { display: none; }
-
+        /* 奢華金屬漆質感標題 */
         header h1 {
             font-size: 1.8rem;
             letter-spacing: 5px;
@@ -55,6 +41,7 @@
             filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
         }
 
+        /* 獨立出來的入口平台 - 採用金邊與金字 */
         .share-section {
             width: 100%;
             max-width: 350px;
@@ -64,22 +51,23 @@
         .btn-large {
             background: rgba(212, 175, 55, 0.08);
             border: 1px solid var(--gold);
-            border-radius: 18px; /* App 通常圓角較大 */
+            border-radius: 14px;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             text-decoration: none;
-            color: var(--gold);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            color: var(--gold); /* 確保是金色 */
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        /* 模擬 App 點擊縮放感 */
-        .btn-large:active, .btn:active {
-            transform: scale(0.96) !important;
-            background: rgba(212, 175, 55, 0.2);
+        .btn-large:hover {
+            background: var(--gold);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
         .menu-grid {
@@ -88,51 +76,65 @@
             gap: 16px;
             width: 100%;
             max-width: 350px;
-            flex: 1; /* 讓網格佔滿剩餘空間 */
         }
 
         .btn {
+            position: relative;
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
             padding: 22px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: var(--gold);
-            transition: all 0.3s ease;
+            color: var(--gold); /* 標題文字改為金色 */
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            /* 輕微呼吸燈效果 */
-            animation: breathe 5s infinite ease-in-out;
+            animation: breathe 4s infinite ease-in-out;
         }
 
         @keyframes breathe {
-            0%, 100% { border-color: rgba(212, 175, 55, 0.15); }
-            50% { border-color: rgba(212, 175, 55, 0.4); }
+            0%, 100% { border-color: rgba(212, 175, 55, 0.2); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+            50% { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
         }
 
-        .icon { font-size: 28px; margin-bottom: 10px; }
+        .icon { font-size: 26px; margin-bottom: 12px; }
         .btn-title { font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-align: center; color: var(--gold); }
 
-        footer { 
-            margin-top: auto; 
-            font-size: 0.65rem; 
-            color: var(--gold); 
-            opacity: 0.5; 
-            padding: 20px 0 calc(5px + env(safe-area-inset-bottom)); /* 避開底部導航條 */
+        .btn:hover {
+            transform: translateY(-4px);
+            background: rgba(212, 175, 55, 0.15);
+            animation: none;
+            color: var(--gold-light);
         }
+
+        /* 懸停邊框色彩噴發效果 */
+        .btn:nth-child(1):hover { border-color: var(--c-1); box-shadow: 0 0 20px var(--c-1); }
+        .btn:nth-child(2):hover { border-color: var(--c-2); box-shadow: 0 0 20px var(--c-2); }
+        .btn:nth-child(3):hover { border-color: var(--c-3); box-shadow: 0 0 20px var(--c-3); }
+        .btn:nth-child(4):hover { border-color: var(--c-4); box-shadow: 0 0 20px var(--c-4); }
+        .btn:nth-child(5):hover { border-color: var(--c-5); box-shadow: 0 0 20px var(--c-5); }
+        .btn:nth-child(6):hover { border-color: var(--c-6); box-shadow: 0 0 20px var(--c-6); }
+        .btn:nth-child(7):hover { border-color: var(--c-7); box-shadow: 0 0 20px var(--c-7); }
+        .btn:nth-child(8):hover { border-color: var(--c-8); box-shadow: 0 0 20px var(--c-8); }
+        .btn:nth-child(9):hover { border-color: var(--c-1); box-shadow: 0 0 20px var(--c-1); }
+        .btn:nth-child(10):hover { border-color: var(--c-2); box-shadow: 0 0 20px var(--c-2); }
+
+        footer { margin-top: auto; font-size: 0.7rem; color: var(--gold); opacity: 0.6; letter-spacing: 2px; padding: 20px; text-align: center; }
     </style>
 </head>
-<body oncontextmenu="return false;"> <header>
+<body>
+
+    <header>
         <h1>學堂隨身助理</h1>
     </header>
 
     <div class="share-section">
         <a href="http://entrance.hairweb.net/" class="btn-large">
             <div class="icon" style="margin-bottom: 0; margin-right: 12px;">🌐</div>
-            <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台</span>
+            <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台 (分享專用)</span>
         </a>
     </div>
 
@@ -172,16 +174,20 @@
     <footer>VITALITY HAIR ACADEMY © 2026</footer>
 
     <script type="module">
-        // Firebase 設定保持不變
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
             authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
             projectId: "holyhairsalon-f73bf",
+            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
+            messagingSenderId: "960169055224",
             appId: "1:960169055224:web:59f89c0dcf194531bf3c0d",
             measurementId: "G-JCQZ78GEV2"
         };
+
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
     </script>
