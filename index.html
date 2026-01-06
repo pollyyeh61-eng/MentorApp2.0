@@ -4,16 +4,17 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>活力美髮線上學堂</title>
     <style>
         :root {
             --bg: #080808;
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
-            --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
-            --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
         }
 
         * {
@@ -25,8 +26,9 @@
 
         html, body {
             height: 100%;
-            overflow: hidden; /* 確保不出現滾動條 */
+            overflow: hidden;
             background-color: var(--bg);
+            margin: 0;
         }
 
         body {
@@ -36,14 +38,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* 垂直居中讓面板更像 App */
-            margin: 0;
-            
-            /* --- 核心縮小設定 --- */
-            transform: scale(0.9); /* 縮小為 90%，若要更小可改 0.85 */
-            transform-origin: center center; /* 從中心縮放，不移動位置 */
-            width: 100%;
-            /* -------------------- */
+            justify-content: center; 
+            transform: scale(0.9); /* 您要求的縮小面板 */
+            transform-origin: center center;
         }
 
         header h1 {
@@ -63,43 +60,47 @@
             margin-bottom: 15px;
         }
 
-        .btn-large {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid var(--gold);
+        /* 靜態高級感按鈕 (無呼吸燈) */
+        .btn-large, .btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.25);
             border-radius: 18px;
-            padding: 18px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             text-decoration: none;
             color: var(--gold);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
+            transition: all 0.2s ease; /* 縮短時間，反應更快 */
+        }
+
+        .btn-large {
+            padding: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 核心觸感：點擊時的反饋 --- */
+        .btn-large:active, .btn:active {
+            transform: scale(0.94); /* 點擊縮小感 */
+            background: rgba(212, 175, 55, 0.2); /* 點擊變亮 */
+            border-color: var(--gold); /* 邊框瞬間變金 */
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px; /* 稍微縮小間距 */
+            gap: 12px;
             width: 100%;
             max-width: 350px;
         }
 
         .btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 20px;
             padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none;
-            color: var(--gold);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
-
-        .btn:active { transform: scale(0.95); }
 
         .icon { font-size: 26px; margin-bottom: 8px; }
         .btn-title { font-size: 0.9rem; font-weight: 500; text-align: center; color: var(--gold); }
@@ -109,6 +110,7 @@
             font-size: 0.6rem; 
             color: var(--gold); 
             opacity: 0.5; 
+            letter-spacing: 2px;
         }
     </style>
 </head>
