@@ -1,15 +1,25 @@
 {
-  "short_name": "學堂隨身助理",
-  "name": "學堂隨身助理",
+  "short_name": "學堂助理",
+  "name": "活力美髮學堂隨身助理",
+  "description": "提供經營、預約、管理一站式美髮助理平台",
   "icons": [
     {
       "src": "logo.png",
       "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "start_url": "index.html",
+  "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#0A0A0A",
-  "theme_color": "#D4AF37"
+  "orientation": "portrait",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "scope": "/",
+  "apple-mobile-web-app-capable": "yes"
 }
