@@ -26,8 +26,38 @@
             color: #f8fafc;
             margin: 0;
             padding: 20px;
+            padding-top: 80px; /* 增加頂部間距，為返回按鈕留出空間 */
             display: flex;
             justify-content: center;
+        }
+
+        /* 奢華返回按鈕樣式 */
+        .btn-back-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(30, 41, 59, 0.7); /* 毛玻璃背景 */
+            border: 1px solid var(--text-gold);
+            border-radius: 50px;
+            color: var(--text-gold);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-back-home:hover {
+            background: var(--text-gold);
+            color: var(--bg-dark);
+            transform: scale(1.05) translateX(5px);
+            box-shadow: 0 0 15px var(--text-gold);
         }
 
         .app-container {
@@ -51,10 +81,10 @@
             }
         }
 
-        /* 按鈕呼吸背景動畫 (4秒週期) */
+        /* 按鈕呼吸背景動畫 */
         @keyframes breathing-bg {
-            0% { background-color: #78350f; } /* 暗金 */
-            50% { background-color: #d97706; } /* 亮金 */
+            0% { background-color: #78350f; } 
+            50% { background-color: #d97706; } 
             100% { background-color: #78350f; }
         }
 
@@ -65,7 +95,6 @@
             padding: 30px;
             text-align: center;
             margin-bottom: 25px;
-            /* 套用呼吸邊框 */
             animation: breathing-glow 4s ease-in-out infinite;
         }
 
@@ -94,7 +123,6 @@
             font-size: 0.85rem;
             color: #94a3b8;
             margin-bottom: 8px;
-            transition: color 0.3s;
         }
 
         input, select {
@@ -110,13 +138,11 @@
             transition: all 0.4s ease;
         }
 
-        /* 滑鼠滑過色彩變化 (Individual Colors) */
         #salesAmount:hover, #salesAmount:focus { border-color: var(--color-sales); box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
         #satisfactionScore:hover, #satisfactionScore:focus { border-color: var(--color-score); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
         #newStudentCount:hover, #newStudentCount:focus { border-color: var(--color-new); box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); }
         #cooperationStatus:hover, #cooperationStatus:focus { border-color: var(--color-coop); box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
 
-        /* 呼吸金屬按鈕 */
         .btn-copy {
             width: 100%;
             border: none;
@@ -132,14 +158,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .btn-copy:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.2);
-        }
-
-        .btn-copy:active {
-            transform: scale(0.98);
-        }
+        .btn-copy:hover { transform: translateY(-2px); filter: brightness(1.2); }
+        .btn-copy:active { transform: scale(0.98); }
 
         .detail-grid {
             display: grid;
@@ -167,6 +187,10 @@
     </style>
 </head>
 <body>
+
+<a href="index.html" class="btn-back-home">
+    <span>🏠</span> 返回總部
+</a>
 
 <div class="app-container">
     <div class="result-card">
