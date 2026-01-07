@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXE Salon | 數位經營總部</title>
+    <title>美髮經營學-正式線上課程</title>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -27,15 +27,15 @@
             overflow-x: hidden;
         }
 
-        /* 系統導航列：位置下移避免遮擋文字 */
+        /* 系統導航列 */
         .side-nav {
             position: fixed;
             left: 15px;
-            top: 60%; /* 從 50% 下移到 60%，避開上方標題文字 */
+            top: 60%;
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 12px; /* 縮小間距更精緻 */
+            gap: 12px;
             z-index: 100;
         }
 
@@ -43,7 +43,7 @@
             width: 45px; height: 45px;
             background: rgba(20,20,20,0.9);
             border: 1px solid var(--gold-dim);
-            border-radius: 50%; /* 改為圓形更符合流線感 */
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -79,7 +79,7 @@
         }
         @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
 
-        /* 外部連結與標題 */
+        /* 外部連結文字 */
         .external-link-text {
             position: absolute; font-size: 16px; font-weight: bold;
             color: var(--gold-dim); writing-mode: vertical-rl; 
@@ -105,18 +105,30 @@
         .block {
             padding: 15px; border-radius: 8px; text-align: center;
             background: rgba(255, 255, 255, 0.02); border: 1px solid var(--gold-dim);
-            transition: 0.4s; cursor: pointer;
+            transition: 0.4s;
         }
-        .block:hover { transform: translateY(-3px); border-color: var(--gold-bright); background: rgba(212, 175, 55, 0.05); }
+        .block:hover { border-color: var(--gold-bright); background: rgba(212, 175, 55, 0.05); }
 
         .main-title { font-size: 16px; font-weight: bold; color: var(--gold-bright); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
         .sub-items { list-style: none; padding: 0; text-align: left; }
-        .sub-items li { margin-bottom: 8px; font-size: 13px; color: var(--text-silver); transition: 0.3s; }
-        .sub-items li:hover { color: #fff; padding-left: 5px; }
+        .sub-items li { 
+            margin-bottom: 8px; 
+            font-size: 13px; 
+            color: var(--text-silver); 
+            transition: 0.3s; 
+            cursor: pointer; /* 關鍵修正：讓滑鼠移上去變手型 */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .sub-items li:hover { 
+            color: var(--gold-bright); 
+            background: rgba(212, 175, 55, 0.1);
+            padding-left: 12px; 
+        }
 
-        /* 手機端微調 */
         @media (max-width: 600px) {
-            .side-nav { left: 8px; top: 65%; } /* 手機端再往下移一點 */
+            .side-nav { left: 8px; top: 65%; }
             .nav-icon-btn { width: 38px; height: 38px; font-size: 16px; }
         }
     </style>
@@ -124,6 +136,7 @@
 <body>
 
     <div class="side-nav">
+        <a href="index.html" class="nav-icon-btn" title="返回首頁">🏠</a>
         <a href="pos.html" class="nav-icon-btn" title="收銀系統">💰</a>
         <a href="customer.html" class="nav-icon-btn" title="客戶系統">💎</a>
         <a href="store.html" class="nav-icon-btn" title="庫存系統">📦</a>
@@ -154,6 +167,7 @@
                         <li>2. 客情分析報告</li>
                     </ul>
                 </div>
+                
                 <div class="block">
                     <div class="main-title">核心內部管理</div>
                     <ul class="sub-items">
@@ -162,6 +176,7 @@
                         <li onclick="location.href='store.html'">3. 庫存金庫系統 (點擊進入)</li>
                     </ul>
                 </div>
+                
                 <div class="block">
                     <div class="main-title">下外部管理</div>
                     <ul class="sub-items">
@@ -181,7 +196,15 @@
     </div>
 
     <script>
-        // 這裡可以加入更多點擊邏輯
+        // 點擊回饋：讓使用者知道點擊成功
+        document.querySelectorAll('.sub-items li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.backgroundColor = 'var(--gold-glow)';
+                setTimeout(() => {
+                    this.style.backgroundColor = '';
+                }, 200);
+            });
+        });
     </script>
 </body>
 </html>
