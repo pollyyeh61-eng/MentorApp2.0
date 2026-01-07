@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美髮經營學-正式線上課程</title>
+    <title>LUXE Salon | 數位經營總部</title>
     <style>
-        /* CSS 樣式：黑金色低調奢華風格設計 */
         :root {
             --bg-color: #0a0a0a;
             --container-bg: #121212;
@@ -25,9 +24,69 @@
             margin: 0;
             background-color: var(--bg-color);
             color: #ffffff;
+            overflow: hidden;
         }
 
-        /* 呼吸發光動畫定義 */
+        /* 背景掃描線特效 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+            animation: scan 8s linear infinite;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 5;
+        }
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* 左側系統導航列 */
+        .side-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        .nav-icon-btn {
+            width: 50px; height: 50px;
+            background: rgba(20,20,20,0.8);
+            border: 1px solid var(--gold-dim);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .nav-icon-btn:hover {
+            border-color: var(--gold-bright);
+            background: var(--gold-bright);
+            transform: translateX(10px);
+        }
+        .nav-icon-btn::after {
+            content: attr(data-label);
+            position: absolute;
+            left: 60px;
+            background: var(--gold-bright);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .nav-icon-btn:hover::after { opacity: 1; transform: translateX(5px); }
+
         @keyframes breath {
             0% { border-color: var(--gold-dim); box-shadow: 0 0 5px rgba(138, 109, 59, 0.2); }
             50% { border-color: var(--gold-bright); box-shadow: 0 0 20px var(--gold-glow); }
@@ -45,110 +104,63 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
         }
 
-        /* 外部總控連結樣式 */
+        /* 外部連結文字樣式 */
         .external-link-text {
-            position: absolute;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--gold-dim);
-            writing-mode: vertical-rl; 
-            text-orientation: upright;
-            cursor: pointer; 
-            transition: all 0.4s ease;
-            transform: none !important; 
+            position: absolute; font-size: 18px; font-weight: bold;
+            color: var(--gold-dim); writing-mode: vertical-rl; 
+            text-orientation: upright; cursor: pointer; transition: all 0.4s ease;
         }
-        .external-link-text:hover {
-            color: var(--gold-bright);
-            text-shadow: 0 0 10px var(--gold-bright);
-        }
+        .external-link-text:hover { color: var(--gold-bright); text-shadow: 0 0 10px var(--gold-bright); }
         
-        .text-management { top: 50%; left: -35px; transform: translateY(-50%) !important; }
-        .text-preface { top: 50%; left: -65px; transform: translateY(-50%) !important; }
-        .text-holding-label { top: 50%; right: -35px; transform: translateY(-50%) !important; }
-        .text-holding { top: 50%; right: -65px; transform: translateY(-50%) !important; } 
+        .text-management { top: 50%; left: -35px; transform: translateY(-50%); }
+        .text-preface { top: 50%; left: -65px; transform: translateY(-50%); }
+        .text-holding { top: 50%; right: -65px; transform: translateY(-50%); } 
 
         .top-bottom-mgt-text {
-            position: absolute; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            font-size: 20px; 
-            font-weight: bold;
-            color: var(--gold-dim); 
-            cursor: pointer;
-            transition: all 0.4s ease;
-            width: 150px; 
-            text-align: center;
-            z-index: 10; 
-            margin: 0 !important; 
+            position: absolute; left: 50%; transform: translateX(-50%); 
+            font-size: 20px; font-weight: bold; color: var(--gold-dim); 
+            cursor: pointer; transition: all 0.4s ease; text-align: center;
         }
-        .top-bottom-mgt-text:hover { color: var(--gold-bright); text-shadow: 0 0 10px var(--gold-bright); }
         .text-top-mgt { top: 0; padding-top: 5px; } 
         .text-cost-mgt { bottom: 0; padding-bottom: 5px; } 
 
-        /* 主要區塊佈局 */
         .management-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr; 
-            gap: 15px;
-            padding: 30px 0; 
-            position: relative;
-            border: 1px solid #333;
+            display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px;
+            padding: 30px 0; position: relative; border: 1px solid #333;
         }
 
-        /* 呼吸感按鈕基礎樣式 */
         .block {
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--gold-dim);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer; 
-            animation: breath 4s infinite ease-in-out;
+            padding: 15px; border-radius: 8px; text-align: center;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--gold-dim);
+            transition: all 0.5s; cursor: pointer; animation: breath 4s infinite ease-in-out;
         }
 
-        /* 滑鼠滑過色彩變化 (Individual Spectrum Colors) */
-        /* 左外部：翡翠光 */
-        .block-side[data-link-id="left-external"]:hover { border-color: #00ff88 !important; box-shadow: 0 0 25px rgba(0, 255, 136, 0.4); transform: scale(1.02); }
-        /* 上外部：金黃光 */
-        .block-top:hover { border-color: #ffea00 !important; box-shadow: 0 0 25px rgba(255, 234, 0, 0.4); transform: scale(1.02); }
-        /* 內部：琥珀光 */
-        .block-middle:hover { border-color: #ff9100 !important; box-shadow: 0 0 25px rgba(255, 145, 0, 0.4); transform: scale(1.02); }
-        /* 下外部：玫瑰紅 */
-        .block-bottom:hover { border-color: #ff0077 !important; box-shadow: 0 0 25px rgba(255, 0, 119, 0.4); transform: scale(1.02); }
-        /* 右外部：寶石藍 */
-        .block-side[data-link-id="right-external"]:hover { border-color: #00d9ff !important; box-shadow: 0 0 25px rgba(0, 217, 255, 0.4); transform: scale(1.02); }
+        /* 各區塊 Hover 色彩 */
+        .block-side:hover { border-color: #00ff88 !important; transform: scale(1.02); }
+        .block-top:hover { border-color: #ffea00 !important; transform: scale(1.02); }
+        .block-middle:hover { border-color: #ff9100 !important; transform: scale(1.02); }
+        .block-bottom:hover { border-color: #ff0077 !important; transform: scale(1.02); }
 
         .sub-items { list-style: none; padding: 0; text-align: left; margin-top: 10px; }
-        .sub-items li { margin-bottom: 5px; font-size: 15px; cursor: pointer; color: var(--text-silver); transition: color 0.3s; }
-        .sub-items li:hover { text-decoration: underline; color: #ffffff; }
+        .sub-items li { margin-bottom: 5px; font-size: 14px; cursor: pointer; color: var(--text-silver); }
+        .sub-items li:hover { color: #fff; text-decoration: underline; }
 
         .main-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--gold-bright);
-            border-bottom: 1px dashed #444;
-            padding-bottom: 5px;
+            font-size: 18px; font-weight: bold; margin-bottom: 10px;
+            color: var(--gold-bright); border-bottom: 1px dashed #444; padding-bottom: 5px;
         }
 
-        .side-link-text {
-            font-size: 16px; 
-            font-weight: bold; 
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--gold-dim);
-        }
-        .side-link-text:hover {
-            text-decoration: underline;
-            color: #ffffff;
-        }
-
-        .side-block { height: 100%; display: flex; flex-direction: column; justify-content: center; }
         .middle-content { display: flex; flex-direction: column; justify-content: space-around; gap: 15px; grid-column: 2 / 3; }
     </style>
 </head>
 <body>
+
+    <div class="side-nav">
+        <a href="pos.html" class="nav-icon-btn" data-label="收銀系統">💰</a>
+        <a href="crm.html" class="nav-icon-btn" data-label="客戶CRM">💎</a>
+        <a href="inventory.html" class="nav-icon-btn" data-label="庫存金庫">📦</a>
+        <a href="status.html" class="nav-icon-btn" data-label="教育訓練">🎓</a>
+    </div>
 
     <div class="container">
         <div class="external-link-text text-preface" data-link-id="total-preface">前言</div>
@@ -159,53 +171,50 @@
         <div class="top-bottom-mgt-text text-cost-mgt" data-link-id="bottom-cost-mgt">成本管理</div>
         
         <div class="management-grid">
-
             <div class="side-block block block-side" data-link-id="left-external">
                 <div class="main-title">左外部管理</div>
-                <div class="side-link-text" data-link-id="supplier-mgt">供應商管理</div> 
+                <div style="font-size: 14px; color: var(--gold-dim);">供應商協作系統</div> 
             </div>
 
             <div class="middle-content">
-                
                 <div class="block block-top" data-link-id="top-external-overview">
                     <div class="main-title">上外部管理</div>
                     <ul class="sub-items">
-                        <li data-link-id="customer-mgt">1. 顧客管理</li>
-                        <li data-link-id="sentiment-mgt">2. 客情管理</li>
-                        <li data-link-id="booking-mgt">3. 預約管理</li>
+                        <li onclick="location.href='crm.html'">1. 顧客管理 (系統)</li>
+                        <li data-link-id="sentiment-mgt">2. 客情分析報告</li>
+                        <li data-link-id="booking-mgt">3. 線上預約中心</li>
                     </ul>
                 </div>
 
                 <div class="block block-middle" data-link-id="internal-operations-overview">
-                    <div class="main-title">內部管理</div>
+                    <div class="main-title">核心內部管理</div>
                     <ul class="sub-items">
-                        <li data-link-id="financial-mgt">1. 財務管理</li>
-                        <li data-link-id="talent-mgt">2. 人才管理</li>
-                        <li data-link-id="inventory-mgt">3. 庫存管理</li>
+                        <li onclick="location.href='pos.html'">1. 財務收銀 (系統)</li>
+                        <li onclick="location.href='status.html'">2. 人才訓練 (系統)</li>
+                        <li onclick="location.href='inventory.html'">3. 庫存金庫 (系統)</li>
                     </ul>
                 </div>
 
                 <div class="block block-bottom" data-link-id="bottom-external-overview">
                     <div class="main-title">下外部管理</div>
                     <ul class="sub-items">
-                        <li data-link-id="marketing-mgt">1. 行銷管理</li>
-                        <li data-link-id="activity-mgt">2. 活動管理</li>
-                        <li data-link-id="community-mgt">3. 社區管理</li>
+                        <li data-link-id="marketing-mgt">1. 行銷漏斗策略</li>
+                        <li data-link-id="activity-mgt">2. 活動促銷模組</li>
+                        <li data-link-id="community-mgt">3. 社區美感經營</li>
                     </ul>
                 </div>
             </div>
 
             <div class="side-block block block-side" data-link-id="right-external">
                 <div class="main-title">右外部管理</div>
-                <div class="side-link-text" data-link-id="brand-mgt">品牌管理</div>
+                <div style="font-size: 14px; color: var(--gold-dim);">品牌視覺資產</div>
             </div>
-
         </div>
-
     </div>
 
+    
+
     <script>
-        // 完全保留原始連結設定
         const linkUrls = {
             'top-price-mgt': 'https://sites.google.com/view/webcourse001/%E5%83%B9%E6%A0%BC%E7%AE%A1%E7%90%86',
             'bottom-cost-mgt': 'https://drive.google.com/file/d/14qUKcjBlMhrGQpNFsb5CUxfUWHeBagkP/view?usp=sharing',
@@ -217,36 +226,19 @@
             'bottom-external-overview': 'https://drive.google.com/file/d/1T6i6smjMgfm40HrLm3zzoC5FrTuOCTbG/view?usp=sharing',
             'left-external': 'https://drive.google.com/file/d/1DaYJLu4EH68bJcOUMOY46Tem85JxRByF/view?usp=drive_link',
             'right-external': 'https://drive.google.com/file/d/1MU1Z2cH0L5sNmV-TqaWWp9zUvRiDoxyV/view?usp=drive_link',
-            'customer-mgt': 'https://sites.google.com/view/webcourse001/%E9%A1%A7%E5%AE%A2%E7%AE%A1%E7%90%86',
             'sentiment-mgt': 'https://sites.google.com/view/webcourse001/%E5%AE%A2%E6%83%85%E7%AE%A1%E7%90%86',
             'booking-mgt': 'https://sites.google.com/view/webcourse001/%E9%A0%90%E7%B4%84%E7%AE%A1%E7%90%86',
-            'financial-mgt': 'https://sites.google.com/view/webcourse001/%E8%B2%A1%E5%8B%99%E7%AE%A1%E7%90%86',
-            'talent-mgt': 'https://sites.google.com/view/webcourse001/%E4%BA%BA%E6%89%8D%E7%AE%A1%E7%90%86',
-            'inventory-mgt': 'https://sites.google.com/view/webcourse001/%E5%BA%AB%E5%AD%98%E7%AE%A1%E7%90%86',
             'marketing-mgt': 'https://sites.google.com/view/webcourse001/%E8%A1%8C%E9%8A%B7%E7%AE%A1%E7%90%86',
             'activity-mgt': 'https://sites.google.com/view/webcourse001/%E6%B4%BB%E5%8B%95%E7%AE%A1%E7%90%86',
             'community-mgt': 'https://sites.google.com/view/webcourse001/%E7%A4%BE%E5%8D%80%E7%AE%A1%E7%90%86',
-            'supplier-mgt': 'https://sites.google.com/view/webcourse001/%E4%BE%9B%E6%87%89%E5%95%86%E7%AE%A1%E7%90%86',
-            'brand-mgt': 'https://sites.google.com/view/webcourse001/%E5%93%81%E7%89%8C%E7%AE%A1%E7%90%86',
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            const clickableElements = document.querySelectorAll('[data-link-id]');
-            clickableElements.forEach(element => {
-                const linkId = element.getAttribute('data-link-id');
-                const url = linkUrls[linkId];
-
-                if (url && url !== '#') {
-                    element.addEventListener('click', (event) => {
-                        const isSubItem = element.tagName === 'LI';
-                        if (element.classList.contains('block') && !isSubItem) {
-                            if (event.target.closest('li') || event.target.classList.contains('side-link-text')) {
-                                return; 
-                            }
-                        }
-                        window.open(url, '_blank');
-                    });
-                }
+            document.querySelectorAll('[data-link-id]').forEach(element => {
+                element.addEventListener('click', (e) => {
+                    const url = linkUrls[element.getAttribute('data-link-id')];
+                    if (url) window.open(url, '_blank');
+                });
             });
         });
     </script>
