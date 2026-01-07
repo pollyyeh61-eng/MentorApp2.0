@@ -7,8 +7,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
     <style>
-        :root { --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 45%, #B38728 70%, #FBF5B7 85%, #AA771C 100%); --dark-bg: #050505; }
-        body { background-color: var(--dark-bg); color: #D4D4D4; font-family: 'Noto Sans TC', sans-serif; background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #050505 100%); min-height: 100vh; padding-bottom: 90px; }
+        :root { 
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 45%, #B38728 70%, #FBF5B7 85%, #AA771C 100%); 
+            --dark-bg: #050505; 
+        }
+
+        /* 奢華黑金返回按鈕 - 完美適配集點卡風格 */
+        .luxury-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(5, 5, 5, 0.8);
+            border: 1px solid #BF953F;
+            border-radius: 30px;
+            color: #FCF6BA;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(191, 149, 63, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .luxury-back-btn:hover {
+            background: var(--gold-gradient);
+            color: #000;
+            box-shadow: 0 0 20px rgba(252, 246, 186, 0.5);
+            transform: translateY(-2px);
+        }
+
+        body { 
+            background-color: var(--dark-bg); 
+            color: #D4D4D4; 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #050505 100%); 
+            min-height: 100vh; 
+            padding-top: 60px; /* 留出返回鍵空間 */
+            padding-bottom: 90px; 
+        }
+
         .gold-text-fancy { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Cinzel', serif; letter-spacing: 0.15em; font-weight: 700; }
         .gold-text-btn { color: #BF953F; font-weight: 600; letter-spacing: 0.1em; }
         .luxury-card { background: rgba(20, 20, 20, 0.7); border: 1px solid rgba(191, 149, 63, 0.15); backdrop-filter: blur(25px); border-radius: 28px; }
@@ -31,6 +76,10 @@
     </style>
 </head>
 <body class="px-5">
+
+    <a href="index.html" class="luxury-back-btn">
+        <span>🏠</span> HOME
+    </a>
 
     <div id="page-member" class="page-content py-6">
         <header class="text-center mb-6">
@@ -105,6 +154,7 @@
     </nav>
 
     <script type="module">
+        /* JavaScript 邏輯保持不變 */
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -115,7 +165,6 @@
         let activeUserId = "";
         let currentFilter = "all";
 
-        // --- 倉庫分類切換 ---
         window.setFilter = (filter, el) => {
             currentFilter = filter;
             document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -123,7 +172,6 @@
             renderDirectory();
         };
 
-        // --- 核心邏輯：智能搜尋 ---
         window.triggerSmartSearch = async (preName = "", prePhone = "") => {
             const nameInput = preName || document.getElementById('reg-name').value.trim();
             const phoneInput = prePhone || document.getElementById('reg-phone').value.trim();
@@ -132,10 +180,8 @@
             const displayArea = document.getElementById('data-display-area');
 
             if (nameInput.length < 1) { resetUI(); return; }
-
             const snap = await get(ref(db, 'members'));
             if (!snap.exists()) return;
-
             const allMembers = Object.values(snap.val());
             const matches = allMembers.filter(m => m.name === nameInput);
 
@@ -182,19 +228,14 @@
             for(let i=1; i<=10; i++) container.innerHTML += `<div class="stamp-slot ${i <= (data.stamps || 0) ? 'stamp-active' : ''}">${i <= (data.stamps || 0) ? '✦' : i}</div>`;
         }
 
-        // --- 倉庫渲染與過濾 ---
         window.renderDirectory = async () => {
             const search = document.getElementById('search-input').value.toLowerCase();
             const snap = await get(ref(db, 'members'));
             const container = document.getElementById('member-directory');
             container.innerHTML = "";
-
             if(snap.exists()){
                 Object.values(snap.val()).forEach(m => {
-                    // 1. 關鍵字搜尋過濾
                     if(!m.name.toLowerCase().includes(search) && !m.phone.includes(search)) return;
-                    
-                    // 2. 分類過濾
                     if(currentFilter === 'wash' && !(m.wash_tickets > 0)) return;
                     if(currentFilter === 'haircut' && !(m.haircut_tickets > 0)) return;
                     if(currentFilter === 'stamps' && !(m.stamps > 0)) return;
@@ -225,7 +266,6 @@
             triggerSmartSearch(name, phone);
         };
 
-        // --- 基礎操作 ---
         window.registerNewMember = async () => {
             if (activeUserId) return alert("會員已存在");
             const name = document.getElementById('reg-name').value;
@@ -273,6 +313,7 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if(pid === 'member') document.getElementById('nav-member').classList.add('active');
             else { document.getElementById('nav-list').classList.add('active'); renderDirectory(); }
+            window.scrollTo(0,0);
         };
     </script>
 </body>
