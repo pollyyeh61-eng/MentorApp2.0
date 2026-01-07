@@ -85,6 +85,8 @@
             color: var(--gold-dim); writing-mode: vertical-rl; 
             text-orientation: upright; cursor: pointer; transition: 0.3s;
         }
+        .external-link-text:hover { color: var(--gold-bright); transform: translateY(-50%) scale(1.1); }
+        
         .text-management { top: 50%; left: -30px; transform: translateY(-50%); }
         .text-preface { top: 50%; left: -55px; transform: translateY(-50%); }
         .text-holding { top: 50%; right: -55px; transform: translateY(-50%); } 
@@ -92,7 +94,9 @@
         .top-bottom-mgt-text {
             position: absolute; left: 50%; transform: translateX(-50%); 
             font-size: 18px; font-weight: bold; color: var(--gold-dim); cursor: pointer;
+            transition: 0.3s;
         }
+        .top-bottom-mgt-text:hover { color: var(--gold-bright); transform: translateX(-50%) scale(1.1); }
         .text-top-mgt { top: 8px; } 
         .text-cost-mgt { bottom: 8px; } 
 
@@ -105,25 +109,25 @@
         .block {
             padding: 15px; border-radius: 8px; text-align: center;
             background: rgba(255, 255, 255, 0.02); border: 1px solid var(--gold-dim);
-            transition: 0.4s;
+            transition: 0.4s; cursor: pointer;
         }
-        .block:hover { border-color: var(--gold-bright); background: rgba(212, 175, 55, 0.05); }
+        .block:hover { border-color: var(--gold-bright); background: rgba(212, 175, 55, 0.08); }
 
         .main-title { font-size: 16px; font-weight: bold; color: var(--gold-bright); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
         
-        .sub-items { list-style: none; padding: 0; text-align: left; }
+        .sub-items { list-style: none; padding: 0; text-align: left; margin: 0; }
         .sub-items li { 
             margin-bottom: 8px; 
             font-size: 13px; 
             color: var(--text-silver); 
             transition: 0.3s; 
-            cursor: pointer; /* 關鍵修正：讓滑鼠移上去變手型 */
+            cursor: pointer;
             padding: 4px 8px;
             border-radius: 4px;
         }
         .sub-items li:hover { 
             color: var(--gold-bright); 
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(212, 175, 55, 0.15);
             padding-left: 12px; 
         }
 
@@ -136,7 +140,7 @@
 <body>
 
     <div class="side-nav">
-        <a href="index.html" class="nav-icon-btn" title="返回首頁">🏠</a>
+        <a href="index.html" class="nav-icon-btn" title="返回首頁助理">🏠</a>
         <a href="pos.html" class="nav-icon-btn" title="收銀系統">💰</a>
         <a href="customer.html" class="nav-icon-btn" title="客戶系統">💎</a>
         <a href="store.html" class="nav-icon-btn" title="庫存系統">📦</a>
@@ -144,67 +148,94 @@
     </div>
 
     <div class="container">
-        <div class="external-link-text text-preface" onclick="window.open('https://sites.google.com/view/webcourse001/%E5%89%8D%E8%A8%80/')">前言</div>
-        <div class="external-link-text text-management">管理層</div>
-        <div class="external-link-text text-holding">控股層</div>
+        <div class="external-link-text text-preface" onclick="navTo('total-preface')">前言</div>
+        <div class="external-link-text text-management" onclick="navTo('total-management')">管理層</div>
+        <div class="external-link-text text-holding" onclick="navTo('total-holding-label')">控股層</div>
         
-        <div class="top-bottom-mgt-text text-top-mgt" onclick="window.open('https://sites.google.com/view/webcourse001/%E5%83%B9%E6%A0%BC%E7%AE%A1%E7%90%86')">價格管理</div>
-        <div class="top-bottom-mgt-text text-cost-mgt">成本管理</div>
+        <div class="top-bottom-mgt-text text-top-mgt" onclick="navTo('top-price-mgt')">價格管理</div>
+        <div class="top-bottom-mgt-text text-cost-mgt" onclick="navTo('bottom-cost-mgt')">成本管理</div>
         
         <div class="management-grid">
-            <div class="block" style="display:flex; align-items:center; justify-content:center;">
+            <div class="block" onclick="navTo('left-external')" style="display:flex; align-items:center; justify-content:center;">
                 <div>
                     <div class="main-title">左外部管理</div>
-                    <p style="font-size:12px; color:var(--gold-dim);">供應商協作</p>
+                    <p class="sub-items" style="text-align:center;"><li onclick="event.stopPropagation(); navTo('supplier-mgt')">供應商協作</li></p>
                 </div>
             </div>
 
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <div class="block">
+                <div class="block" onclick="navTo('top-external-overview')">
                     <div class="main-title">上外部管理</div>
                     <ul class="sub-items">
-                        <li onclick="location.href='customer.html'">1. 顧客管理系統 (點擊進入)</li>
-                        <li>2. 客情分析報告</li>
+                        <li onclick="event.stopPropagation(); navTo('customer-mgt')">1. 顧客管理系統</li>
+                        <li onclick="event.stopPropagation(); navTo('sentiment-mgt')">2. 客情分析報告</li>
+                        <li onclick="event.stopPropagation(); navTo('booking-mgt')">3. 預約管理課程</li>
                     </ul>
                 </div>
                 
-                <div class="block">
+                <div class="block" onclick="navTo('internal-operations-overview')">
                     <div class="main-title">核心內部管理</div>
                     <ul class="sub-items">
-                        <li onclick="location.href='pos.html'">1. 財務收銀系統 (點擊進入)</li>
-                        <li onclick="location.href='student.html'">2. 人才訓練系統 (點擊進入)</li>
-                        <li onclick="location.href='store.html'">3. 庫存金庫系統 (點擊進入)</li>
+                        <li onclick="event.stopPropagation(); navTo('financial-mgt')">1. 財務收銀系統</li>
+                        <li onclick="event.stopPropagation(); navTo('talent-mgt')">2. 人才訓練系統</li>
+                        <li onclick="event.stopPropagation(); navTo('inventory-mgt')">3. 庫存金庫系統</li>
                     </ul>
                 </div>
                 
-                <div class="block">
+                <div class="block" onclick="navTo('bottom-external-overview')">
                     <div class="main-title">下外部管理</div>
                     <ul class="sub-items">
-                        <li>1. 行銷漏斗策略</li>
-                        <li>2. 社區美感經營</li>
+                        <li onclick="event.stopPropagation(); navTo('marketing-mgt')">1. 行銷漏斗策略</li>
+                        <li onclick="event.stopPropagation(); navTo('activity-mgt')">2. 活動管理實務</li>
+                        <li onclick="event.stopPropagation(); navTo('community-mgt')">3. 社區美感經營</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="block" style="display:flex; align-items:center; justify-content:center;">
+            <div class="block" onclick="navTo('right-external')" style="display:flex; align-items:center; justify-content:center;">
                 <div>
                     <div class="main-title">右外部管理</div>
-                    <p style="font-size:12px; color:var(--gold-dim);">品牌視覺資產</p>
+                    <p class="sub-items" style="text-align:center;"><li onclick="event.stopPropagation(); navTo('brand-mgt')">品牌視覺資產</li></p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 點擊回饋：讓使用者知道點擊成功
-        document.querySelectorAll('.sub-items li').forEach(item => {
-            item.addEventListener('click', function() {
-                this.style.backgroundColor = 'var(--gold-glow)';
-                setTimeout(() => {
-                    this.style.backgroundColor = '';
-                }, 200);
-            });
-        });
+        // 您提供的完整網址對照表
+        const linkUrls = {
+            'top-price-mgt': 'https://sites.google.com/view/webcourse001/%E5%83%B9%E6%A0%BC%E7%AE%A1%E7%90%86',
+            'bottom-cost-mgt': 'https://drive.google.com/file/d/14qUKcjBlMhrGQpNFsb5CUxfUWHeBagkP/view?usp=sharing',
+            'total-preface': 'https://sites.google.com/view/webcourse001/%E5%89%8D%E8%A8%80/',
+            'total-management': 'https://drive.google.com/file/d/1OFOMi1jE9KRMp2eHoL1T4eeGUm3peq9g/view?usp=sharing',
+            'total-holding-label': 'https://drive.google.com/file/d/19jz8RCEfCmmBI_ki8mlXP0BeEa7NIM14/view?usp=sharing',
+            'top-external-overview': 'https://drive.google.com/file/d/1cFAh4to7Jyau-JrV75RzHXexsyTGuePA/view?usp=sharing',
+            'internal-operations-overview': 'https://drive.google.com/file/d/1WqYvrwuDqktlYV94Blb3ETpxL5rJ4cG5/view?usp=sharing',
+            'bottom-external-overview': 'https://drive.google.com/file/d/1T6i6smjMgfm40HrLm3zzoC5FrTuOCTbG/view?usp=sharing',
+            'left-external': 'https://drive.google.com/file/d/1DaYJLu4EH68bJcOUMOY46Tem85JxRByF/view?usp=drive_link',
+            'right-external': 'https://drive.google.com/file/d/1MU1Z2cH0L5sNmV-TqaWWp9zUvRiDoxyV/view?usp=drive_link',
+            'customer-mgt': 'https://sites.google.com/view/webcourse001/%E9%A1%A7%E5%AE%A2%E7%AE%A1%E7%90%86',
+            'sentiment-mgt': 'https://sites.google.com/view/webcourse001/%E5%AE%A2%E6%83%85%E7%AE%A1%E7%90%86',
+            'booking-mgt': 'https://sites.google.com/view/webcourse001/%E9%A0%90%E7%B4%84%E7%AE%A1%E7%90%86',
+            'financial-mgt': 'https://sites.google.com/view/webcourse001/%E8%B2%A1%E5%8B%99%E7%AE%A1%E7%90%86',
+            'talent-mgt': 'https://sites.google.com/view/webcourse001/%E4%BA%BA%E6%89%8D%E7%AE%A1%E7%90%86',
+            'inventory-mgt': 'https://sites.google.com/view/webcourse001/%E5%BA%AB%E5%AD%98%E7%AE%A1%E7%90%86',
+            'marketing-mgt': 'https://sites.google.com/view/webcourse001/%E8%A1%8C%E9%8A%B7%E7%AE%A1%E7%90%86',
+            'activity-mgt': 'https://sites.google.com/view/webcourse001/%E6%B4%BB%E5%8B%95%E7%AE%A1%E7%90%86',
+            'community-mgt': 'https://sites.google.com/view/webcourse001/%E7%A4%BE%E5%8D%80%E7%AE%A1%E7%90%86',
+            'supplier-mgt': 'https://sites.google.com/view/webcourse001/%E4%BE%9B%E6%87%89%E5%95%86%E7%AE%A1%E7%90%86',
+            'brand-mgt': 'https://sites.google.com/view/webcourse001/%E5%93%81%E7%89%8C%E7%AE%A1%E7%90%86',
+        };
+
+        // 導航函數
+        function navTo(key) {
+            const url = linkUrls[key];
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                console.error("找不到對應網址: " + key);
+            }
+        }
     </script>
 </body>
 </html>
