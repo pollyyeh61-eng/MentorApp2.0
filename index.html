@@ -10,7 +10,6 @@
             --bg: #080808;
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
-            /* 網格色彩配置維持原樣，但僅用於懸停邊框 */
             --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
             --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
         }
@@ -18,17 +17,35 @@
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
-            color: var(--gold); /* 全域文字改為金色 */
+            color: var(--gold);
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 30px 15px;
+            padding: 10px 15px;
         }
 
-        /* 奢華金屬漆質感標題 */
+        /* 右上角功能區 */
+        .top-nav {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 0;
+            gap: 10px;
+        }
+        .nav-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
         header h1 {
             font-size: 1.8rem;
             letter-spacing: 5px;
@@ -38,14 +55,18 @@
             margin-bottom: 25px;
             text-align: center;
             font-weight: 700;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* 獨立出來的入口平台 - 採用金邊與金字 */
-        .share-section {
-            width: 100%;
-            max-width: 350px;
-            margin-bottom: 20px;
+        /* 內容容器 */
+        .main-container { width: 100%; max-width: 350px; }
+        .share-section { margin-bottom: 20px; }
+        .btn-large, .btn {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-decoration: none;
+            color: var(--gold);
+            display: flex;
+            transition: all 0.4s ease;
         }
 
         .btn-large {
@@ -53,130 +74,187 @@
             border: 1px solid var(--gold);
             border-radius: 14px;
             padding: 20px;
-            display: flex;
             justify-content: center;
             align-items: center;
-            text-decoration: none;
-            color: var(--gold); /* 確保是金色 */
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .btn-large:hover {
-            background: var(--gold);
-            color: #000;
-            transform: translateY(-3px);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            width: 100%;
-            max-width: 350px;
         }
 
         .btn {
-            position: relative;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 16px;
             padding: 22px 10px;
-            display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none;
-            color: var(--gold); /* 標題文字改為金色 */
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             animation: breathe 4s infinite ease-in-out;
         }
 
         @keyframes breathe {
-            0%, 100% { border-color: rgba(212, 175, 55, 0.2); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
-            50% { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+            0%, 100% { border-color: rgba(212, 175, 55, 0.2); }
+            50% { border-color: rgba(212, 175, 55, 0.5); }
         }
 
         .icon { font-size: 26px; margin-bottom: 12px; }
-        .btn-title { font-size: 0.95rem; font-weight: 500; letter-spacing: 1px; text-align: center; color: var(--gold); }
+        .btn-title { font-size: 0.95rem; font-weight: 500; text-align: center; }
 
-        .btn:hover {
-            transform: translateY(-4px);
-            background: rgba(212, 175, 55, 0.15);
-            animation: none;
+        /* --- 彈窗樣式 (包含協議捲軸) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #151515;
+            border: 1px solid var(--gold);
+            padding: 20px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 320px;
+        }
+        
+        /* 捲軸協議區 */
+        .terms-scroll {
+            height: 150px;
+            overflow-y: scroll;
+            background: #000;
+            border: 1px solid #333;
+            padding: 10px;
+            font-size: 0.75rem;
+            color: #ccc;
+            margin: 15px 0;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .terms-scroll h4 { color: var(--gold); margin-top: 0; }
+
+        .checkbox-container {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
             color: var(--gold-light);
         }
 
-        /* 懸停邊框色彩噴發效果 */
-        .btn:nth-child(1):hover { border-color: var(--c-1); box-shadow: 0 0 20px var(--c-1); }
-        .btn:nth-child(2):hover { border-color: var(--c-2); box-shadow: 0 0 20px var(--c-2); }
-        .btn:nth-child(3):hover { border-color: var(--c-3); box-shadow: 0 0 20px var(--c-3); }
-        .btn:nth-child(4):hover { border-color: var(--c-4); box-shadow: 0 0 20px var(--c-4); }
-        .btn:nth-child(5):hover { border-color: var(--c-5); box-shadow: 0 0 20px var(--c-5); }
-        .btn:nth-child(6):hover { border-color: var(--c-6); box-shadow: 0 0 20px var(--c-6); }
-        .btn:nth-child(7):hover { border-color: var(--c-7); box-shadow: 0 0 20px var(--c-7); }
-        .btn:nth-child(8):hover { border-color: var(--c-8); box-shadow: 0 0 20px var(--c-8); }
-        .btn:nth-child(9):hover { border-color: var(--c-1); box-shadow: 0 0 20px var(--c-1); }
-        .btn:nth-child(10):hover { border-color: var(--c-2); box-shadow: 0 0 20px var(--c-2); }
+        input[type="text"], input[type="tel"], textarea {
+            width: 100%; background: #000; border: 1px solid #333; color: #fff;
+            padding: 10px; margin: 5px 0; border-radius: 8px; box-sizing: border-box;
+        }
 
-        footer { margin-top: auto; font-size: 0.7rem; color: var(--gold); opacity: 0.6; letter-spacing: 2px; padding: 20px; text-align: center; }
+        .primary-btn {
+            width: 100%; background: var(--gold); color: #000; border: none;
+            padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;
+        }
+        .primary-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+        footer { margin-top: auto; font-size: 0.7rem; color: var(--gold); opacity: 0.6; padding: 20px; text-align: center; }
     </style>
 </head>
 <body>
+
+    <div class="top-nav">
+        <div id="guest-zone">
+            <button class="nav-btn" onclick="openModal('auth-modal')">註冊 / 登入</button>
+        </div>
+        <div id="user-zone" style="display:none;">
+            <button class="nav-btn" onclick="openModal('profile-modal')">👤 會員中心</button>
+        </div>
+    </div>
 
     <header>
         <h1>學堂隨身助理</h1>
     </header>
 
-    <div class="share-section">
-        <a href="http://entrance.hairweb.net/" class="btn-large">
-            <div class="icon" style="margin-bottom: 0; margin-right: 12px;">🌐</div>
-            <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台 (分享專用)</span>
-        </a>
+    <div class="main-container">
+        <div class="share-section">
+            <a href="http://entrance.hairweb.net/" class="btn-large app-link">
+                <div class="icon" style="margin-bottom: 0; margin-right: 12px;">🌐</div>
+                <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台</span>
+            </a>
+        </div>
+
+        <div class="menu-grid">
+            <a href="https://pos.hairweb.net/" class="btn app-link"><div class="icon">💰</div><span class="btn-title">銷售收銀</span></a>
+            <a href="http://booking.hairweb.net" class="btn app-link"><div class="icon">📅</div><span class="btn-title">客戶預約</span></a>
+            <a href="https://card.hairweb.net/" class="btn app-link"><div class="icon">💳</div><span class="btn-title">會員卡</span></a>
+            <a href="https://customer.hairweb.net/" class="btn app-link"><div class="icon">🤝</div><span class="btn-title">客戶管理</span></a>
+            <a href="http://store.hairweb.net/" class="btn app-link"><div class="icon">📦</div><span class="btn-title">庫存管理</span></a>
+            <a href="http://points.hairweb.net/" class="btn app-link"><div class="icon">✨</div><span class="btn-title">升等集點</span></a>
+            <a href="http://trial2.hairweb.net/" class="btn app-link"><div class="icon">📈</div><span class="btn-title">經營課程</span></a>
+            <a href="http://sale.hairweb.net/" class="btn app-link"><div class="icon">🚀</div><span class="btn-title">銷售開發</span></a>
+            <a href="http://profit.hairweb.net/" class="btn app-link"><div class="icon">🧮</div><span class="btn-title">分潤計算</span></a>
+            <a href="https://student.hairweb.net/" class="btn app-link"><div class="icon">🏆</div><span class="btn-title">學員關卡</span></a>
+        </div>
     </div>
 
-    <div class="menu-grid">
-        <a href="https://pos.hairweb.net/" class="btn">
-            <div class="icon">💰</div><span class="btn-title">銷售收銀</span>
-        </a>
-        <a href="https://Booking.hairweb.net" class="btn">
-            <div class="icon">📅</div><span class="btn-title">客戶預約</span>
-        </a>
-        <a href="https://card.hairweb.net/" class="btn">
-            <div class="icon">💳</div><span class="btn-title">會員卡</span>
-        </a>
-        <a href="https://customer.hairweb.net/" class="btn">
-            <div class="icon">🤝</div><span class="btn-title">客戶管理</span>
-        </a>
-        <a href="http://store.hairweb.net/" class="btn">
-            <div class="icon">📦</div><span class="btn-title">庫存管理</span>
-        </a>
-        <a href="http://points.hairweb.net/" class="btn">
-            <div class="icon">✨</div><span class="btn-title">升等集點</span>
-        </a>
-        <a href="http://trial2.hairweb.net/" class="btn">
-            <div class="icon">📈</div><span class="btn-title">經營課程</span>
-        </a>
-        <a href="http://sale.hairweb.net/" class="btn">
-            <div class="icon">🚀</div><span class="btn-title">銷售開發</span>
-        </a>
-        <a href="http://profit.hairweb.net/" class="btn">
-            <div class="icon">🧮</div><span class="btn-title">分潤計算</span>
-        </a>
-        <a href="https://student.hairweb.net/" class="btn">
-            <div class="icon">🏆</div><span class="btn-title">學員關卡</span>
-        </a>
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="text-align:center; margin-top:0;">學員註冊與登入</h3>
+            <input type="text" id="login-id" placeholder="帳號 / Email">
+            <input type="password" style="width:100%; background:#000; border:1px solid #333; color:#fff; padding:10px; border-radius:8px;" placeholder="密碼">
+            
+            <div class="terms-scroll">
+                <h4>📋 學員服務與個資保護條款</h4>
+                一、 帳號安全與權限規範<br>
+                1. 專屬權限：本平台核發之登入帳號僅限學員本人使用，嚴禁轉借、租賃或授權他人使用。<br>
+                2. 安全義務：學員有義務妥善保管密碼。凡經由正確帳號密碼登入後之所有行為，均視為本人操作。<br><br>
+                二、 會員個資與數據處理<br>
+                1. 個資授權：學員蒐集之顧客名單，其所有權歸屬學員沙龍所有。本平台僅提供技術支持。<br>
+                2. 隱私保護：本平台承諾採用 AES 加密技術，未經授權不得將數據提供予第三方。<br><br>
+                三、 金流與點數管理<br>
+                1. 功能定義：App 內「錢包」僅供內部記錄帳務，本平台不代收、不經手實際貨幣。<br>
+                2. 對帳責任：若因學員操作錯誤導致帳務紛爭，應由學員與顧客自行協商。<br><br>
+                四、 系統免責聲明<br>
+                1. 種子測試：學員理解本系統處於測試階段。因不可抗力導致中斷，本平台不負賠償責任。<br>
+                2. 更新義務：學員應配合更新至最新版本以確保安全。<br><br>
+                五、 爭議解決<br>
+                本協議以高雄地方法院為第一審管轄法院。
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="agree-check" onchange="toggleRegBtn()">
+                <label for="agree-check">我已閱讀並同意以上條款</label>
+            </div>
+
+            <button id="reg-btn" class="primary-btn" disabled onclick="handleAuth()">完成並進入學堂</button>
+            <p style="text-align:center; font-size:0.7rem; color:#888; cursor:pointer;" onclick="alert('重設連結已發送')">忘記密碼？</p>
+            <button class="nav-btn" style="width:100%; margin-top:10px; border:none;" onclick="closeModal('auth-modal')">取消</button>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="text-align:center">個人會員中心</h3>
+            <div id="photo-box" style="width:80px; height:80px; border:1px dashed var(--gold); border-radius:50%; margin: 0 auto 10px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                <span id="pic-hint">📷</span>
+                <img id="my-pic" style="width:100%; height:100%; object-fit:cover; display:none;">
+            </div>
+            <input type="file" id="file-in" style="display:none" onchange="previewPhoto(event)">
+            <div style="display:flex; gap:5px; margin-bottom:10px;">
+                <button class="nav-btn" style="flex:1" onclick="document.getElementById('file-in').click()">增加照片</button>
+                <button class="nav-btn" style="flex:1; border-color:#555" onclick="delPhoto()">刪除</button>
+            </div>
+            <input type="text" id="user-n" placeholder="姓名" oninput="autoSave()">
+            <input type="tel" id="user-p" placeholder="電話" oninput="autoSave()">
+            <textarea id="user-b" placeholder="自我介紹" rows="3" oninput="autoSave()"></textarea>
+            <button class="primary-btn" onclick="saveData()">修正並永久儲存</button>
+            <button class="nav-btn" style="width:100%; margin-top:10px; border:none;" onclick="closeModal('profile-modal')">關閉</button>
+        </div>
     </div>
 
     <footer>VITALITY HAIR ACADEMY © 2026</footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
             authDomain: "holyhairsalon-f73bf.firebaseapp.com",
@@ -184,13 +262,95 @@
             projectId: "holyhairsalon-f73bf",
             storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
             messagingSenderId: "960169055224",
-            appId: "1:960169055224:web:59f89c0dcf194531bf3c0d",
-            measurementId: "G-JCQZ78GEV2"
+            appId: "1:960169055224:web:59f89c0dcf194531bf3c0d"
         };
-
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+    </script>
+
+    <script>
+        let loggedIn = false;
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // 同意框邏輯
+        function toggleRegBtn() {
+            const isChecked = document.getElementById('agree-check').checked;
+            document.getElementById('reg-btn').disabled = !isChecked;
+        }
+
+        // 登入/註冊處理
+        function handleAuth() {
+            loggedIn = true;
+            document.getElementById('guest-zone').style.display = 'none';
+            document.getElementById('user-zone').style.display = 'block';
+            closeModal('auth-modal');
+            loadSaved();
+            alert("已同意條款並登入成功！");
+        }
+
+        // 攔截未登入行為
+        document.querySelectorAll('.app-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!loggedIn) {
+                    e.preventDefault();
+                    alert("請先完成註冊與同意服務條款哦！");
+                    openModal('auth-modal');
+                }
+            });
+        });
+
+        // 即時暫存
+        function autoSave() {
+            const info = {
+                name: document.getElementById('user-n').value,
+                phone: document.getElementById('user-p').value,
+                bio: document.getElementById('user-b').value,
+                photo: document.getElementById('my-pic').src
+            };
+            localStorage.setItem('hair_app_data', JSON.stringify(info));
+        }
+
+        function loadSaved() {
+            const saved = JSON.parse(localStorage.getItem('hair_app_data'));
+            if(saved) {
+                document.getElementById('user-n').value = saved.name || '';
+                document.getElementById('user-p').value = saved.phone || '';
+                document.getElementById('user-b').value = saved.bio || '';
+                if(saved.photo && saved.photo.includes('data:image')) {
+                    const img = document.getElementById('my-pic');
+                    img.src = saved.photo;
+                    img.style.display = 'block';
+                    document.getElementById('pic-hint').style.display = 'none';
+                }
+            }
+        }
+
+        function previewPhoto(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.getElementById('my-pic');
+                img.src = event.target.result;
+                img.style.display = 'block';
+                document.getElementById('pic-hint').style.display = 'none';
+                autoSave();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function delPhoto() {
+            document.getElementById('my-pic').src = "";
+            document.getElementById('my-pic').style.display = "none";
+            document.getElementById('pic-hint').style.display = "block";
+            autoSave();
+        }
+
+        function saveData() {
+            autoSave();
+            alert("雲端同步儲存成功！");
+            closeModal('profile-modal');
+        }
     </script>
 </body>
 </html>
-
