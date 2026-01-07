@@ -12,13 +12,42 @@
         :root { --gold-bright: #fde68a; --gold-main: #d4af37; --gold-dark: #8e6d13; --bg-black: #050505; }
         body { background: var(--bg-black); color: var(--gold-main); font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; }
         
+        /* 奢華返回按鈕樣式 */
+        .luxury-back-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid var(--gold-main);
+            border-radius: 30px;
+            color: var(--gold-bright);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .luxury-back-btn:hover {
+            background: var(--gold-main);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
         .text-gradient-gold {
             background: linear-gradient(to bottom, #fff6d5 0%, #d4af37 50%, #8e6d13 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-weight: 900;
         }
 
-        /* 每一筆卡片的獨立流動金光邊框（呼吸感） */
+        /* 呼吸感金框卡片 */
         .individual-flow-box {
             position: relative; border-radius: 24px; padding: 1.5px;
             background: linear-gradient(90deg, #1a1a1a, var(--gold-dark), #1a1a1a, var(--gold-main), #1a1a1a);
@@ -37,7 +66,6 @@
             border-radius: 23px; width: 100%;
         }
 
-        /* 按鈕反色效果 */
         .btn-gold-action {
             background: linear-gradient(180deg, var(--gold-bright), var(--gold-main));
             color: #000; font-weight: 900; padding: 14px; border-radius: 12px; 
@@ -49,12 +77,11 @@
             border: 2px solid var(--gold-main); transform: scale(0.95);
         }
 
-        .page { display: none; padding: 20px; }
+        .page { display: none; padding: 20px; padding-top: 60px; } /* 預留返回鍵空間 */
         .page.active { display: block; }
 
-        /* 抽屜內容 */
-        .drawer-container .drawer-content { display: none; }
         .drawer-container.active .drawer-content { display: block; padding: 0 15px 20px 15px; }
+        .drawer-content { display: none; }
 
         input, select {
             background: rgba(0,0,0,0.7) !important;
@@ -73,6 +100,10 @@
     </style>
 </head>
 <body class="pb-24">
+
+    <a href="index.html" class="luxury-back-btn">
+        <span>🏠</span> 返回首頁
+    </a>
 
     <div id="page-input" class="page active">
         <header class="py-6 text-center">
@@ -124,6 +155,7 @@
     </nav>
 
     <script>
+        // Firebase 與 原有邏輯保持不變 (略)
         const firebaseConfig = {
             apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
             authDomain: "holyhairsalon-f73bf.firebaseapp.com",
@@ -143,6 +175,7 @@
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('page-'+p).classList.add('active');
             document.getElementById('nav-'+p).classList.add('active');
+            window.scrollTo(0,0);
         }
 
         function checkPass() {
