@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LUXE Inventory | 黑金奢華庫存管理</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -14,6 +14,35 @@
             --light-gold: #fcf6ba;
             --dark-gold: #926f34;
             --black: #050505;
+        }
+
+        /* 奢華黑金返回按鈕 */
+        .luxury-back-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid var(--gold);
+            border-radius: 30px;
+            color: var(--light-gold);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .luxury-back-btn:hover {
+            background: var(--gold);
+            color: #000;
+            transform: translateY(-2px);
         }
 
         body {
@@ -32,102 +61,50 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 精緻化按鈕設計 */
+        /* 按鈕與導航樣式 */
         .nav-btn {
-            position: relative;
-            padding: 10px 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 12px;
-            letter-spacing: 2px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent;
-            overflow: hidden;
-            background: none;
-            cursor: pointer;
+            position: relative; padding: 10px 20px;
+            color: rgba(255,255,255,0.5); font-size: 12px;
+            letter-spacing: 2px; transition: all 0.4s;
+            background: none; cursor: pointer; border: 1px solid transparent;
         }
-        
-        .nav-btn::before {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 50%; width: 0; height: 1px;
-            background: var(--gold);
-            transition: all 0.4s ease;
-        }
-
-        .nav-btn:hover {
-            color: var(--light-gold);
-            background: rgba(212, 175, 55, 0.05);
-        }
-
         .nav-btn.active {
             color: var(--gold);
             border: 1px solid rgba(212, 175, 55, 0.3);
             background: rgba(212, 175, 55, 0.1);
-            box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1);
         }
 
-        .nav-btn.active::before { width: 100%; left: 0; }
-
-        /* 呼吸感卡片與反光 */
+        /* 呼吸感卡片 */
         .luxury-card {
             background: rgba(20, 20, 20, 0.8);
             border: 1px solid rgba(212, 175, 55, 0.15);
             backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.5s ease;
             animation: breathe 6s infinite ease-in-out;
         }
-
         @keyframes breathe {
-            0%, 100% { box-shadow: 0 0 15px rgba(0,0,0,0.5); border-color: rgba(212, 175, 55, 0.15); }
-            50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.4); }
+            0%, 100% { border-color: rgba(212, 175, 55, 0.15); }
+            50% { border-color: rgba(212, 175, 55, 0.4); }
         }
 
-        .luxury-card::after {
-            content: '';
-            position: absolute;
-            top: -150%; left: -150%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.08), transparent);
-            transform: rotate(45deg);
-            pointer-events: none;
-        }
-
-        .luxury-card:hover::after {
-            left: 150%; top: 150%;
-            transition: 0.8s;
-        }
-
-        /* 輸入框美化 */
         input, select {
             background: rgba(0,0,0,0.4) !important;
             border: 1px solid rgba(212, 175, 55, 0.2) !important;
-            color: #fff !important;
-            transition: 0.3s;
-            outline: none;
+            color: #fff !important; outline: none;
         }
-        input:focus { border-color: var(--gold) !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
 
         .gold-btn-main {
             background: linear-gradient(135deg, #b38728, #fcf6ba, #aa771c);
-            color: #000;
-            font-weight: 700;
-            letter-spacing: 4px;
-            transition: 0.4s;
-            cursor: pointer;
-            border: none;
+            color: #000; font-weight: 700; letter-spacing: 4px;
         }
-        .gold-btn-main:hover { transform: scale(1.02); filter: brightness(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-
-        /* 隱藏捲軸 */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--dark-gold); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div id="app" class="p-6 md:p-12">
-    <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
+<a href="index.html" class="luxury-back-btn">
+    <span>🏠</span> 返回首頁
+</a>
+
+<div id="app" class="p-6 md:p-12 pt-20"> <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
         <h1 class="text-4xl gold-text font-bold tracking-[0.2em]">LUXE INVENTORY</h1>
         <div class="flex items-center gap-4 flex-wrap justify-center">
             <nav class="flex gap-2">
@@ -224,14 +201,15 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // --- 請記得替換成你的 Firebase 設定 ---
+    // 使用你統一的 Firebase 設定
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+        authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+        databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+        projectId: "holyhairsalon-f73bf",
+        storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
+        messagingSenderId: "960169055224",
+        appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
     };
 
     const firebaseApp = initializeApp(firebaseConfig);
@@ -293,13 +271,11 @@
                     type.list.forEach(i => content += `   - ${i.name} (庫存:${i.stock})\n`);
                 });
 
-                content += `\n\n[ 第三部分：每日結算摘要 ]\n- 今日預估業績: $12,800\n- 平均客單價: $2,560\n- 產品銷售比例: 18.5%\n`;
-                
                 const blob = new Blob(["\ufeff" + content], { type: "text/plain;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = `LUXE_Full_Report_${now.getTime()}.txt`;
+                a.download = `LUXE_Inventory_Report_${now.getTime()}.txt`;
                 a.click();
             };
 
