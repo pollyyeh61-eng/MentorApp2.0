@@ -1,230 +1,288 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUXE Inventory | 黑金奢華庫存管理</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
-    
-    <style>
-        :root { --gold: #d4af37; --light-gold: #fcf6ba; --black: #050505; }
-        
-        .luxury-back-btn {
-            position: fixed; top: 15px; left: 15px; z-index: 9999;
-            display: flex; align-items: center; gap: 8px; padding: 8px 15px;
-            background: rgba(5, 5, 5, 0.85); border: 1px solid var(--gold);
-            border-radius: 30px; color: var(--light-gold); text-decoration: none;
-            font-size: 13px; font-weight: bold; backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); transition: all 0.3s ease;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LUXE Inventory | 黑金奢華庫存管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --light-gold: #fcf6ba;
+            --dark-gold: #926f34;
+            --black: #050505;
+        }
 
-        body {
-            background-color: var(--black); color: #e0e0e0; font-family: 'Noto Sans TC', sans-serif;
-            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
-            min-height: 100vh; margin: 0;
-        }
+        /* 奢華黑金返回按鈕 */
+        .luxury-back-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid var(--gold);
+            border-radius: 30px;
+            color: var(--light-gold);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .luxury-back-btn:hover {
+            background: var(--gold);
+            color: #000;
+            transform: translateY(-2px);
+        }
 
-        .gold-text {
-            font-family: 'Cinzel', serif;
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        body {
+            background-color: var(--black);
+            color: #e0e0e0;
+            font-family: 'Noto Sans TC', sans-serif;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
 
-        .nav-btn {
-            padding: 10px 20px; color: rgba(255,255,255,0.5); font-size: 12px;
-            letter-spacing: 2px; transition: all 0.4s; background: none; cursor: pointer; border: 1px solid transparent;
-        }
-        .nav-btn.active { color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.1); }
+        .gold-text {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        .luxury-card {
-            background: rgba(20, 20, 20, 0.8); border: 1px solid rgba(212, 175, 55, 0.15);
-            backdrop-filter: blur(10px); animation: breathe 6s infinite ease-in-out;
-        }
-        @keyframes breathe { 0%, 100% { border-color: rgba(212, 175, 55, 0.15); } 50% { border-color: rgba(212, 175, 55, 0.4); } }
+        /* 按鈕與導航樣式 */
+        .nav-btn {
+            position: relative; padding: 10px 20px;
+            color: rgba(255,255,255,0.5); font-size: 12px;
+            letter-spacing: 2px; transition: all 0.4s;
+            background: none; cursor: pointer; border: 1px solid transparent;
+        }
+        .nav-btn.active {
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.1);
+        }
 
-        input, select { background: rgba(0,0,0,0.4) !important; border: 1px solid rgba(212, 175, 55, 0.2) !important; color: #fff !important; outline: none; }
-        .gold-btn-main { background: linear-gradient(135deg, #b38728, #fcf6ba, #aa771c); color: #000; font-weight: 700; letter-spacing: 4px; }
-    </style>
+        /* 呼吸感卡片 */
+        .luxury-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px);
+            animation: breathe 6s infinite ease-in-out;
+        }
+        @keyframes breathe {
+            0%, 100% { border-color: rgba(212, 175, 55, 0.15); }
+            50% { border-color: rgba(212, 175, 55, 0.4); }
+        }
+
+        input, select {
+            background: rgba(0,0,0,0.4) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+            color: #fff !important; outline: none;
+        }
+
+        .gold-btn-main {
+            background: linear-gradient(135deg, #b38728, #fcf6ba, #aa771c);
+            color: #000; font-weight: 700; letter-spacing: 4px;
+        }
+    </style>
 </head>
 <body>
 
-<a href="index.html" class="luxury-back-btn"><span>🏠</span> 返回首頁</a>
+<a href="index.html" class="luxury-back-btn">
+    <span>🏠</span> 返回首頁
+</a>
 
-<div id="app" class="p-6 md:p-12 pt-20">
-    <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
-        <h1 class="text-4xl gold-text font-bold tracking-[0.2em]">LUXE INVENTORY</h1>
-        <div class="flex items-center gap-4 flex-wrap justify-center">
-            <nav class="flex gap-2">
-                <button @click="page = 1" :class="['nav-btn', {active: page === 1}]">資料輸入</button>
-                <button @click="page = 2" :class="['nav-btn', {active: page === 2}]">倉庫抽屜</button>
-                <button @click="page = 3" :class="['nav-btn', {active: page === 3}]">營運建議</button>
-            </nav>
-            <button @click="downloadCombinedReport" class="px-6 py-2 border border-gold text-[10px] text-gold hover:bg-gold hover:text-black transition-all tracking-[2px] bg-transparent cursor-pointer">
-                MERGED REPORT
-            </button>
-        </div>
-    </header>
+<div id="app" class="p-6 md:p-12 pt-20"> <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
+        <h1 class="text-4xl gold-text font-bold tracking-[0.2em]">LUXE INVENTORY</h1>
+        <div class="flex items-center gap-4 flex-wrap justify-center">
+            <nav class="flex gap-2">
+                <button @click="page = 1" :class="['nav-btn', {active: page === 1}]">資料輸入</button>
+                <button @click="page = 2" :class="['nav-btn', {active: page === 2}]">倉庫抽屜</button>
+                <button @click="page = 3" :class="['nav-btn', {active: page === 3}]">營運建議</button>
+            </nav>
+            <button @click="downloadCombinedReport" class="px-6 py-2 border border-gold text-[10px] text-gold hover:bg-gold hover:text-black transition-all tracking-[2px] bg-transparent cursor-pointer">
+                MERGED REPORT
+            </button>
+        </div>
+    </header>
 
-    <main>
-        <section v-if="page === 1" class="max-w-xl mx-auto">
-            <div class="luxury-card p-10 rounded-3xl border-t-2 border-t-gold/50">
-                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">ITEM REGISTRATION</h2>
-                <div class="space-y-6 text-sm">
-                    <div>
-                        <label class="block opacity-40 mb-2">物品名稱 / Name</label>
-                        <input v-model="newItem.name" type="text" class="w-full p-4 rounded-xl">
-                    </div>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <label class="block opacity-40 mb-2">類別 / Category</label>
-                            <select v-model="newItem.category" class="w-full p-4 rounded-xl">
-                                <option value="藥劑">藥劑/染劑</option>
-                                <option value="耗材">備品耗材</option>
-                                <option value="奢華">精品客供</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block opacity-40 mb-2">當前存量</label>
-                            <input v-model.number="newItem.stock" type="number" class="w-full p-4 rounded-xl">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block opacity-40 mb-2">安全水位 / Safety Line</label>
-                        <input v-model.number="newItem.safeValue" type="number" class="w-full p-4 rounded-xl">
-                    </div>
-                    <button @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl hover:brightness-110 transition-all cursor-pointer">存入金庫系統</button>
-                </div>
-            </div>
-        </section>
+    <main>
+        <section v-if="page === 1" class="max-w-xl mx-auto">
+            <div class="luxury-card p-10 rounded-3xl border-t-2 border-t-gold/50">
+                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">ITEM REGISTRATION</h2>
+                <div class="space-y-6 text-sm">
+                    <div>
+                        <label class="block opacity-40 mb-2">物品名稱 / Name</label>
+                        <input v-model="newItem.name" type="text" class="w-full p-4 rounded-xl">
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block opacity-40 mb-2">類別 / Category</label>
+                            <select v-model="newItem.category" class="w-full p-4 rounded-xl">
+                                <option value="藥劑">藥劑/染劑</option>
+                                <option value="耗材">備品耗材</option>
+                                <option value="奢華">精品客供</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block opacity-40 mb-2">當前存量</label>
+                            <input v-model.number="newItem.stock" type="number" class="w-full p-4 rounded-xl">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block opacity-40 mb-2">安全水位 / Safety Line</label>
+                        <input v-model.number="newItem.safeValue" type="number" class="w-full p-4 rounded-xl">
+                    </div>
+                    <button @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl">存入金庫系統</button>
+                </div>
+            </div>
+        </section>
 
-        <section v-if="page === 2">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div v-for="item in items" :key="item.id" class="luxury-card p-6 rounded-2xl h-60 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between">
-                            <span class="text-[9px] text-gold border border-gold/30 px-2 py-1 rounded">{{ item.category }}</span>
-                            <span v-if="item.stock <= item.safeValue" class="text-red-500 text-[9px] font-bold animate-pulse">REFILL NEEDED</span>
-                        </div>
-                        <h3 class="text-xl mt-4 tracking-wider">{{ item.name }}</h3>
-                    </div>
-                    <div class="flex justify-between items-end">
-                        <div class="text-4xl font-light text-white">{{ item.stock }}<span class="text-xs opacity-30 ml-1">UNITS</span></div>
-                        <div class="flex gap-2">
-                            <button @click="updateStock(item, -1)" class="w-10 h-10 border border-gold/30 rounded-lg hover:bg-gold hover:text-black transition-all bg-transparent cursor-pointer">－</button>
-                            <button @click="updateStock(item, 1)" class="w-10 h-10 border border-gold/30 rounded-lg hover:bg-gold hover:text-black transition-all bg-transparent cursor-pointer">＋</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section v-if="page === 2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div v-for="item in items" :key="item.id" class="luxury-card p-6 rounded-2xl h-60 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between">
+                            <span class="text-[9px] text-gold border border-gold/30 px-2 py-1 rounded">{{ item.category }}</span>
+                            <span v-if="item.stock <= item.safeValue" class="text-red-500 text-[9px] font-bold animate-pulse">REFILL NEEDED</span>
+                        </div>
+                        <h3 class="text-xl mt-4 tracking-wider">{{ item.name }}</h3>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div class="text-4xl font-light text-white">{{ item.stock }}<span class="text-xs opacity-30 ml-1">UNITS</span></div>
+                        <div class="flex gap-2">
+                            <button @click="updateStock(item, -1)" class="w-10 h-10 border border-gold/30 rounded-lg hover:bg-gold hover:text-black transition-all bg-transparent cursor-pointer">－</button>
+                            <button @click="updateStock(item, 1)" class="w-10 h-10 border border-gold/30 rounded-lg hover:bg-gold hover:text-black transition-all bg-transparent cursor-pointer">＋</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <section v-if="page === 3" class="max-w-6xl mx-auto space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div v-for="type in reportLogic" :key="type.title" class="luxury-card p-6 rounded-2xl border-t-4" :style="{borderColor: type.color}">
-                    <h4 class="text-xs font-bold mb-4" :style="{color: type.color}">{{ type.title }}</h4>
-                    <div class="space-y-2 h-40 overflow-y-auto pr-2">
-                        <div v-for="i in type.list" :key="i.id" class="flex justify-between text-xs border-b border-white/5 pb-2">
-                            <span>{{ i.name }}</span>
-                            <span class="opacity-60">{{ i.stock }}件</span>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-[10px] opacity-50 italic">建議：{{ type.advice }}</p>
-                </div>
-            </div>
-            
-            <div class="luxury-card p-10 rounded-3xl text-center">
-                <h3 class="gold-text text-xl mb-6 tracking-[8px]">BUSINESS ANALYSIS</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <div><p class="text-[10px] opacity-40 mb-1">庫存總項目</p><p class="text-2xl gold-text font-bold">{{ items.length }}</p></div>
-                    <div><p class="text-[10px] opacity-40 mb-1">警示項目</p><p class="text-2xl gold-text font-bold text-red-500">{{ reportLogic[0].list.length }}</p></div>
-                    <div><p class="text-[10px] opacity-40 mb-1">健康比例</p><p class="text-2xl gold-text font-bold">{{ Math.round((reportLogic[1].list.length/items.length)*100 || 0) }}%</p></div>
-                </div>
-            </div>
-        </section>
-    </main>
+        <section v-if="page === 3" class="max-w-6xl mx-auto space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div v-for="type in reportLogic" :key="type.title" class="luxury-card p-6 rounded-2xl border-t-4" :style="{borderColor: type.color}">
+                    <h4 class="text-xs font-bold mb-4" :style="{color: type.color}">{{ type.title }}</h4>
+                    <div class="space-y-2 h-40 overflow-y-auto pr-2">
+                        <div v-for="i in type.list" :key="i.id" class="flex justify-between text-xs border-b border-white/5 pb-2">
+                            <span>{{ i.name }}</span>
+                            <span class="opacity-60">{{ i.stock }}件</span>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-[10px] opacity-50 italic">建議：{{ type.advice }}</p>
+                </div>
+            </div>
+            
+            <div class="luxury-card p-10 rounded-3xl text-center">
+                <h3 class="gold-text text-xl mb-6 tracking-[8px]">BUSINESS ANALYSIS</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div><p class="text-[10px] opacity-40 mb-1">今日總額</p><p class="text-2xl gold-text font-bold">$12,800</p></div>
+                    <div><p class="text-[10px] opacity-40 mb-1">客單分析</p><p class="text-2xl gold-text font-bold">$2,560</p></div>
+                    <div><p class="text-[10px] opacity-40 mb-1">銷售佔比</p><p class="text-2xl gold-text font-bold">18.5%</p></div>
+                </div>
+            </div>
+        </section>
+    </main>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 使用 mentor-app-b76e3 配置
-    const firebaseConfig = {
-        apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
-        authDomain: "mentor-app-b76e3.firebaseapp.com",
-        projectId: "mentor-app-b76e3",
-        storageBucket: "mentor-app-b76e3.firebasestorage.app",
-        messagingSenderId: "757249551762",
-        appId: "1:757249551762:web:512533e0a85dc1ad47654b"
-    };
+    // 使用你統一的 Firebase 設定
+    const firebaseConfig = {
+        apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+        authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+        databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+        projectId: "holyhairsalon-f73bf",
+        storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
+        messagingSenderId: "960169055224",
+        appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
+    };
 
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getFirestore(firebaseApp);
-    const { createApp, ref, computed, onMounted } = Vue;
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+    const { createApp, ref, computed, onMounted } = Vue;
 
-    createApp({
-        setup() {
-            const page = ref(2);
-            const items = ref([]);
-            const newItem = ref({ name: '', category: '藥劑', stock: 0, safeValue: 5 });
+    createApp({
+        setup() {
+            const page = ref(2);
+            const items = ref([]);
+            const newItem = ref({ name: '', category: '藥劑', stock: 0, safeValue: 5 });
 
-            // 即時監聽資料庫
-            onMounted(() => {
-                const q = query(collection(db, "inventory"));
-                onSnapshot(q, (snap) => {
-                    items.value = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                });
-            });
+            onMounted(() => {
+                onSnapshot(query(collection(db, "inventory")), (snap) => {
+                    items.value = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                });
+            });
 
-            const addItem = async () => {
-                if (!newItem.value.name) return alert("請輸入物品名稱");
-                try {
-                    await addDoc(collection(db, "inventory"), { ...newItem.value, createdAt: Date.now() });
-                    newItem.value = { name: '', category: '藥劑', stock: 0, safeValue: 5 };
-                    alert("✨ 物品已安全存入庫存系統");
-                    page.value = 2; // 自動跳轉回列表
-                } catch (e) { alert("系統同步失敗: " + e.message); }
-            };
+            const addItem = async () => {
+                if (!newItem.value.name) {
+                    alert("請輸入名稱");
+                    return;
+                }
+                await addDoc(collection(db, "inventory"), newItem.value);
+                newItem.value = { name: '', category: '藥劑', stock: 0, safeValue: 5 };
+                alert("物品已安全存入庫存系統");
+            };
 
-            const updateStock = async (item, change) => {
-                const newStock = Math.max(0, item.stock + change);
-                await updateDoc(doc(db, "inventory", item.id), { stock: newStock });
-            };
+            const updateStock = async (item, change) => {
+                const newStock = Math.max(0, item.stock + change);
+                await updateDoc(doc(db, "inventory", item.id), { stock: newStock });
+            };
 
-            const reportLogic = computed(() => [
-                { title: '🆘 不足量補貨', color: '#ff4d4d', advice: '請儘快補貨，避免斷貨風險。', list: items.value.filter(i => i.stock <= i.safeValue) },
-                { title: '✅ 均量保持', color: '#d4af37', advice: '現狀良好，暫無需變動。', list: items.value.filter(i => i.stock > i.safeValue && i.stock <= i.safeValue * 2) },
-                { title: '📈 主力推薦', color: '#4da6ff', advice: '過量一倍，建議列為本週主力品項。', list: items.value.filter(i => i.stock > i.safeValue * 2 && i.stock <= i.safeValue * 3) },
-                { title: '🔥 促銷處理', color: '#ff944d', advice: '過量二倍以上，建議立即執行促銷。', list: items.value.filter(i => i.stock > i.safeValue * 3) }
-            ]);
+            const reportLogic = computed(() => [
+                { title: '🆘 不足量補貨', color: '#ff4d4d', advice: '請儘快補貨，避免斷貨風險。', 
+                  list: items.value.filter(i => i.stock <= i.safeValue) },
+                { title: '✅ 均量保持', color: '#d4af37', advice: '現狀良好，暫無需變動。', 
+                  list: items.value.filter(i => i.stock > i.safeValue && i.stock <= i.safeValue * 2) },
+                { title: '📈 主力推薦', color: '#4da6ff', advice: '過量一倍，建議列為本週主力推薦品項。', 
+                  list: items.value.filter(i => i.stock > i.safeValue * 2 && i.stock <= i.safeValue * 3) },
+                { title: '🔥 促銷處理', color: '#ff944d', advice: '過量二倍以上，建議立即執行促銷活動。', 
+                  list: items.value.filter(i => i.stock > i.safeValue * 3) }
+            ]);
 
-            const downloadCombinedReport = () => {
-                const now = new Date();
-                let content = `【 LUXE MANAGEMENT - 庫存即時分析報告 】\n報告時間: ${now.toLocaleString()}\n${'='.repeat(50)}\n\n`;
-                
-                content += `[ 庫存清冊 ]\n`;
-                items.value.forEach(i => content += `- ${i.name} (${i.category}): ${i.stock}件 (安全線:${i.safeValue})\n`);
+            const downloadCombinedReport = () => {
+                const now = new Date();
+                let content = `【 LUXE MANAGEMENT - 綜合營運庫存月結報告 】\n`;
+                content += `產出時間: ${now.toLocaleString()}\n${'='.repeat(60)}\n\n`;
 
-                content += `\n[ 營運建議 ]\n`;
-                reportLogic.value.forEach(type => {
-                    if(type.list.length > 0) {
-                        content += `▶ ${type.title}: ${type.list.map(i => i.name).join(', ')}\n   策略：${type.advice}\n\n`;
-                    }
-                });
+                content += `[ 第一部分：全庫存狀態清冊 ]\n`;
+                items.value.forEach(i => {
+                    content += `- ${i.name.padEnd(15)} | 分類: ${i.category} | 當前庫存: ${i.stock} | 安全水位: ${i.safeValue}\n`;
+                });
 
-                const blob = new Blob(["\ufeff" + content], { type: "text/plain;charset=utf-8" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `LUXE_Report_${now.getTime()}.txt`;
-                a.click();
-            };
+                content += `\n\n[ 第二部分：營運階梯建議報告 ]\n`;
+                reportLogic.value.forEach(type => {
+                    content += `\n▶ ${type.title} (共 ${type.list.length} 項)\n`;
+                    content += `建議方針：${type.advice}\n`;
+                    type.list.forEach(i => content += `   - ${i.name} (庫存:${i.stock})\n`);
+                });
 
-            return { page, items, newItem, addItem, updateStock, reportLogic, downloadCombinedReport };
-        }
-    }).mount('#app');
+                const blob = new Blob(["\ufeff" + content], { type: "text/plain;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `LUXE_Inventory_Report_${now.getTime()}.txt`;
+                a.click();
+            };
+
+            return { page, items, newItem, addItem, updateStock, reportLogic, downloadCombinedReport };
+        }
+    }).mount('#app');
 </script>
 
 </body>
