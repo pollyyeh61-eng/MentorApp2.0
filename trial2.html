@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUXE Salon | 數位經營總部</title>
+    <title>美髮經營學-正式線上課程</title>
     <style>
+        /* CSS 樣式：黑金色低調奢華風格設計 */
         :root {
             --bg-color: #0a0a0a;
             --container-bg: #121212;
@@ -24,189 +25,188 @@
             margin: 0;
             background-color: var(--bg-color);
             color: #ffffff;
-            overflow-x: hidden;
         }
 
-        /* 系統導航列 */
-        .side-nav {
-            position: fixed;
-            left: 15px;
-            top: 55%; /* 微調位置以容納更多按鈕 */
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 100;
+        /* 呼吸發光動畫定義 */
+        @keyframes breath {
+            0% { border-color: var(--gold-dim); box-shadow: 0 0 5px rgba(138, 109, 59, 0.2); }
+            50% { border-color: var(--gold-bright); box-shadow: 0 0 20px var(--gold-glow); }
+            100% { border-color: var(--gold-dim); box-shadow: 0 0 5px rgba(138, 109, 59, 0.2); }
         }
 
-        .nav-icon-btn {
-            width: 45px; height: 45px;
-            background: rgba(20,20,20,0.9);
-            border: 1px solid var(--gold-dim);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 18px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-        }
-
-        .nav-icon-btn:hover {
-            border-color: var(--gold-bright);
-            background: var(--gold-bright);
-            transform: scale(1.1);
-        }
-
-        /* 容器與掃描線 */
         .container {
             width: 900px;
-            max-width: 92%;
-            padding: 40px 20px; 
+            max-width: 95%;
+            padding: 30px 20px; 
             box-sizing: border-box;
             background: var(--container-bg);
             border: 2px solid var(--gold-dim); 
             position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
         }
 
-        .container::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
-            animation: scan 10s linear infinite; opacity: 0.15; pointer-events: none;
-        }
-        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
-
-        /* 外部連結文字 */
+        /* 外部總控連結樣式 */
         .external-link-text {
-            position: absolute; font-size: 16px; font-weight: bold;
-            color: var(--gold-dim); writing-mode: vertical-rl; 
-            text-orientation: upright; cursor: pointer; transition: 0.3s;
+            position: absolute;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--gold-dim);
+            writing-mode: vertical-rl; 
+            text-orientation: upright;
+            cursor: pointer; 
+            transition: all 0.4s ease;
+            transform: none !important; 
         }
-        .external-link-text:hover { color: var(--gold-bright); transform: translateY(-50%) scale(1.1); }
+        .external-link-text:hover {
+            color: var(--gold-bright);
+            text-shadow: 0 0 10px var(--gold-bright);
+        }
         
-        .text-management { top: 50%; left: -30px; transform: translateY(-50%); }
-        .text-preface { top: 50%; left: -55px; transform: translateY(-50%); }
-        .text-holding { top: 50%; right: -55px; transform: translateY(-50%); } 
+        .text-management { top: 50%; left: -35px; transform: translateY(-50%) !important; }
+        .text-preface { top: 50%; left: -65px; transform: translateY(-50%) !important; }
+        .text-holding-label { top: 50%; right: -35px; transform: translateY(-50%) !important; }
+        .text-holding { top: 50%; right: -65px; transform: translateY(-50%) !important; } 
 
         .top-bottom-mgt-text {
-            position: absolute; left: 50%; transform: translateX(-50%); 
-            font-size: 18px; font-weight: bold; color: var(--gold-dim); cursor: pointer;
-            transition: 0.3s;
-        }
-        .top-bottom-mgt-text:hover { color: var(--gold-bright); transform: translateX(-50%) scale(1.1); }
-        .text-top-mgt { top: 8px; } 
-        .text-cost-mgt { bottom: 8px; } 
-
-        /* 網格佈局 */
-        .management-grid {
-            display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 12px;
-            padding: 25px 0; border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-
-        .block {
-            padding: 15px; border-radius: 8px; text-align: center;
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--gold-dim);
-            transition: 0.4s; cursor: pointer;
-        }
-        .block:hover { border-color: var(--gold-bright); background: rgba(212, 175, 55, 0.08); }
-
-        .main-title { font-size: 16px; font-weight: bold; color: var(--gold-bright); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        
-        .sub-items { list-style: none; padding: 0; text-align: left; margin: 0; }
-        .sub-items li { 
-            margin-bottom: 8px; 
-            font-size: 13px; 
-            color: var(--text-silver); 
-            transition: 0.3s; 
+            position: absolute; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 20px; 
+            font-weight: bold;
+            color: var(--gold-dim); 
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
+            transition: all 0.4s ease;
+            width: 150px; 
+            text-align: center;
+            z-index: 10; 
+            margin: 0 !important; 
         }
-        .sub-items li:hover { 
-            color: var(--gold-bright); 
-            background: rgba(212, 175, 55, 0.15);
-            padding-left: 12px; 
+        .top-bottom-mgt-text:hover { color: var(--gold-bright); text-shadow: 0 0 10px var(--gold-bright); }
+        .text-top-mgt { top: 0; padding-top: 5px; } 
+        .text-cost-mgt { bottom: 0; padding-bottom: 5px; } 
+
+        /* 主要區塊佈局 */
+        .management-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr; 
+            gap: 15px;
+            padding: 30px 0; 
+            position: relative;
+            border: 1px solid #333;
         }
 
-        @media (max-width: 600px) {
-            .side-nav { left: 8px; top: 60%; }
-            .nav-icon-btn { width: 38px; height: 38px; font-size: 16px; }
+        /* 呼吸感按鈕基礎樣式 */
+        .block {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--gold-dim);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; 
+            animation: breath 4s infinite ease-in-out;
         }
+
+        /* 滑鼠滑過色彩變化 (Individual Spectrum Colors) */
+        /* 左外部：翡翠光 */
+        .block-side[data-link-id="left-external"]:hover { border-color: #00ff88 !important; box-shadow: 0 0 25px rgba(0, 255, 136, 0.4); transform: scale(1.02); }
+        /* 上外部：金黃光 */
+        .block-top:hover { border-color: #ffea00 !important; box-shadow: 0 0 25px rgba(255, 234, 0, 0.4); transform: scale(1.02); }
+        /* 內部：琥珀光 */
+        .block-middle:hover { border-color: #ff9100 !important; box-shadow: 0 0 25px rgba(255, 145, 0, 0.4); transform: scale(1.02); }
+        /* 下外部：玫瑰紅 */
+        .block-bottom:hover { border-color: #ff0077 !important; box-shadow: 0 0 25px rgba(255, 0, 119, 0.4); transform: scale(1.02); }
+        /* 右外部：寶石藍 */
+        .block-side[data-link-id="right-external"]:hover { border-color: #00d9ff !important; box-shadow: 0 0 25px rgba(0, 217, 255, 0.4); transform: scale(1.02); }
+
+        .sub-items { list-style: none; padding: 0; text-align: left; margin-top: 10px; }
+        .sub-items li { margin-bottom: 5px; font-size: 15px; cursor: pointer; color: var(--text-silver); transition: color 0.3s; }
+        .sub-items li:hover { text-decoration: underline; color: #ffffff; }
+
+        .main-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--gold-bright);
+            border-bottom: 1px dashed #444;
+            padding-bottom: 5px;
+        }
+
+        .side-link-text {
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gold-dim);
+        }
+        .side-link-text:hover {
+            text-decoration: underline;
+            color: #ffffff;
+        }
+
+        .side-block { height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .middle-content { display: flex; flex-direction: column; justify-content: space-around; gap: 15px; grid-column: 2 / 3; }
     </style>
 </head>
 <body>
 
-    <div class="side-nav">
-        <a href="index.html" class="nav-icon-btn" title="返回首頁助理">🏠</a>
-        <a href="#" class="nav-icon-btn" title="電子書系統" onclick="navTo('ebook-system')">📖</a>
-        <a href="pos.html" class="nav-icon-btn" title="收銀系統">💰</a>
-        <a href="customer.html" class="nav-icon-btn" title="客戶系統">💎</a>
-        <a href="store.html" class="nav-icon-btn" title="庫存系統">📦</a>
-        <a href="student.html" class="nav-icon-btn" title="訓練系統">🎓</a>
-    </div>
-
     <div class="container">
-        <div class="external-link-text text-preface" onclick="navTo('total-preface')">前言</div>
-        <div class="external-link-text text-management" onclick="navTo('total-management')">管理層</div>
-        <div class="external-link-text text-holding" onclick="navTo('total-holding-label')">控股層</div>
+        <div class="external-link-text text-preface" data-link-id="total-preface">前言</div>
+        <div class="external-link-text text-management" data-link-id="total-management">管理層</div>
+        <div class="external-link-text text-holding" data-link-id="total-holding-label">控股層</div>
         
-        <div class="top-bottom-mgt-text text-top-mgt" onclick="navTo('top-price-mgt')">價格管理</div>
-        <div class="top-bottom-mgt-text text-cost-mgt" onclick="navTo('bottom-cost-mgt')">成本管理</div>
+        <div class="top-bottom-mgt-text text-top-mgt" data-link-id="top-price-mgt">價格管理</div>
+        <div class="top-bottom-mgt-text text-cost-mgt" data-link-id="bottom-cost-mgt">成本管理</div>
         
         <div class="management-grid">
-            <div class="block" onclick="navTo('left-external')" style="display:flex; align-items:center; justify-content:center;">
-                <div>
-                    <div class="main-title">左外部管理</div>
-                    <p class="sub-items" style="text-align:center;"><li onclick="event.stopPropagation(); navTo('supplier-mgt')">供應商協作</li></p>
-                </div>
+
+            <div class="side-block block block-side" data-link-id="left-external">
+                <div class="main-title">左外部管理</div>
+                <div class="side-link-text" data-link-id="supplier-mgt">供應商管理</div> 
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <div class="block" onclick="navTo('top-external-overview')">
+            <div class="middle-content">
+                
+                <div class="block block-top" data-link-id="top-external-overview">
                     <div class="main-title">上外部管理</div>
                     <ul class="sub-items">
-                        <li onclick="event.stopPropagation(); navTo('customer-mgt')">1. 顧客管理系統</li>
-                        <li onclick="event.stopPropagation(); navTo('sentiment-mgt')">2. 客情分析報告</li>
-                        <li onclick="event.stopPropagation(); navTo('booking-mgt')">3. 預約管理課程</li>
+                        <li data-link-id="customer-mgt">1. 顧客管理</li>
+                        <li data-link-id="sentiment-mgt">2. 客情管理</li>
+                        <li data-link-id="booking-mgt">3. 預約管理</li>
                     </ul>
                 </div>
-                
-                <div class="block" onclick="navTo('internal-operations-overview')">
-                    <div class="main-title">核心內部管理</div>
+
+                <div class="block block-middle" data-link-id="internal-operations-overview">
+                    <div class="main-title">內部管理</div>
                     <ul class="sub-items">
-                        <li onclick="event.stopPropagation(); navTo('financial-mgt')">1. 財務收銀系統</li>
-                        <li onclick="event.stopPropagation(); navTo('talent-mgt')">2. 人才訓練系統</li>
-                        <li onclick="event.stopPropagation(); navTo('inventory-mgt')">3. 庫存金庫系統</li>
+                        <li data-link-id="financial-mgt">1. 財務管理</li>
+                        <li data-link-id="talent-mgt">2. 人才管理</li>
+                        <li data-link-id="inventory-mgt">3. 庫存管理</li>
                     </ul>
                 </div>
-                
-                <div class="block" onclick="navTo('bottom-external-overview')">
+
+                <div class="block block-bottom" data-link-id="bottom-external-overview">
                     <div class="main-title">下外部管理</div>
                     <ul class="sub-items">
-                        <li onclick="event.stopPropagation(); navTo('marketing-mgt')">1. 行銷漏斗策略</li>
-                        <li onclick="event.stopPropagation(); navTo('activity-mgt')">2. 活動管理實務</li>
-                        <li onclick="event.stopPropagation(); navTo('community-mgt')">3. 社區美感經營</li>
+                        <li data-link-id="marketing-mgt">1. 行銷管理</li>
+                        <li data-link-id="activity-mgt">2. 活動管理</li>
+                        <li data-link-id="community-mgt">3. 社區管理</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="block" onclick="navTo('right-external')" style="display:flex; align-items:center; justify-content:center;">
-                <div>
-                    <div class="main-title">右外部管理</div>
-                    <p class="sub-items" style="text-align:center;"><li onclick="event.stopPropagation(); navTo('brand-mgt')">品牌視覺資產</li></p>
-                </div>
+            <div class="side-block block block-side" data-link-id="right-external">
+                <div class="main-title">右外部管理</div>
+                <div class="side-link-text" data-link-id="brand-mgt">品牌管理</div>
             </div>
+
         </div>
+
     </div>
 
     <script>
+        // 完全保留原始連結設定
         const linkUrls = {
-            // 電子書系統 (Google Apps Script 連結)
-            'ebook-system': 'https://script.google.com/macros/s/AKfycbzYzDuMASjfu6KG-RKi-4X8zDSZ7xed1hW-Hmb06rKgu7Mi5wybPR8ZDjueNSPAYlyq/exec',
-            
             'top-price-mgt': 'https://sites.google.com/view/webcourse001/%E5%83%B9%E6%A0%BC%E7%AE%A1%E7%90%86',
             'bottom-cost-mgt': 'https://drive.google.com/file/d/14qUKcjBlMhrGQpNFsb5CUxfUWHeBagkP/view?usp=sharing',
             'total-preface': 'https://sites.google.com/view/webcourse001/%E5%89%8D%E8%A8%80/',
@@ -230,14 +230,25 @@
             'brand-mgt': 'https://sites.google.com/view/webcourse001/%E5%93%81%E7%89%8C%E7%AE%A1%E7%90%86',
         };
 
-        function navTo(key) {
-            const url = linkUrls[key];
-            if (url) {
-                window.open(url, '_blank');
-            } else {
-                console.error("找不到對應網址: " + key);
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickableElements = document.querySelectorAll('[data-link-id]');
+            clickableElements.forEach(element => {
+                const linkId = element.getAttribute('data-link-id');
+                const url = linkUrls[linkId];
+
+                if (url && url !== '#') {
+                    element.addEventListener('click', (event) => {
+                        const isSubItem = element.tagName === 'LI';
+                        if (element.classList.contains('block') && !isSubItem) {
+                            if (event.target.closest('li') || event.target.classList.contains('side-link-text')) {
+                                return; 
+                            }
+                        }
+                        window.open(url, '_blank');
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
