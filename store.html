@@ -9,102 +9,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --gold: #d4af37;
-            --light-gold: #fcf6ba;
-            --dark-gold: #926f34;
-            --black: #050505;
-        }
-
-        /* 奢華黑金返回按鈕 */
+        :root { --gold: #d4af37; --light-gold: #fcf6ba; --black: #050505; }
+        
         .luxury-back-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            background: rgba(5, 5, 5, 0.85);
-            border: 1px solid var(--gold);
-            border-radius: 30px;
-            color: var(--light-gold);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        .luxury-back-btn:hover {
-            background: var(--gold);
-            color: #000;
-            transform: translateY(-2px);
+            position: fixed; top: 15px; left: 15px; z-index: 9999;
+            display: flex; align-items: center; gap: 8px; padding: 8px 15px;
+            background: rgba(5, 5, 5, 0.85); border: 1px solid var(--gold);
+            border-radius: 30px; color: var(--light-gold); text-decoration: none;
+            font-size: 13px; font-weight: bold; backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); transition: all 0.3s ease;
         }
 
         body {
-            background-color: var(--black);
-            color: #e0e0e0;
-            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--black); color: #e0e0e0; font-family: 'Noto Sans TC', sans-serif;
             background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
-            min-height: 100vh;
-            margin: 0;
+            min-height: 100vh; margin: 0;
         }
 
         .gold-text {
             font-family: 'Cinzel', serif;
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* 按鈕與導航樣式 */
         .nav-btn {
-            position: relative; padding: 10px 20px;
-            color: rgba(255,255,255,0.5); font-size: 12px;
-            letter-spacing: 2px; transition: all 0.4s;
-            background: none; cursor: pointer; border: 1px solid transparent;
+            padding: 10px 20px; color: rgba(255,255,255,0.5); font-size: 12px;
+            letter-spacing: 2px; transition: all 0.4s; background: none; cursor: pointer; border: 1px solid transparent;
         }
-        .nav-btn.active {
-            color: var(--gold);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            background: rgba(212, 175, 55, 0.1);
-        }
+        .nav-btn.active { color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.1); }
 
-        /* 呼吸感卡片 */
         .luxury-card {
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            backdrop-filter: blur(10px);
-            animation: breathe 6s infinite ease-in-out;
+            background: rgba(20, 20, 20, 0.8); border: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px); animation: breathe 6s infinite ease-in-out;
         }
-        @keyframes breathe {
-            0%, 100% { border-color: rgba(212, 175, 55, 0.15); }
-            50% { border-color: rgba(212, 175, 55, 0.4); }
-        }
+        @keyframes breathe { 0%, 100% { border-color: rgba(212, 175, 55, 0.15); } 50% { border-color: rgba(212, 175, 55, 0.4); } }
 
-        input, select {
-            background: rgba(0,0,0,0.4) !important;
-            border: 1px solid rgba(212, 175, 55, 0.2) !important;
-            color: #fff !important; outline: none;
-        }
-
-        .gold-btn-main {
-            background: linear-gradient(135deg, #b38728, #fcf6ba, #aa771c);
-            color: #000; font-weight: 700; letter-spacing: 4px;
-        }
+        input, select { background: rgba(0,0,0,0.4) !important; border: 1px solid rgba(212, 175, 55, 0.2) !important; color: #fff !important; outline: none; }
+        .gold-btn-main { background: linear-gradient(135deg, #b38728, #fcf6ba, #aa771c); color: #000; font-weight: 700; letter-spacing: 4px; }
     </style>
 </head>
 <body>
 
-<a href="index.html" class="luxury-back-btn">
-    <span>🏠</span> 返回首頁
-</a>
+<a href="index.html" class="luxury-back-btn"><span>🏠</span> 返回首頁</a>
 
-<div id="app" class="p-6 md:p-12 pt-20"> <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
+<div id="app" class="p-6 md:p-12 pt-20">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
         <h1 class="text-4xl gold-text font-bold tracking-[0.2em]">LUXE INVENTORY</h1>
         <div class="flex items-center gap-4 flex-wrap justify-center">
             <nav class="flex gap-2">
@@ -145,7 +94,7 @@
                         <label class="block opacity-40 mb-2">安全水位 / Safety Line</label>
                         <input v-model.number="newItem.safeValue" type="number" class="w-full p-4 rounded-xl">
                     </div>
-                    <button @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl">存入金庫系統</button>
+                    <button @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl hover:brightness-110 transition-all cursor-pointer">存入金庫系統</button>
                 </div>
             </div>
         </section>
@@ -188,9 +137,9 @@
             <div class="luxury-card p-10 rounded-3xl text-center">
                 <h3 class="gold-text text-xl mb-6 tracking-[8px]">BUSINESS ANALYSIS</h3>
                 <div class="grid grid-cols-3 gap-4">
-                    <div><p class="text-[10px] opacity-40 mb-1">今日總額</p><p class="text-2xl gold-text font-bold">$12,800</p></div>
-                    <div><p class="text-[10px] opacity-40 mb-1">客單分析</p><p class="text-2xl gold-text font-bold">$2,560</p></div>
-                    <div><p class="text-[10px] opacity-40 mb-1">銷售佔比</p><p class="text-2xl gold-text font-bold">18.5%</p></div>
+                    <div><p class="text-[10px] opacity-40 mb-1">庫存總項目</p><p class="text-2xl gold-text font-bold">{{ items.length }}</p></div>
+                    <div><p class="text-[10px] opacity-40 mb-1">警示項目</p><p class="text-2xl gold-text font-bold text-red-500">{{ reportLogic[0].list.length }}</p></div>
+                    <div><p class="text-[10px] opacity-40 mb-1">健康比例</p><p class="text-2xl gold-text font-bold">{{ Math.round((reportLogic[1].list.length/items.length)*100 || 0) }}%</p></div>
                 </div>
             </div>
         </section>
@@ -199,17 +148,16 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 使用你統一的 Firebase 設定
+    // 使用 mentor-app-b76e3 配置
     const firebaseConfig = {
-        apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
-        authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-        databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
-        projectId: "holyhairsalon-f73bf",
-        storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
-        messagingSenderId: "960169055224",
-        appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
+        apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
+        authDomain: "mentor-app-b76e3.firebaseapp.com",
+        projectId: "mentor-app-b76e3",
+        storageBucket: "mentor-app-b76e3.firebasestorage.app",
+        messagingSenderId: "757249551762",
+        appId: "1:757249551762:web:512533e0a85dc1ad47654b"
     };
 
     const firebaseApp = initializeApp(firebaseConfig);
@@ -222,20 +170,22 @@
             const items = ref([]);
             const newItem = ref({ name: '', category: '藥劑', stock: 0, safeValue: 5 });
 
+            // 即時監聽資料庫
             onMounted(() => {
-                onSnapshot(query(collection(db, "inventory")), (snap) => {
+                const q = query(collection(db, "inventory"));
+                onSnapshot(q, (snap) => {
                     items.value = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 });
             });
 
             const addItem = async () => {
-                if (!newItem.value.name) {
-                    alert("請輸入名稱");
-                    return;
-                }
-                await addDoc(collection(db, "inventory"), newItem.value);
-                newItem.value = { name: '', category: '藥劑', stock: 0, safeValue: 5 };
-                alert("物品已安全存入庫存系統");
+                if (!newItem.value.name) return alert("請輸入物品名稱");
+                try {
+                    await addDoc(collection(db, "inventory"), { ...newItem.value, createdAt: Date.now() });
+                    newItem.value = { name: '', category: '藥劑', stock: 0, safeValue: 5 };
+                    alert("✨ 物品已安全存入庫存系統");
+                    page.value = 2; // 自動跳轉回列表
+                } catch (e) { alert("系統同步失敗: " + e.message); }
             };
 
             const updateStock = async (item, change) => {
@@ -244,38 +194,31 @@
             };
 
             const reportLogic = computed(() => [
-                { title: '🆘 不足量補貨', color: '#ff4d4d', advice: '請儘快補貨，避免斷貨風險。', 
-                  list: items.value.filter(i => i.stock <= i.safeValue) },
-                { title: '✅ 均量保持', color: '#d4af37', advice: '現狀良好，暫無需變動。', 
-                  list: items.value.filter(i => i.stock > i.safeValue && i.stock <= i.safeValue * 2) },
-                { title: '📈 主力推薦', color: '#4da6ff', advice: '過量一倍，建議列為本週主力推薦品項。', 
-                  list: items.value.filter(i => i.stock > i.safeValue * 2 && i.stock <= i.safeValue * 3) },
-                { title: '🔥 促銷處理', color: '#ff944d', advice: '過量二倍以上，建議立即執行促銷活動。', 
-                  list: items.value.filter(i => i.stock > i.safeValue * 3) }
+                { title: '🆘 不足量補貨', color: '#ff4d4d', advice: '請儘快補貨，避免斷貨風險。', list: items.value.filter(i => i.stock <= i.safeValue) },
+                { title: '✅ 均量保持', color: '#d4af37', advice: '現狀良好，暫無需變動。', list: items.value.filter(i => i.stock > i.safeValue && i.stock <= i.safeValue * 2) },
+                { title: '📈 主力推薦', color: '#4da6ff', advice: '過量一倍，建議列為本週主力品項。', list: items.value.filter(i => i.stock > i.safeValue * 2 && i.stock <= i.safeValue * 3) },
+                { title: '🔥 促銷處理', color: '#ff944d', advice: '過量二倍以上，建議立即執行促銷。', list: items.value.filter(i => i.stock > i.safeValue * 3) }
             ]);
 
             const downloadCombinedReport = () => {
                 const now = new Date();
-                let content = `【 LUXE MANAGEMENT - 綜合營運庫存月結報告 】\n`;
-                content += `產出時間: ${now.toLocaleString()}\n${'='.repeat(60)}\n\n`;
+                let content = `【 LUXE MANAGEMENT - 庫存即時分析報告 】\n報告時間: ${now.toLocaleString()}\n${'='.repeat(50)}\n\n`;
+                
+                content += `[ 庫存清冊 ]\n`;
+                items.value.forEach(i => content += `- ${i.name} (${i.category}): ${i.stock}件 (安全線:${i.safeValue})\n`);
 
-                content += `[ 第一部分：全庫存狀態清冊 ]\n`;
-                items.value.forEach(i => {
-                    content += `- ${i.name.padEnd(15)} | 分類: ${i.category} | 當前庫存: ${i.stock} | 安全水位: ${i.safeValue}\n`;
-                });
-
-                content += `\n\n[ 第二部分：營運階梯建議報告 ]\n`;
+                content += `\n[ 營運建議 ]\n`;
                 reportLogic.value.forEach(type => {
-                    content += `\n▶ ${type.title} (共 ${type.list.length} 項)\n`;
-                    content += `建議方針：${type.advice}\n`;
-                    type.list.forEach(i => content += `   - ${i.name} (庫存:${i.stock})\n`);
+                    if(type.list.length > 0) {
+                        content += `▶ ${type.title}: ${type.list.map(i => i.name).join(', ')}\n   策略：${type.advice}\n\n`;
+                    }
                 });
 
                 const blob = new Blob(["\ufeff" + content], { type: "text/plain;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = `LUXE_Inventory_Report_${now.getTime()}.txt`;
+                a.download = `LUXE_Report_${now.getTime()}.txt`;
                 a.click();
             };
 
