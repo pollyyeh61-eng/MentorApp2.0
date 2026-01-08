@@ -6,148 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>活力美髮線上學堂</title>
     <style>
+        /* 保留你原本的所有奢華黑金 CSS 樣式 */
         :root {
             --bg: #080808;
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
-            --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
-            --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
         }
-
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
             color: var(--gold);
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 10px 15px;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 10px 15px;
         }
-
-        .top-nav {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px 0;
-            gap: 10px;
-            z-index: 100;
-        }
-        .nav-btn {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .top-nav { width: 100%; display: flex; justify-content: flex-end; padding: 10px 0; gap: 10px; z-index: 100; }
+        .nav-btn { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
         .nav-btn:hover { background: var(--gold); color: #000; }
-
-        header h1 {
-            font-size: 1.8rem;
-            letter-spacing: 5px;
-            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 700;
-        }
-
+        header h1 { font-size: 1.8rem; letter-spacing: 5px; background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; text-align: center; font-weight: 700; }
         .main-container { width: 100%; max-width: 350px; }
-
-        .btn-large, .btn {
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: var(--gold);
-            display: flex;
-            transition: all 0.4s ease;
-        }
-
-        .btn-large {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid var(--gold);
-            border-radius: 14px;
-            padding: 20px;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        .btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 16px;
-            padding: 22px 10px;
-            flex-direction: column;
-            align-items: center;
-            animation: breathe 4s infinite ease-in-out;
-        }
-
-        @keyframes breathe {
-            0%, 100% { border-color: rgba(212, 175, 55, 0.2); }
-            50% { border-color: rgba(212, 175, 55, 0.5); }
-        }
-
+        .btn-large { background: rgba(212, 175, 55, 0.08); border: 1px solid var(--gold); border-radius: 14px; padding: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; cursor: pointer; }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; padding: 22px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; animation: breathe 4s infinite ease-in-out; }
+        @keyframes breathe { 0%, 100% { border-color: rgba(212, 175, 55, 0.2); } 50% { border-color: rgba(212, 175, 55, 0.5); } }
         .icon { font-size: 26px; margin-bottom: 12px; }
         .btn-title { font-size: 0.95rem; font-weight: 500; text-align: center; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: #151515;
-            border: 1px solid var(--gold);
-            padding: 20px;
-            border-radius: 20px;
-            width: 85%;
-            max-width: 320px;
-        }
-        .terms-scroll {
-            height: 120px;
-            overflow-y: scroll;
-            background: #000;
-            border: 1px solid #333;
-            padding: 10px;
-            font-size: 0.75rem;
-            color: #ccc;
-            margin: 10px 0;
-            text-align: left;
-        }
-        .checkbox-container {
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        input[type="text"], input[type="password"], input[type="tel"], textarea {
-            width: 100%; background: #000; border: 1px solid #333; color: #fff;
-            padding: 10px; margin: 5px 0; border-radius: 8px; box-sizing: border-box;
-        }
-        .primary-btn {
-            width: 100%; background: var(--gold); color: #000; border: none;
-            padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;
-        }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #151515; border: 1px solid var(--gold); padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; }
+        .terms-scroll { height: 120px; overflow-y: scroll; background: #000; border: 1px solid #333; padding: 10px; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
+        input[type="text"], input[type="password"], input[type="tel"], textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; margin: 5px 0; border-radius: 8px; box-sizing: border-box; }
+        .primary-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
         .primary-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
-
         footer { font-size: 0.7rem; color: var(--gold); opacity: 0.6; padding: 20px; text-align: center; }
     </style>
 </head>
@@ -163,13 +51,11 @@
         </div>
     </div>
 
-    <header>
-        <h1>學堂隨身助理</h1>
-    </header>
+    <header><h1>學堂隨身助理</h1></header>
 
     <div class="main-container">
         <div class="btn-large" onclick="navigateToApp('http://entrance.hairweb.net/')">
-            <div class="icon" style="margin-bottom: 0; margin-right: 12px;">🌐</div>
+            <div class="icon" style="margin-right: 12px;">🌐</div>
             <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台</span>
         </div>
 
@@ -190,19 +76,17 @@
     <div id="auth-modal" class="modal">
         <div class="modal-content">
             <h3 style="text-align:center; margin-top:0;">登入啟動學堂</h3>
-            <input type="text" id="email" placeholder="帳號 / Email">
-            <input type="password" id="password" placeholder="密碼">
+            <input type="text" id="email" placeholder="Email (自動記憶)">
+            <input type="password" id="password" placeholder="通行密碼">
             
             <div id="terms-area">
                 <div class="terms-scroll">
                     <h4>📋 服務條款與個資保護</h4>
                     一、帳號規範：限本人使用，嚴禁轉借他人。<br>
-                    二、個資處理：顧客數據歸屬學員沙龍，平台僅提供加密技術支持。<br>
-                    三、金流聲明：App錢包僅供內部管理記錄，平台不代收法律貨幣。<br>
-                    四、免責聲明：系統目前為測試階段，不可抗力導致中斷平台不負損害賠償。
+                    二、個資處理：顧客數據加密處理，平台僅提供技術支持。<br>
+                    三、免責聲明：測試階段系統可能因更新而中斷。
                 </div>
-
-                <div class="checkbox-container">
+                <div style="font-size:0.8rem; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
                     <input type="checkbox" id="agree-check" onchange="document.getElementById('login-btn').disabled = !this.checked">
                     <label for="agree-check">我已閱讀並同意以上條款</label>
                 </div>
@@ -216,19 +100,10 @@
     <div id="profile-modal" class="modal">
         <div class="modal-content">
             <h3 style="text-align:center">個人會員中心</h3>
-            <div id="photo-p" style="width:80px; height:80px; border:1px dashed var(--gold); border-radius:50%; margin:0 auto 10px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                <img id="my-img" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="hint">📷</span>
-            </div>
-            <input type="file" id="file-i" style="display:none" onchange="previewImg(event)">
-            <div style="display:flex; gap:5px; margin-bottom:10px;">
-                <button class="nav-btn" style="flex:1" onclick="document.getElementById('file-i').click()">換照片</button>
-                <button class="nav-btn" style="flex:1; border-color:#555" onclick="delImg()">刪除</button>
-            </div>
-            <input type="text" id="u-name" placeholder="姓名" oninput="autoSave()">
-            <input type="tel" id="u-phone" placeholder="電話" oninput="autoSave()">
+            <input type="text" id="u-name" placeholder="顯示名稱" oninput="autoSave()">
+            <input type="tel" id="u-phone" placeholder="聯絡電話" oninput="autoSave()">
             <textarea id="u-bio" placeholder="自我介紹" rows="3" oninput="autoSave()"></textarea>
-            <button class="primary-btn" onclick="saveFinal()">修正並永久儲存</button>
+            <button class="primary-btn" onclick="saveFinal()">修正並儲存</button>
             <button class="nav-btn" style="width:100%; margin-top:10px; border:none;" onclick="closeModal('profile-modal')">關閉</button>
         </div>
     </div>
@@ -238,30 +113,29 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
+        // 這是前端專用的 SDK 配置 (非私鑰 JSON)
         const firebaseConfig = {
             apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
             authDomain: "mentor-app-b76e3.firebaseapp.com",
-            databaseURL: "https://mentor-app-b76e3-default-rtdb.firebaseio.com",
             projectId: "mentor-app-b76e3",
             storageBucket: "mentor-app-b76e3.firebasestorage.app",
             messagingSenderId: "757249551762",
-            appId: "1:757249551762:web:512533e0a85dc1ad47654b",
-            measurementId: "G-0FYHJEMPYK"
+            appId: "1:757249551762:web:512533e0a85dc1ad47654b"
         };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         window.auth = auth;
 
+        // 監控登入狀態
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.isLoggedIn = true;
                 document.getElementById('guest-zone').style.display = 'none';
                 document.getElementById('user-zone').style.display = 'block';
-                if (typeof loadLocalData === 'function') loadLocalData();
+                loadLocalData();
+                localStorage.setItem('cached_email', user.email);
             } else {
                 window.isLoggedIn = false;
                 document.getElementById('guest-zone').style.display = 'block';
@@ -269,69 +143,53 @@
             }
         });
 
-        window.navigateToApp = async function(url) {
-            if (!window.isLoggedIn) {
-                alert("請先完成註冊或登入哦！");
-                openAuthModal();
-                return;
-            }
-            const user = auth.currentUser;
-            if (user) {
-                const token = await user.getIdToken();
-                window.location.href = `${url}?token=${token}`;
-            } else {
-                window.location.href = url;
-            }
-        };
-
+        // 處理登入
         window.handleAuth = async function() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                
-                // 登入成功後，記錄已同意條款狀態
                 localStorage.setItem('terms_agreed', 'true');
-                
                 closeModal('auth-modal');
-                alert("歡迎回來！");
+                alert("學堂啟動成功！");
             } catch (e) {
-                console.error(e);
-                alert("登入失敗，請檢查帳密或聯繫導師。");
+                alert("驗證失敗：帳號密碼不正確");
             }
         };
 
-        window.handleLogout = () => signOut(auth);
+        window.handleLogout = () => { if(confirm("確定登出？")) signOut(auth); };
+
+        window.navigateToApp = async function(url) {
+            if (!window.isLoggedIn) {
+                alert("請先完成登入哦！");
+                openAuthModal();
+                return;
+            }
+            // 帶入 Token 到分頁，增加安全性
+            const token = await auth.currentUser.getIdToken();
+            window.location.href = `${url}?token=${token}`;
+        };
     </script>
 
     <script>
-        // 開啟登入視窗並判斷是否需要顯示條款
+        // UI 輔助功能
         function openAuthModal() {
             const hasAgreed = localStorage.getItem('terms_agreed') === 'true';
-            const termsArea = document.getElementById('terms-area');
-            const loginBtn = document.getElementById('login-btn');
-            
-            if (hasAgreed) {
-                termsArea.style.display = 'none'; // 隱藏條款區
-                loginBtn.disabled = false;        // 直接啟用按鈕
-            } else {
-                termsArea.style.display = 'block';
-                loginBtn.disabled = true;
-            }
-            
+            document.getElementById('email').value = localStorage.getItem('cached_email') || '';
+            document.getElementById('terms-area').style.display = hasAgreed ? 'none' : 'block';
+            document.getElementById('login-btn').disabled = !hasAgreed;
             document.getElementById('auth-modal').style.display = 'flex';
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
+        // 個人資料本機快取
         function autoSave() {
             const data = {
                 name: document.getElementById('u-name').value,
                 phone: document.getElementById('u-phone').value,
-                bio: document.getElementById('u-bio').value,
-                photo: document.getElementById('my-img').src
+                bio: document.getElementById('u-bio').value
             };
             localStorage.setItem('hair_member_data', JSON.stringify(data));
         }
@@ -342,38 +200,12 @@
                 document.getElementById('u-name').value = saved.name || '';
                 document.getElementById('u-phone').value = saved.phone || '';
                 document.getElementById('u-bio').value = saved.bio || '';
-                if(saved.photo && saved.photo.startsWith('data:image')) {
-                    const img = document.getElementById('my-img');
-                    img.src = saved.photo;
-                    img.style.display = 'block';
-                    document.getElementById('hint').style.display = 'none';
-                }
             }
-        }
-
-        function previewImg(e) {
-            if (!e.target.files[0]) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.getElementById('my-img');
-                img.src = event.target.result;
-                img.style.display = 'block';
-                document.getElementById('hint').style.display = 'none';
-                autoSave();
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function delImg() {
-            document.getElementById('my-img').src = "";
-            document.getElementById('my-img').style.display = "none";
-            document.getElementById('hint').style.display = "block";
-            autoSave();
         }
 
         function saveFinal() {
             autoSave();
-            alert("會員資料已同步至本機快取！");
+            alert("資料已儲存！");
             closeModal('profile-modal');
         }
     </script>
