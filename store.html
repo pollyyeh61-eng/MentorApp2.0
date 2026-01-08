@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUXE Inventory | 黑金奢華庫存管理</title>
+    <title>黑金奢華庫存管理</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
 
 <div id="app" class="p-6 md:p-12 pt-20"> 
     <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
-        <h1 class="text-4xl gold-text font-bold tracking-[0.2em]">LUXE INVENTORY</h1>
+        <h1 class="text-4xl gold-text font-bold tracking-[0.2em]">美業庫存管理</h1>
         <nav class="flex gap-2">
             <button @click="page = 1" :class="['nav-btn', {active: page === 1}]">資料輸入</button>
             <button @click="page = 2" :class="['nav-btn', {active: page === 2}]">倉庫抽屜</button>
@@ -41,7 +41,7 @@
     <main>
         <section v-if="page === 1" class="max-w-xl mx-auto">
             <div class="luxury-card p-10 rounded-3xl border-t-2 border-t-gold/50">
-                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">ITEM REGISTRATION</h2>
+                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">數位生活/快意人生</h2>
                 <div class="space-y-6 text-sm">
                     <div>
                         <label class="block opacity-40 mb-2">物品名稱 / Name</label>
@@ -66,7 +66,7 @@
                         <input v-model.number="newItem.safeValue" type="number" class="w-full p-4 rounded-xl">
                     </div>
                     <button @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl active:scale-95 transition-transform">
-                        存入金庫系統
+                        存入倉庫系統
                     </button>
                 </div>
             </div>
@@ -187,3 +187,4 @@
 </script>
 </body>
 </html>
+
