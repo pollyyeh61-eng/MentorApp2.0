@@ -63,10 +63,23 @@
             max-width: 450px;
         }
 
+        /* --- 修正後的呼吸動畫：加強了光暈與邊框色偏 --- */
         @keyframes breathing-glow {
-            0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); border-color: var(--low-gold); }
-            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); border-color: var(--bright-gold); }
-            100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); border-color: var(--low-gold); }
+            0% { 
+                box-shadow: 0 0 10px rgba(146, 64, 14, 0.4); 
+                border-color: var(--low-gold);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.6); 
+                border-color: var(--bright-gold);
+                transform: scale(1.01); /* 輕微縮放增加動感 */
+            }
+            100% { 
+                box-shadow: 0 0 10px rgba(146, 64, 14, 0.4); 
+                border-color: var(--low-gold);
+                transform: scale(1);
+            }
         }
 
         @keyframes breathing-bg {
@@ -82,7 +95,10 @@
             padding: 30px;
             text-align: center;
             margin-bottom: 25px;
-            animation: breathing-glow 4s ease-in-out infinite;
+            /* 確保動畫名稱與定義一致 */
+            animation: breathing-glow 3.5s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
         }
 
         .total-amount {
@@ -90,14 +106,14 @@
             font-weight: 900;
             color: var(--text-gold);
             margin: 10px 0;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
         }
 
         .card {
             background: var(--card-bg);
             border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .input-group { margin-bottom: 20px; position: relative; }
