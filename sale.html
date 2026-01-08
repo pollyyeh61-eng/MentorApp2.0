@@ -3,42 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>銷售開發系統</title>
+    <title>銷售開發系統 | LUXE SDK</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
     <style>
         :root { --gold-bright: #fde68a; --gold-main: #d4af37; --gold-dark: #8e6d13; --bg-black: #050505; }
-        body { background: var(--bg-black); color: var(--gold-main); font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg-black); color: var(--gold-main); font-family: sans-serif; margin: 0; padding: 0; }
         
-        /* 奢華返回按鈕樣式 */
         .luxury-back-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            background: rgba(5, 5, 5, 0.85);
-            border: 1px solid var(--gold-main);
-            border-radius: 30px;
-            color: var(--gold-bright);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        .luxury-back-btn:hover {
-            background: var(--gold-main);
-            color: #000;
-            transform: translateY(-2px);
+            position: fixed; top: 15px; left: 15px; z-index: 9999;
+            display: flex; align-items: center; gap: 8px; padding: 8px 15px;
+            background: rgba(5, 5, 5, 0.85); border: 1px solid var(--gold-main);
+            border-radius: 30px; color: var(--gold-bright); text-decoration: none;
+            font-size: 13px; font-weight: 900; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px); transition: all 0.3s ease;
         }
 
         .text-gradient-gold {
@@ -47,47 +24,30 @@
             font-weight: 900;
         }
 
-        /* 呼吸感金框卡片 */
         .individual-flow-box {
             position: relative; border-radius: 24px; padding: 1.5px;
             background: linear-gradient(90deg, #1a1a1a, var(--gold-dark), #1a1a1a, var(--gold-main), #1a1a1a);
-            background-size: 200% 100%;
-            animation: individualFlow 5s linear infinite;
-            margin-bottom: 20px;
+            background-size: 200% 100%; animation: individualFlow 5s linear infinite; margin-bottom: 20px;
         }
-        @keyframes individualFlow {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        @keyframes individualFlow { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        .glass-panel {
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 23px; width: 100%;
-        }
+        .glass-panel { background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(20px); border-radius: 23px; width: 100%; }
 
         .btn-gold-action {
             background: linear-gradient(180deg, var(--gold-bright), var(--gold-main));
             color: #000; font-weight: 900; padding: 14px; border-radius: 12px; 
-            cursor: pointer; border: 2px solid transparent; transition: all 0.1s;
-            text-align: center;
-        }
-        .btn-gold-action:active {
-            background: #000 !important; color: var(--gold-main) !important;
-            border: 2px solid var(--gold-main); transform: scale(0.95);
+            cursor: pointer; border: 2px solid transparent; text-align: center;
         }
 
-        .page { display: none; padding: 20px; padding-top: 60px; } /* 預留返回鍵空間 */
+        .page { display: none; padding: 20px; padding-top: 70px; }
         .page.active { display: block; }
 
         .drawer-container.active .drawer-content { display: block; padding: 0 15px 20px 15px; }
         .drawer-content { display: none; }
 
         input, select {
-            background: rgba(0,0,0,0.7) !important;
-            border: 1px solid var(--gold-dark) !important;
-            color: var(--gold-bright) !important;
-            padding: 12px !important; border-radius: 10px !important; outline: none; width: 100%;
+            background: rgba(0,0,0,0.7) !important; border: 1px solid var(--gold-dark) !important;
+            color: var(--gold-bright) !important; padding: 12px !important; border-radius: 10px !important; width: 100%; outline: none;
         }
 
         .nav-bar {
@@ -95,15 +55,13 @@
             background: rgba(10, 10, 10, 0.95); border-top: 1px solid var(--gold-dark);
             display: flex; justify-content: space-around; align-items: center; z-index: 100;
         }
-        .nav-item { color: var(--gold-dark); font-size: 10px; font-weight: 900; text-align: center; }
+        .nav-item { color: var(--gold-dark); font-size: 10px; font-weight: 900; text-align: center; cursor: pointer; }
         .nav-item.active { color: var(--gold-bright); }
     </style>
 </head>
 <body class="pb-24">
 
-    <a href="index.html" class="luxury-back-btn">
-        <span>🏠</span> 返回首頁
-    </a>
+    <a href="index.html" class="luxury-back-btn"><span>🏠</span> 返回首頁</a>
 
     <div id="page-input" class="page active">
         <header class="py-6 text-center">
@@ -124,84 +82,111 @@
                     <option value="won">成交紀錄 (WON)</option>
                 </select>
                 <input type="text" id="ipt-contact" placeholder="備註">
-                <button id="btn-save" class="btn-gold-action w-full">同步資料庫</button>
+                <button id="btn-save" class="btn-gold-action w-full">同步雲端資料庫</button>
             </div>
         </div>
     </div>
 
     <div id="page-admin" class="page">
         <div id="lock-screen" class="py-20 text-center">
-            <h2 class="text-xl font-bold text-gradient-gold mb-6">請輸入密碼解鎖</h2>
-            <input type="password" id="admin-pass" class="text-center w-40 mb-4" maxlength="4">
-            <button onclick="checkPass()" class="btn-gold-action w-40 mx-auto block">進入系統</button>
+            <h2 class="text-xl font-bold text-gradient-gold mb-6">身分驗證</h2>
+            <input type="password" id="admin-pass" class="text-center w-40 mb-4" placeholder="密碼" maxlength="4">
+            <button id="btn-unlock" class="btn-gold-action w-40 mx-auto block">解鎖系統</button>
         </div>
 
         <div id="admin-content" style="display:none;">
             <header class="py-4 text-center">
-                <h1 class="text-2xl font-black text-gradient-gold tracking-widest">銷售開發系統</h1>
+                <h1 class="text-2xl font-black text-gradient-gold tracking-widest">銷售管理中心</h1>
             </header>
-            <input type="text" id="search-input" oninput="renderUI()" placeholder="🔍 搜尋..." class="mb-6">
+            <input type="text" id="search-input" placeholder="🔍 搜尋客戶姓名..." class="mb-6">
             <div id="kanban-display" class="space-y-8"></div>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active" id="nav-input" onclick="switchPage('input')">
+        <div class="nav-item active" id="nav-input">
             <div class="text-2xl">✍️</div><div>登錄</div>
         </div>
-        <div class="nav-item" id="nav-admin" onclick="switchPage('admin')">
+        <div class="nav-item" id="nav-admin">
             <div class="text-2xl">🗄️</div><div>系統</div>
         </div>
     </nav>
 
-    <script>
-        // Firebase 與 原有邏輯保持不變 (略)
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, update, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // 更新為 mentor-app-b76e3 配置
         const firebaseConfig = {
-            apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
-            authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
-            projectId: "holyhairsalon-f73bf",
-            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
-            messagingSenderId: "960169055224",
-            appId: "1:960169055224:web:82244b5e65983f89bf3c0d",
-            measurementId: "G-XS22B43TYM"
+            apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
+            authDomain: "mentor-app-b76e3.firebaseapp.com",
+            databaseURL: "https://mentor-app-b76e3-default-rtdb.firebaseio.com",
+            projectId: "mentor-app-b76e3",
+            storageBucket: "mentor-app-b76e3.firebasestorage.app",
+            messagingSenderId: "757249551762",
+            appId: "1:757249551762:web:512533e0a85dc1ad47654b"
         };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
         let cacheData = {};
 
-        function switchPage(p) {
+        // 頁面切換
+        const switchPage = (p) => {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('page-'+p).classList.add('active');
             document.getElementById('nav-'+p).classList.add('active');
-            window.scrollTo(0,0);
-        }
+        };
 
-        function checkPass() {
+        document.getElementById('nav-input').onclick = () => switchPage('input');
+        document.getElementById('nav-admin').onclick = () => switchPage('admin');
+
+        // 解鎖
+        document.getElementById('btn-unlock').onclick = () => {
             if(document.getElementById('admin-pass').value === '0000') {
                 document.getElementById('lock-screen').style.display = 'none';
                 document.getElementById('admin-content').style.display = 'block';
             } else { alert('密碼錯誤'); }
-        }
+        };
 
-        document.getElementById('btn-save').addEventListener('click', () => {
+        // 存檔
+        document.getElementById('btn-save').onclick = async () => {
             const name = document.getElementById('ipt-name').value.trim();
-            if(!name) return alert("請填姓名");
-            database.ref('leads').push({
-                name, phone: document.getElementById('ipt-phone').value || "無",
-                course: document.getElementById('ipt-course').value || "未指定",
-                value: document.getElementById('ipt-value').value || 0,
-                stage: document.getElementById('ipt-stage').value,
-                contact: document.getElementById('ipt-contact').value || "無",
-                time: Date.now()
-            }).then(() => { alert("✨ 已同步"); document.getElementById('ipt-name').value = ''; });
-        });
+            if(!name) return alert("請填入客戶姓名");
 
-        database.ref('leads').on('value', (snapshot) => {
+            try {
+                await push(ref(db, 'leads'), {
+                    name,
+                    phone: document.getElementById('ipt-phone').value || "無",
+                    course: document.getElementById('ipt-course').value || "未指定",
+                    value: document.getElementById('ipt-value').value || 0,
+                    stage: document.getElementById('ipt-stage').value,
+                    contact: document.getElementById('ipt-contact').value || "無",
+                    time: serverTimestamp()
+                });
+                alert("✨ 資料已同步雲端");
+                document.getElementById('ipt-name').value = '';
+            } catch (e) { alert("同步失敗: " + e.message); }
+        };
+
+        // 監聽數據
+        onValue(ref(db, 'leads'), (snapshot) => {
             cacheData = snapshot.val() || {};
             renderUI();
         });
+
+        window.updateRec = (id) => {
+            update(ref(db, `leads/${id}`), {
+                course: document.getElementById(`ed-c-${id}`).value,
+                value: document.getElementById(`ed-v-${id}`).value,
+                contact: document.getElementById(`ed-t-${id}`).value
+            }).then(() => alert("修改成功"));
+        };
+
+        window.deleteRec = (id) => {
+            if(confirm('確定刪除此筆紀錄？')) remove(ref(db, `leads/${id}`));
+        };
 
         function renderUI() {
             const container = document.getElementById('kanban-display');
@@ -231,7 +216,10 @@
                         <div class="individual-flow-box drawer-container" onclick="this.classList.toggle('active')">
                             <div class="glass-panel overflow-hidden">
                                 <div class="p-5 flex justify-between items-center">
-                                    <div><div class="text-xl font-bold text-white">${history[0].name}</div><div class="text-[10px] text-yellow-800">${history[0].phone}</div></div>
+                                    <div>
+                                        <div class="text-xl font-bold text-white">${history[0].name}</div>
+                                        <div class="text-[10px] text-yellow-800">${history[0].phone}</div>
+                                    </div>
                                     <div class="text-right">
                                         <div class="text-xl font-black text-gradient-gold">$${history.reduce((a,b)=>a+Number(b.value),0).toLocaleString()}</div>
                                         <div class="text-[9px]">歷程 ${history.length} 筆 ▼</div>
@@ -244,7 +232,7 @@
                                             <input type="number" id="ed-v-${i.id}" value="${i.value}">
                                             <input type="text" id="ed-t-${i.id}" value="${i.contact}">
                                             <div class="flex gap-2">
-                                                <button onclick="updateRec('${i.id}')" class="btn-gold-action flex-1 py-2 text-xs">儲存</button>
+                                                <button onclick="updateRec('${i.id}')" class="btn-gold-action flex-1 py-2 text-xs">儲存修改</button>
                                                 <button onclick="deleteRec('${i.id}')" class="px-4 text-red-800 text-xs border border-red-900/20 rounded-xl">刪除</button>
                                             </div>
                                         </div>
@@ -257,18 +245,8 @@
                 if(hasItem) container.innerHTML += stageHtml;
             }
         }
-
-        function updateRec(id) {
-            database.ref('leads').child(id).update({
-                course: document.getElementById(`ed-c-${id}`).value,
-                value: document.getElementById(`ed-v-${id}`).value,
-                contact: document.getElementById(`ed-t-${id}`).value
-            }).then(() => alert("修改成功"));
-        }
-
-        function deleteRec(id) {
-            if(confirm('確定刪除？')) database.ref('leads').child(id).remove();
-        }
+        
+        document.getElementById('search-input').oninput = renderUI;
     </script>
 </body>
 </html>
