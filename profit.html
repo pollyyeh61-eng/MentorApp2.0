@@ -12,12 +12,10 @@
             --text-gold: #fbbf24;
             --low-gold: #92400e;
             --bright-gold: #fcd34d;
-            
-            /* 光譜色定義 */
-            --color-sales: #3b82f6;   /* 藍 */
-            --color-score: #10b981;   /* 綠 */
-            --color-new: #f43f5e;     /* 紅 */
-            --color-coop: #8b5cf6;    /* 紫 */
+            --color-sales: #3b82f6;
+            --color-score: #10b981;
+            --color-new: #f43f5e;
+            --color-coop: #8b5cf6;
         }
 
         body {
@@ -26,12 +24,12 @@
             color: #f8fafc;
             margin: 0;
             padding: 20px;
-            padding-top: 80px; /* 增加頂部間距，為返回按鈕留出空間 */
+            padding-top: 80px; 
             display: flex;
             justify-content: center;
         }
 
-        /* 奢華返回按鈕樣式 */
+        /* 奢華返回按鈕 */
         .btn-back-home {
             position: fixed;
             top: 20px;
@@ -41,7 +39,7 @@
             align-items: center;
             gap: 8px;
             padding: 10px 16px;
-            background: rgba(30, 41, 59, 0.7); /* 毛玻璃背景 */
+            background: rgba(30, 41, 59, 0.7); 
             border: 1px solid var(--text-gold);
             border-radius: 50px;
             color: var(--text-gold);
@@ -65,23 +63,12 @@
             max-width: 450px;
         }
 
-        /* 呼吸發光邊框動畫 */
         @keyframes breathing-glow {
-            0% { 
-                box-shadow: 0 0 5px rgba(251, 191, 36, 0.2);
-                border-color: var(--low-gold);
-            }
-            50% { 
-                box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-                border-color: var(--bright-gold);
-            }
-            100% { 
-                box-shadow: 0 0 5px rgba(251, 191, 36, 0.2);
-                border-color: var(--low-gold);
-            }
+            0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); border-color: var(--low-gold); }
+            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); border-color: var(--bright-gold); }
+            100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); border-color: var(--low-gold); }
         }
 
-        /* 按鈕呼吸背景動畫 */
         @keyframes breathing-bg {
             0% { background-color: #78350f; } 
             50% { background-color: #d97706; } 
@@ -113,17 +100,8 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
+        .input-group { margin-bottom: 20px; position: relative; }
+        label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; }
 
         input, select {
             width: 100%;
@@ -144,52 +122,23 @@
         #cooperationStatus:hover, #cooperationStatus:focus { border-color: var(--color-coop); box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
 
         .btn-copy {
-            width: 100%;
-            border: none;
-            padding: 16px;
-            border-radius: 14px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
+            width: 100%; border: none; padding: 16px; border-radius: 14px; color: white;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px;
             animation: breathing-bg 4s ease-in-out infinite;
             transition: transform 0.2s, filter 0.3s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .btn-copy:hover { transform: translateY(-2px); filter: brightness(1.2); }
-        .btn-copy:active { transform: scale(0.98); }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
-        }
-
-        .detail-item {
-            text-align: left;
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .detail-item span {
-            display: block;
-            color: #f8fafc;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #334155; }
+        .detail-item { text-align: left; font-size: 0.8rem; color: #94a3b8; }
+        .detail-item span { display: block; color: #f8fafc; font-size: 1rem; font-weight: 600; margin-top: 4px; }
     </style>
 </head>
 <body>
 
 <a href="index.html" class="btn-back-home">
-    <span>🏠</span> 返回總部
+    <span>🏠</span> 返回首頁
 </a>
 
 <div class="app-container">
@@ -210,17 +159,14 @@
             <label>💰 課程銷售總額</label>
             <input type="number" id="salesAmount" value="50000" oninput="calculate()">
         </div>
-
         <div class="input-group">
             <label>⭐ 學員滿意度 (80分起算獎勵)</label>
             <input type="number" id="satisfactionScore" value="95" oninput="calculate()">
         </div>
-
         <div class="input-group">
             <label>🚀 新客招募人數</label>
             <input type="number" id="newStudentCount" value="5" oninput="calculate()">
         </div>
-
         <div class="input-group">
             <label>🤝 合作模式</label>
             <select id="cooperationStatus" onchange="calculate()">
@@ -228,7 +174,6 @@
                 <option value="true">協同合作 (+3%)</option>
             </select>
         </div>
-
         <button class="btn-copy" onclick="copyReport()">複製分潤報表</button>
     </div>
 </div>
@@ -264,10 +209,7 @@
         const report = `【講師結算報表】\n總分潤：${document.getElementById('totalProfit').textContent}\n基礎：${document.getElementById('det-base').textContent}\n績效：${document.getElementById('det-perf').textContent}\n新客：${document.getElementById('det-new').textContent}\n合作：${document.getElementById('det-coop').textContent}`;
         navigator.clipboard.writeText(report).then(() => alert('報表已複製！'));
     }
-
     window.onload = calculate;
 </script>
-
 </body>
 </html>
-
