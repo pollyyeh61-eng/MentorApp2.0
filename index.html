@@ -10,7 +10,6 @@
             --bg: #080808;
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
-            --glass: rgba(255, 255, 255, 0.05);
             --c-1: #f6d365; --c-2: #00f2fe; --c-3: #ff9a9e; --c-4: #fa709a;
             --c-5: #a18cd1; --c-6: #43e97b; --c-7: #f093fb; --c-8: #4facfe;
         }
@@ -29,7 +28,6 @@
             overflow-x: hidden;
         }
 
-        /* 右上角登入控制區 */
         .auth-bar {
             width: 100%;
             display: flex;
@@ -40,7 +38,7 @@
         }
 
         .auth-btn {
-            background: transparent;
+            background: rgba(212, 175, 55, 0.1);
             border: 1px solid var(--gold);
             color: var(--gold);
             padding: 5px 12px;
@@ -49,7 +47,6 @@
             font-size: 0.85rem;
             transition: 0.3s;
         }
-
         .auth-btn:hover { background: var(--gold); color: #000; }
 
         header h1 {
@@ -62,29 +59,26 @@
             font-weight: 700;
         }
 
-        /* 內容區塊控制 */
         .main-content { width: 100%; max-width: 350px; }
-        
-        .share-section { margin-bottom: 20px; }
 
-        .btn-large, .btn {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            text-decoration: none;
-            color: var(--gold);
-            display: flex;
-            transition: all 0.4s ease;
-        }
-
+        /* 大按鈕：入口平台 */
         .btn-large {
+            cursor: pointer;
             background: rgba(212, 175, 55, 0.08);
             border: 1px solid var(--gold);
             border-radius: 14px;
             padding: 20px;
+            display: flex;
             justify-content: center;
             align-items: center;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--gold);
+            transition: 0.4s;
         }
+        .btn-large:hover { transform: translateY(-3px); box-shadow: 0 0 15px var(--gold); }
 
+        /* 功能網格 */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -93,16 +87,30 @@
         }
 
         .btn {
-            background: var(--glass);
+            cursor: pointer;
+            background: rgba(255,255,255,0.05);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 16px;
             padding: 22px 10px;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
+            animation: breathe 4s infinite ease-in-out;
+            transition: 0.4s;
         }
 
-        .btn.locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+        @keyframes breathe {
+            0%, 100% { border-color: rgba(212, 175, 55, 0.2); }
+            50% { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 10px rgba(212,175,55,0.1); }
+        }
+
+        .btn:hover { transform: translateY(-5px); animation: none; background: rgba(212,175,55,0.1); }
+        
+        /* 每個按鈕不同的 Hover 光暈 */
+        .btn:nth-child(1):hover { border-color: var(--c-1); box-shadow: 0 0 15px var(--c-1); }
+        .btn:nth-child(2):hover { border-color: var(--c-2); box-shadow: 0 0 15px var(--c-2); }
+        .btn:nth-child(3):hover { border-color: var(--c-3); box-shadow: 0 0 15px var(--c-3); }
+        /* ...以此類推 */
 
         .icon { font-size: 26px; margin-bottom: 12px; }
         .btn-title { font-size: 0.95rem; font-weight: 500; text-align: center; }
@@ -121,60 +129,35 @@
         .modal-content {
             background: #1a1a1a;
             border: 1px solid var(--gold);
-            padding: 30px;
+            padding: 25px;
             border-radius: 20px;
             width: 85%;
             max-width: 320px;
-            position: relative;
         }
 
-        .close-btn { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; }
+        .terms-scroll {
+            height: 100px; overflow-y: scroll; background: #000;
+            padding: 10px; font-size: 0.7rem; color: #888; margin-bottom: 10px; border: 1px solid #333;
+        }
 
         input, textarea {
-            width: 100%;
-            background: #000;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-sizing: border-box;
+            width: 100%; background: #000; border: 1px solid #444; color: #fff;
+            padding: 10px; margin: 8px 0; border-radius: 8px; box-sizing: border-box;
         }
 
         .primary-btn {
-            width: 100%;
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
+            width: 100%; background: var(--gold); color: #000; border: none;
+            padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
         }
+        .primary-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
 
-        /* 會員中心照片相關 */
-        .profile-pic-container {
-            width: 100px; height: 100px;
-            border: 2px dashed var(--gold);
-            margin: 10px auto;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-        #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-
-        footer { font-size: 0.7rem; opacity: 0.6; letter-spacing: 2px; padding: 20px; text-align: center; }
+        footer { font-size: 0.7rem; opacity: 0.6; padding: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="auth-bar" id="auth-bar">
-        <button class="auth-btn" onclick="openModal('login-modal')">登入</button>
-        <button class="auth-btn" onclick="openModal('login-modal')">註冊</button>
+        <button class="auth-btn" onclick="openAuthModal()">登入 / 註冊</button>
     </div>
 
     <header>
@@ -182,158 +165,115 @@
     </header>
 
     <div class="main-content">
-        <div class="share-section">
-            <a href="http://entrance.hairweb.net/" class="btn-large app-link">
-                <div class="icon" style="margin-bottom: 0; margin-right: 12px;">🌐</div>
-                <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台</span>
-            </a>
+        <div class="btn-large" onclick="navigateToApp('http://entrance.hairweb.net/')">
+            <div class="icon" style="margin-bottom: 0; margin-right: 12px;">🌐</div>
+            <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台</span>
         </div>
 
         <div class="menu-grid">
-            <a href="https://pos.hairweb.net/" class="btn app-link"><div class="icon">💰</div><span class="btn-title">銷售收銀</span></a>
-            <a href="http://booking.hairweb.net" class="btn app-link"><div class="icon">📅</div><span class="btn-title">客戶預約</span></a>
-            <a href="https://card.hairweb.net/" class="btn app-link"><div class="icon">💳</div><span class="btn-title">會員卡</span></a>
-            <a href="https://customer.hairweb.net/" class="btn app-link"><div class="icon">🤝</div><span class="btn-title">客戶管理</span></a>
-            <a href="http://store.hairweb.net/" class="btn app-link"><div class="icon">📦</div><span class="btn-title">庫存管理</span></a>
-            <a href="http://points.hairweb.net/" class="btn app-link"><div class="icon">✨</div><span class="btn-title">升等集點</span></a>
-            <a href="http://trial2.hairweb.net/" class="btn app-link"><div class="icon">📈</div><span class="btn-title">經營課程</span></a>
-            <a href="http://sale.hairweb.net/" class="btn app-link"><div class="icon">🚀</div><span class="btn-title">銷售開發</span></a>
-            <a href="http://profit.hairweb.net/" class="btn app-link"><div class="icon">🧮</div><span class="btn-title">分潤計算</span></a>
-            <a href="https://student.hairweb.net/" class="btn app-link"><div class="icon">🏆</div><span class="btn-title">學員關卡</span></a>
+            <div class="btn" onclick="navigateToApp('https://pos.hairweb.net/')"><div class="icon">💰</div><span class="btn-title">銷售收銀</span></div>
+            <div class="btn" onclick="navigateToApp('http://booking.hairweb.net')"><div class="icon">📅</div><span class="btn-title">客戶預約</span></div>
+            <div class="btn" onclick="navigateToApp('https://card.hairweb.net/')"><div class="icon">💳</div><span class="btn-title">會員卡</span></div>
+            <div class="btn" onclick="navigateToApp('https://customer.hairweb.net/')"><div class="icon">🤝</div><span class="btn-title">客戶管理</span></div>
+            <div class="btn" onclick="navigateToApp('http://store.hairweb.net/')"><div class="icon">📦</div><span class="btn-title">庫存管理</span></div>
+            <div class="btn" onclick="navigateToApp('http://points.hairweb.net/')"><div class="icon">✨</div><span class="btn-title">升等集點</span></div>
+            <div class="btn" onclick="navigateToApp('http://trial2.hairweb.net/')"><div class="icon">📈</div><span class="btn-title">經營課程</span></div>
+            <div class="btn" onclick="navigateToApp('http://sale.hairweb.net/')"><div class="icon">🚀</div><span class="btn-title">銷售開發</span></div>
+            <div class="btn" onclick="navigateToApp('http://profit.hairweb.net/')"><div class="icon">🧮</div><span class="btn-title">分潤計算</span></div>
+            <div class="btn" onclick="navigateToApp('https://student.hairweb.net/')"><div class="icon">🏆</div><span class="btn-title">學員關卡</span></div>
         </div>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('login-modal')">&times;</span>
-            <h2 style="text-align:center">歡迎回來</h2>
-            <input type="text" placeholder="帳號 / Email">
-            <input type="password" placeholder="密碼">
-            <button class="primary-btn" onclick="handleLogin()">立即登入</button>
-            <p style="text-align:center; font-size:0.8rem; color: #888; cursor:pointer" onclick="alert('重設密碼連結已發送至您的信箱')">忘記密碼？</p>
-        </div>
-    </div>
-
-    <div id="profile-modal" class="modal">
-        <div class="modal-content" style="max-width: 350px;">
-            <span class="close-btn" onclick="closeModal('profile-modal')">&times;</span>
-            <h3 style="text-align:center">個人會員資訊</h3>
+            <h2 style="text-align:center; margin-top:0;">學員登入</h2>
+            <input type="text" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="密碼">
             
-            <div class="profile-pic-container" id="profile-pic-box">
-                <span id="pic-placeholder">📷</span>
-                <img id="preview-img" alt="Profile">
-            </div>
-            
-            <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-            <div style="display:flex; gap:5px; margin-bottom:10px">
-                <button class="primary-btn" style="font-size:0.7rem; padding:5px" onclick="document.getElementById('file-input').click()">增加照片</button>
-                <button class="primary-btn" style="font-size:0.7rem; padding:5px; background:#444; color:#fff" onclick="deletePhoto()">刪除照片</button>
+            <div id="terms-box">
+                <div class="terms-scroll">
+                    <h4>服務條款</h4>
+                    1. 本系統僅供學員教學使用。<br>
+                    2. 個資受加密保護，嚴禁轉借帳號。<br>
+                    3. 同意接受平台通知。
+                </div>
+                <div style="font-size:0.8rem; margin-bottom:10px;">
+                    <input type="checkbox" id="agree-check" style="width:auto;" onchange="document.getElementById('login-sub-btn').disabled = !this.checked">
+                    <label for="agree-check">我已閱讀並同意以上條款</label>
+                </div>
             </div>
 
-            <input type="text" id="user-name" placeholder="姓名" oninput="autoSave()">
-            <input type="tel" id="user-phone" placeholder="電話" oninput="autoSave()">
-            <textarea id="user-bio" placeholder="自我介紹" rows="3" oninput="autoSave()"></textarea>
-            
-            <button class="primary-btn" onclick="saveToCloud()">修正並永久儲存</button>
+            <button id="login-sub-btn" class="primary-btn" disabled onclick="handleFirebaseLogin()">立即登入</button>
+            <button class="auth-btn" style="width:100%; border:none; margin-top:10px;" onclick="closeModal('login-modal')">取消</button>
         </div>
     </div>
 
     <footer>VITALITY HAIR ACADEMY © 2026</footer>
 
-    <script>
-        // 模擬登入狀態
-        let isLoggedIn = false;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
+            authDomain: "mentor-app-b76e3.firebaseapp.com",
+            projectId: "mentor-app-b76e3",
+            appId: "1:757249551762:web:512533e0a85dc1ad47654b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        window.isLoggedIn = false;
+
+        // 監聽登入
+        onAuthStateChanged(auth, (user) => {
+            const authBar = document.getElementById('auth-bar');
+            if (user) {
+                window.isLoggedIn = true;
+                authBar.innerHTML = `<button class="auth-btn" onclick="alert('開啟會員中心')">👤 會員中心</button>
+                                     <button class="auth-btn" style="border-color:#555" onclick="window.doLogout()">登出</button>`;
+            } else {
+                window.isLoggedIn = false;
+                authBar.innerHTML = `<button class="auth-btn" onclick="openAuthModal()">登入 / 註冊</button>`;
+            }
+        });
+
+        // 登入函數
+        window.handleFirebaseLogin = async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            try {
+                await signInWithEmailAndPassword(auth, e, p);
+                localStorage.setItem('terms_accepted', 'true');
+                closeModal('login-modal');
+                alert("歡迎回來！");
+            } catch (err) { alert("登入失敗，請檢查帳密"); }
+        };
+
+        window.doLogout = () => signOut(auth);
+
+        // SSO 跳轉邏輯
+        window.navigateToApp = async (url) => {
+            if (!window.isLoggedIn) {
+                alert("請先登入後才能使用功能哦！");
+                openAuthModal();
+                return;
+            }
+            const user = auth.currentUser;
+            const token = await user.getIdToken();
+            window.location.href = `${url}?token=${token}`;
+        };
+    </script>
+
+    <script>
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // 登入處理
-        function handleLogin() {
-            isLoggedIn = true;
-            closeModal('login-modal');
-            updateUI();
-            alert("登入成功！");
-        }
-
-        // 更新 UI 狀態
-        function updateUI() {
-            const authBar = document.getElementById('auth-bar');
-            if (isLoggedIn) {
-                authBar.innerHTML = `<button class="auth-btn" onclick="openModal('profile-modal')">👤 會員中心</button>
-                                     <button class="auth-btn" style="border-color:#555" onclick="location.reload()">登出</button>`;
-                loadSavedData();
-            }
-        }
-
-        // 攔截按鍵
-        document.querySelectorAll('.app-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (!isLoggedIn) {
-                    e.preventDefault();
-                    alert("請先登入後才能使用功能哦！");
-                    openModal('login-modal');
-                }
-            });
-        });
-
-        // 即時暫存 Auto-Save
-        function autoSave() {
-            const userData = {
-                name: document.getElementById('user-name').value,
-                phone: document.getElementById('user-phone').value,
-                bio: document.getElementById('user-bio').value,
-                photo: document.getElementById('preview-img').src
-            };
-            localStorage.setItem('temp_user_data', JSON.stringify(userData));
-            console.log("資料已自動暫存...");
-        }
-
-        // 讀取存檔
-        function loadSavedData() {
-            const saved = localStorage.getItem('temp_user_data');
-            if (saved) {
-                const data = JSON.parse(saved);
-                document.getElementById('user-name').value = data.name || '';
-                document.getElementById('user-phone').value = data.phone || '';
-                document.getElementById('user-bio').value = data.bio || '';
-                if (data.photo && data.photo.startsWith('data:image')) {
-                    const img = document.getElementById('preview-img');
-                    img.src = data.photo;
-                    img.style.display = 'block';
-                    document.getElementById('pic-placeholder').style.display = 'none';
-                }
-            }
-        }
-
-        // 照片處理
-        function previewFile() {
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                const img = document.getElementById('preview-img');
-                img.src = reader.result;
-                img.style.display = 'block';
-                document.getElementById('pic-placeholder').style.display = 'none';
-                autoSave();
-            }
-            if (file) reader.readAsDataURL(file);
-        }
-
-        function deletePhoto() {
-            const img = document.getElementById('preview-img');
-            img.src = "";
-            img.style.display = 'none';
-            document.getElementById('pic-placeholder').style.display = 'block';
-            autoSave();
-        }
-
-        // 永久儲存 (模擬雲端)
-        function saveToCloud() {
-            autoSave();
-            const data = localStorage.getItem('temp_user_data');
-            // 此處可接 Firebase 儲存代碼
-            alert("資料已成功修正並同步至雲端儲存空間！");
-            closeModal('profile-modal');
+        function openAuthModal() {
+            const accepted = localStorage.getItem('terms_accepted') === 'true';
+            document.getElementById('terms-box').style.display = accepted ? 'none' : 'block';
+            document.getElementById('login-sub-btn').disabled = !accepted;
+            openModal('login-modal');
         }
     </script>
 </body>
