@@ -11,12 +11,14 @@
     <style>
         :root { --gold: #d4af37; --light-gold: #fcf6ba; --black: #050505; }
         .luxury-back-btn { position: fixed; top: 15px; left: 15px; z-index: 9999; display: flex; align-items: center; gap: 8px; padding: 8px 15px; background: rgba(5, 5, 5, 0.85); border: 1px solid var(--gold); border-radius: 30px; color: var(--light-gold); text-decoration: none; font-size: 13px; font-weight: bold; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        
         body { background-color: var(--black); color: #e0e0e0; font-family: 'Noto Sans TC', sans-serif; background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%); min-height: 100vh; margin: 0; }
         .gold-text { font-family: 'Cinzel', serif; background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         .nav-btn { padding: 10px 20px; color: rgba(255,255,255,0.5); font-size: 12px; letter-spacing: 2px; transition: all 0.4s; background: none; cursor: pointer; border: 1px solid transparent; }
         .nav-btn.active { color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.1); }
         
-        /* 呼吸感卡片 */
+        /* 黑金呼吸感卡片 */
         .luxury-card {
             background: rgba(20, 20, 20, 0.85);
             border: 1px solid rgba(212, 175, 55, 0.2);
@@ -32,8 +34,9 @@
         .gold-btn-main { 
             background: linear-gradient(135deg, #b38728, #fcf6ba, #aa771c) !important; 
             color: #000 !important; font-weight: 900; letter-spacing: 4px; 
-            cursor: pointer; position: relative; z-index: 50;
+            cursor: pointer; position: relative; z-index: 50; transition: all 0.2s;
         }
+        .gold-btn-main:active { transform: scale(0.96); filter: brightness(0.8); }
     </style>
 </head>
 <body>
@@ -53,7 +56,7 @@
     <main>
         <section v-if="page === 1" class="max-w-xl mx-auto">
             <div class="luxury-card p-10 rounded-3xl border-t-2 border-t-gold/50">
-                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">美業庫存管理</h2>
+                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">ITEM REGISTRATION</h2>
                 <div class="space-y-6 text-sm">
                     <div>
                         <label class="block opacity-40 mb-2">物品名稱 / Name</label>
@@ -77,8 +80,8 @@
                         <label class="block opacity-40 mb-2">安全水位 / Safety Line</label>
                         <input v-model.number="newItem.safeValue" type="number" class="w-full p-4 rounded-xl">
                     </div>
-                    <button type="button" @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl active:scale-95 transition-transform">
-                        存入倉庫系統
+                    <button type="button" @click="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl">
+                        存入金庫系統
                     </button>
                 </div>
             </div>
@@ -92,13 +95,13 @@
                             <span class="text-[9px] text-gold border border-gold/30 px-2 py-1 rounded">{{ item.category }}</span>
                             <span v-if="item.stock <= item.safeValue" class="text-red-500 text-[9px] font-bold animate-pulse">REFILL NEEDED</span>
                         </div>
-                        <h3 class="text-xl mt-4 tracking-wider text-white">{{ item.name }}</h3>
+                        <h3 class="text-xl mt-4 tracking-wider text-white font-medium">{{ item.name }}</h3>
                     </div>
                     <div class="flex justify-between items-end">
                         <div class="text-4xl font-light text-white">{{ item.stock }}<span class="text-xs opacity-30 ml-1">UNITS</span></div>
                         <div class="flex gap-2">
-                            <button @click="updateStock(item, -1)" class="w-10 h-10 border border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-black">－</button>
-                            <button @click="updateStock(item, 1)" class="w-10 h-10 border border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-black">＋</button>
+                            <button @click="updateStock(item, -1)" class="w-10 h-10 border border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-black transition-colors">－</button>
+                            <button @click="updateStock(item, 1)" class="w-10 h-10 border border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-black transition-colors">＋</button>
                         </div>
                     </div>
                 </div>
@@ -107,8 +110,8 @@
 
         <section v-if="page === 3" class="max-w-6xl mx-auto space-y-8">
             <div class="flex justify-end">
-                <button @click="downloadCombinedReport" class="px-6 py-2 border border-gold text-[10px] text-gold hover:bg-gold hover:text-black tracking-[2px]">
-                    EXPORT REPORT
+                <button @click="downloadCombinedReport" class="px-6 py-2 border border-gold text-[10px] text-gold hover:bg-gold hover:text-black tracking-[2px] transition-all">
+                    EXPORT MERGED REPORT
                 </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -128,16 +131,20 @@
 </div>
 
 <script type="module">
+    // 使用最新金鑰配置
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // 更新為你提供的 Firebase 配置
     const firebaseConfig = {
         apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
         authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+        databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
         projectId: "holyhairsalon-f73bf",
-        storageBucket: "holyhairsalon-f73bf.appspot.com",
+        storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
         messagingSenderId: "960169055224",
-        appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
+        appId: "1:960169055224:web:02407a24022a6fb0bf3c0d",
+        measurementId: "G-X509KYEJ8P"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -146,34 +153,33 @@
 
     createApp({
         setup() {
-            const page = ref(1);
+            const page = ref(1); // 預設一進來就在「資料輸入」
             const items = ref([]);
             const newItem = ref({ name: '', category: '藥劑', stock: 0, safeValue: 5 });
 
             onMounted(() => {
-                // 這裡會實時抓取數據
+                // 實時監聽庫存，按時間排序
                 onSnapshot(collection(db, "inventory"), (snap) => {
                     items.value = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 });
             });
 
             const addItem = async () => {
-                if (!newItem.value.name) return alert("請輸入名稱");
+                if (!newItem.value.name) return alert("請輸入物品名稱");
                 try {
-                    // 這裡改用比較穩定的寫法
-                    const colRef = collection(db, "inventory");
-                    await addDoc(colRef, {
+                    await addDoc(collection(db, "inventory"), {
                         name: newItem.value.name,
                         category: newItem.value.category,
-                        stock: Number(newItem.value.stock),
-                        safeValue: Number(newItem.value.safeValue),
-                        timestamp: Date.now()
+                        stock: Number(newItem.value.stock) || 0,
+                        safeValue: Number(newItem.value.safeValue) || 0,
+                        createdAt: Date.now()
                     });
-                    alert("✨ 存入金庫成功！");
+                    alert("✨ 成功存入金庫系統");
+                    // 清空輸入框
                     newItem.value = { name: '', category: '藥劑', stock: 0, safeValue: 5 };
                 } catch (e) {
-                    console.error("Firebase Error:", e);
-                    alert("儲存失敗！\n1. 請檢查 Firebase Rules 是否設為 allow read, write: if true;\n2. 檢查網路是否穩定。");
+                    console.error("Error:", e);
+                    alert("存入失敗！請確認 Firebase Rules 權限。");
                 }
             };
 
@@ -183,19 +189,19 @@
             };
 
             const reportLogic = computed(() => [
-                { title: '🆘 補貨', color: '#ff4d4d', advice: '立即補貨。', list: items.value.filter(i => i.stock <= i.safeValue) },
-                { title: '✅ 正常', color: '#d4af37', advice: '維持。', list: items.value.filter(i => i.stock > i.safeValue && i.stock <= i.safeValue * 2) },
-                { title: '📈 推薦', color: '#4da6ff', advice: '主力推廣。', list: items.value.filter(i => i.stock > i.safeValue * 2 && i.stock <= i.safeValue * 3) },
-                { title: '🔥 促銷', color: '#ff944d', advice: '出清活動。', list: items.value.filter(i => i.stock > i.safeValue * 3) }
+                { title: '🆘 需補貨', color: '#ff4d4d', advice: '立即採購', list: items.value.filter(i => i.stock <= i.safeValue) },
+                { title: '✅ 正常', color: '#d4af37', advice: '狀況穩定', list: items.value.filter(i => i.stock > i.safeValue && i.stock <= i.safeValue * 2) },
+                { title: '📈 充裕', color: '#4da6ff', advice: '推薦使用', list: items.value.filter(i => i.stock > i.safeValue * 2 && i.stock <= i.safeValue * 3) },
+                { title: '🔥 過量', color: '#ff944d', advice: '促銷出清', list: items.value.filter(i => i.stock > i.safeValue * 3) }
             ]);
 
             const downloadCombinedReport = () => {
-                let content = `【 LUXE 營運報告 】\n時間: ${new Date().toLocaleString()}\n\n`;
-                items.value.forEach(i => content += `${i.name} | 庫存: ${i.stock} | 水位: ${i.safeValue}\n`);
-                const blob = new Blob(["\ufeff" + content], { type: "text/plain;charset=utf-8" });
+                let txt = `【 LUXE 庫存結算報告 】\n日期: ${new Date().toLocaleString()}\n${'='.repeat(30)}\n`;
+                items.value.forEach(i => txt += `[${i.category}] ${i.name}: ${i.stock} (安全線: ${i.safeValue})\n`);
+                const blob = new Blob(["\ufeff" + txt], { type: "text/plain;charset=utf-8" });
                 const a = document.createElement("a");
                 a.href = URL.createObjectURL(blob);
-                a.download = `Report.txt`;
+                a.download = `LUXE_Report_${Date.now()}.txt`;
                 a.click();
             };
 
