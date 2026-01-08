@@ -11,8 +11,28 @@
       --text-main: #e0e0e0; 
       --btn-save: #00ff88; --btn-edit: #00d4ff; --btn-delete: #ff4d4d;
     }
+
+    /* --- 新增：黑金呼吸邊框動畫 --- */
+    @keyframes gold-glow {
+        0% { border-color: var(--gold-dark); box-shadow: 0 0 15px rgba(122, 92, 13, 0.4); }
+        50% { border-color: var(--gold-light); box-shadow: 0 0 30px rgba(241, 196, 15, 0.6); }
+        100% { border-color: var(--gold-dark); box-shadow: 0 0 15px rgba(122, 92, 13, 0.4); }
+    }
+
     body { font-family: 'PingFang TC', sans-serif; background: var(--bg-dark); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; margin: 0; }
-    .container { width: 100%; max-width: 450px; background: var(--card-bg); padding: 25px; border-radius: 28px; border: 1px solid var(--gold-dark); box-shadow: 0 0 20px #000; box-sizing: border-box; }
+    
+    /* --- 修正：套用呼吸效果到 container --- */
+    .container { 
+        width: 100%; 
+        max-width: 450px; 
+        background: var(--card-bg); 
+        padding: 25px; 
+        border-radius: 28px; 
+        border: 2px solid var(--gold-dark); 
+        box-sizing: border-box; 
+        animation: gold-glow 4s infinite ease-in-out; /* 呼吸靈魂 */
+    }
+
     h1 { color: var(--gold-light); text-align: center; letter-spacing: 2px; }
     label { display: block; margin-top: 15px; font-size: 0.8rem; color: #888; }
     input, select { width: 100%; padding: 14px; margin-top: 8px; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 1rem; }
@@ -229,5 +249,3 @@
 </script>
 </body>
 </html>
-
-
