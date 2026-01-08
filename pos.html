@@ -1,269 +1,261 @@
-<!DOCTYPE html>
+
+幫我改成用SDK 私密金鑰:<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUXE POS | 專業全功能系統</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root { --bg-black: #0a0a0a; --gold: #d4af37; --text: #f3e5ab; }
-        
-        .luxury-back-btn {
-            position: fixed; top: 15px; left: 15px; z-index: 9999;
-            display: flex; align-items: center; gap: 8px; padding: 8px 15px;
-            background: rgba(10, 10, 10, 0.85); border: 1px solid var(--gold);
-            border-radius: 30px; color: var(--gold); text-decoration: none;
-            font-size: 13px; font-weight: bold; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px); transition: all 0.3s ease;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LUXE POS | 專業全功能系統</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <style>
+        :root { --bg-black: #0a0a0a; --gold: #d4af37; --text: #f3e5ab; }
+        
+        /* 奢華黑金返回按鈕樣式 */
+        .luxury-back-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid var(--gold);
+            border-radius: 30px;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .luxury-back-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
 
-        body { background: var(--bg-black); color: var(--text); font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; padding: 70px 20px 20px 20px; box-sizing: border-box; }
-        h1 { text-align: center; color: var(--gold); letter-spacing: 3px; font-size: 24px; margin-bottom: 20px; }
-        
-        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 12px 5px; border: 1px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-size: 12px; border-radius: 4px; }
-        .tab-btn.active { background: var(--gold); color: #000; font-weight: bold; }
-        
-        .identity-toggle { display: flex; background: #1a1a1a; padding: 5px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
-        .toggle-btn { flex: 1; padding: 10px; border: none; background: none; color: #888; cursor: pointer; border-radius: 6px; }
-        .toggle-btn.active { background: #333; color: var(--gold); font-weight: bold; }
+        body { background: var(--bg-black); color: var(--text); font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
+        
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            padding: 70px 20px 20px 20px; /* 增加上方 Padding 以避開返回鍵 */
+            box-sizing: border-box; 
+        }
+        
+        h1 { text-align: center; color: var(--gold); letter-spacing: 3px; font-size: 24px; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px 5px; border: 1px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-size: 12px; border-radius: 4px; }
+        .tab-btn.active { background: var(--gold); color: #000; font-weight: bold; }
+        
+        /* 身份切換開關樣式 */
+        .identity-toggle { display: flex; background: #1a1a1a; padding: 5px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
+        .toggle-btn { flex: 1; padding: 10px; border: none; background: none; color: #888; cursor: pointer; border-radius: 6px; }
+        .toggle-btn.active { background: #333; color: var(--gold); font-weight: bold; }
 
-        label { display: block; margin: 10px 0 5px; color: var(--gold); font-size: 14px; }
-        input, select { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; outline: none; }
-        .btn-main { width: 100%; padding: 15px; background: linear-gradient(45deg, #8c6d1f, #d4af37); border: none; color: #000; font-weight: bold; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; }
-        
-        .result-box { margin-top: 20px; padding: 15px; border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.1); border-radius: 8px; display: none; line-height: 1.6; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 14px; }
-    </style>
+        label { display: block; margin: 10px 0 5px; color: var(--gold); font-size: 14px; }
+        input, select { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 15px; background: linear-gradient(45deg, #8c6d1f, #d4af37); border: none; color: #000; font-weight: bold; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; }
+        .result-box { margin-top: 20px; padding: 15px; border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.1); border-radius: 8px; display: none; line-height: 1.6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .report-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-top: 10px; }
+        .item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 14px; }
+    </style>
 </head>
 <body>
 
-<a href="index.html" class="luxury-back-btn"><span>🏠</span> 返回首頁</a>
+<a href="index.html" class="luxury-back-btn">
+    <span>🏠</span> 返回首頁
+</a>
 
 <div class="container">
-    <h1>👑 LUXE POS</h1>
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="sale">收銀</button>
-        <button class="tab-btn" data-tab="query">個人業績</button>
-        <button class="tab-btn" data-tab="shop">店務報表</button>
-    </div>
+    <h1>👑 LUXE POS</h1>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('sale')">收銀</button>
+        <button class="tab-btn" onclick="showTab('query')">個人業績</button>
+        <button class="tab-btn" onclick="showTab('shop')">店務報表</button>
+    </div>
 
-    <div id="sale" class="tab-content active">
-        <div class="identity-toggle">
-            <button id="btn-member" class="toggle-btn active">會員儲值扣款</button>
-            <button id="btn-guest" class="toggle-btn">散客現金消費</button>
-        </div>
+    <div id="sale" class="tab-content active">
+        <div class="identity-toggle">
+            <button id="btn-member" class="toggle-btn active" onclick="setIdentity('member')">會員儲值扣款</button>
+            <button id="btn-guest" class="toggle-btn" onclick="setIdentity('guest')">散客現金消費</button>
+        </div>
 
-        <div id="phone-group">
-            <label>貴賓手機 (搜尋餘額)</label>
-            <input type="text" id="phone" placeholder="請輸入手機號碼">
-        </div>
+        <div id="phone-group">
+            <label>貴賓手機 (必填)</label>
+            <input type="text" id="phone" placeholder="輸入手機搜尋餘額">
+        </div>
 
-        <label>設計師</label>
-        <input type="text" id="staff" placeholder="輸入設計師姓名">
-        
-        <hr style="border: 0.5px solid #333; margin: 15px 0;">
-        
-        <label>💈 技術金額</label>
-        <input type="number" id="tech_amt" value="0">
-        <label>🧴 產品金額</label>
-        <input type="number" id="prod_amt" value="0">
-        
-        <div id="payment-group">
-            <label>支付方式</label>
-            <select id="payment">
-                <option value="儲值金">⭐ 儲值金扣款</option>
-                <option value="現金">現金結帳</option>
-                <option value="信用卡">信用卡刷卡</option>
-            </select>
-        </div>
+        <label>設計師</label>
+        <input type="text" id="staff" placeholder="輸入設計師姓名">
+        
+        <hr style="border: 0.5px solid #333; margin: 15px 0;">
+        
+        <label>💈 技術金額</label>
+        <input type="number" id="tech_amt" value="0">
+        <label>🧴 產品金額</label>
+        <input type="number" id="prod_amt" value="0">
+        
+        <div id="payment-group">
+            <label>支付方式</label>
+            <select id="payment">
+                <option value="儲值金">⭐ 儲值金扣款</option>
+                <option value="現金">現金結帳</option>
+                <option value="信用卡">信用卡刷卡</option>
+            </select>
+        </div>
 
-        <button id="btnSubmitSale" class="btn-main">確認提交交易</button>
-        <div id="saleResult" class="result-box"></div>
-    </div>
+        <button class="btn-main" onclick="processSale()">確認提交交易</button>
+        <div id="saleResult" class="result-box"></div>
+    </div>
 
-    <div id="query" class="tab-content">
-        <label>查詢設計師</label>
-        <input type="text" id="q_staff" placeholder="輸入姓名">
-        <button id="btnQueryStaff" class="btn-main">生成個人報表</button>
-        <div id="queryResult" class="result-box"></div>
-    </div>
+    <div id="query" class="tab-content">
+        <label>查詢設計師</label>
+        <input type="text" id="q_staff" placeholder="輸入姓名">
+        <button class="btn-main" onclick="getDesignerReport()">生成個人報表</button>
+        <div id="queryResult" class="result-box"></div>
+    </div>
 
-    <div id="shop" class="tab-content">
-        <div class="flex gap-2 mb-4">
-            <button class="tab-btn" onclick="getShopReport('today')">今日</button>
-            <button class="tab-btn" onclick="getShopReport('week')">本週</button>
-            <button class="tab-btn" onclick="getShopReport('month')">本月</button>
-        </div>
-        <div id="shopResult" class="result-box"></div>
-    </div>
+    <div id="shop" class="tab-content">
+        <div class="report-grid">
+            <button class="tab-btn" onclick="getShopReport('today')">今日</button>
+            <button class="tab-btn" onclick="getShopReport('week')">本週</button>
+            <button class="tab-btn" onclick="getShopReport('month')">本月</button>
+        </div>
+        <div id="shopResult" class="result-box"></div>
+    </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script>
+    // Firebase 初始化
+    const firebaseConfig = {
+        apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+        authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+        databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+        projectId: "holyhairsalon-f73bf",
+        appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const rdb = firebase.database();
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
-        authDomain: "mentor-app-b76e3.firebaseapp.com",
-        projectId: "mentor-app-b76e3",
-        storageBucket: "mentor-app-b76e3.firebasestorage.app",
-        messagingSenderId: "757249551762",
-        appId: "1:757249551762:web:512533e0a85dc1ad47654b"
-    };
+    let currentIdentity = 'member';
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    function setIdentity(type) {
+        currentIdentity = type;
+        document.getElementById('btn-member').classList.toggle('active', type === 'member');
+        document.getElementById('btn-guest').classList.toggle('active', type === 'guest');
+        
+        if(type === 'guest') {
+            document.getElementById('phone-group').style.display = 'none';
+            document.getElementById('payment').value = '現金';
+        } else {
+            document.getElementById('phone-group').style.display = 'block';
+            document.getElementById('payment').value = '儲值金';
+        }
+    }
 
-    let currentIdentity = 'member';
+    function showTab(name) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(name).classList.add('active');
+        if(window.event) window.event.currentTarget.classList.add('active');
+    }
 
-    // 頁面切換邏輯
-    document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(btn.dataset.tab).classList.add('active');
-            btn.classList.add('active');
-        });
-    });
+    async function processSale() {
+        const phone = document.getElementById('phone').value;
+        const staff = document.getElementById('staff').value.trim();
+        const tech = Number(document.getElementById('tech_amt').value || 0);
+        const prod = Number(document.getElementById('prod_amt').value || 0);
+        const total = tech + prod;
+        const payment = document.getElementById('payment').value;
+        const res = document.getElementById('saleResult');
 
-    // 身份切換
-    document.getElementById('btn-member').onclick = () => {
-        currentIdentity = 'member';
-        document.getElementById('btn-member').classList.add('active');
-        document.getElementById('btn-guest').classList.remove('active');
-        document.getElementById('phone-group').style.display = 'block';
-        document.getElementById('payment').value = '儲值金';
-    };
+        if(!staff || total <= 0) return alert("請輸入金額與設計師");
+        res.style.display = 'block'; res.innerHTML = "處理中...";
 
-    document.getElementById('btn-guest').onclick = () => {
-        currentIdentity = 'guest';
-        document.getElementById('btn-guest').classList.add('active');
-        document.getElementById('btn-member').classList.remove('active');
-        document.getElementById('phone-group').style.display = 'none';
-        document.getElementById('payment').value = '現金';
-    };
+        try {
+            if (currentIdentity === 'member' && payment === '儲值金') {
+                let mKey = null, mBal = 0;
+                const snap = await rdb.ref('members').once('value');
+                snap.forEach(c => {
+                    if(c.val().phone === phone || c.key === phone) { mKey = c.key; mBal = Number(c.val().balance || 0); }
+                });
+                if(!mKey) return res.innerHTML = "❌ 找不到會員資料";
+                if(mBal < total) return res.innerHTML = `❌ 餘額不足 ($${mBal})`;
+                await rdb.ref(`members/${mKey}`).update({ balance: mBal - total });
+            }
 
-    // 提交交易
-    window.processSale = async () => {
-        const phone = document.getElementById('phone').value.trim();
-        const staff = document.getElementById('staff').value.trim();
-        const tech = Number(document.getElementById('tech_amt').value || 0);
-        const prod = Number(document.getElementById('prod_amt').value || 0);
-        const payment = document.getElementById('payment').value;
-        const total = tech + prod;
-        const resBox = document.getElementById('saleResult');
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '-');
 
-        if (!staff || total <= 0) return alert("請完整填寫金額與設計師");
+            await rdb.ref('sales').push({
+                staff, tech, prod, total, payment, 
+                identity: currentIdentity,
+                phone: (currentIdentity === 'member' ? phone : "散客"),
+                timestamp: now.getTime(),
+                date: dateStr
+            });
 
-        resBox.style.display = 'block';
-        resBox.innerHTML = "正在處理雲端交易...";
+            res.innerHTML = `✅ 交易成功！<br>項目：${currentIdentity === 'member'?'會員':'散客'}<br>總計：$${total}`;
+            document.getElementById('tech_amt').value = "0"; document.getElementById('prod_amt').value = "0";
+            if(currentIdentity === 'member') document.getElementById('phone').value = "";
+        } catch (e) { res.innerHTML = "❌ 錯誤: " + e.message; }
+    }
 
-        try {
-            // 如果是會員儲值扣款，先查餘額
-            if (currentIdentity === 'member' && payment === '儲值金') {
-                const q = query(collection(db, "members"), where("phone", "==", phone));
-                const snap = await getDocs(q);
-                if (snap.empty) {
-                    resBox.innerHTML = "❌ 找不到會員資料，請確認手機號碼";
-                    return;
-                }
-                const memberDoc = snap.docs[0];
-                const balance = Number(memberDoc.data().balance || 0);
+    async function getDesignerReport() {
+        const target = document.getElementById('q_staff').value.trim().toUpperCase();
+        const res = document.getElementById('queryResult');
+        res.style.display = 'block'; res.innerHTML = "計算中...";
+        const snap = await rdb.ref('sales').once('value');
+        let tTech = 0, tProd = 0, count = 0;
+        snap.forEach(c => {
+            const d = c.val();
+            if(d.staff && d.staff.toUpperCase() === target) {
+                tTech += Number(d.tech || 0); tProd += Number(d.prod || 0); count++;
+            }
+        });
+        res.innerHTML = `<h3>${target} 業績</h3>技術：$${tTech}<br>產品：$${tProd}<br><b>總計：$${tTech+tProd}</b>`;
+    }
 
-                if (balance < total) {
-                    resBox.innerHTML = `❌ 儲值金不足 (剩餘: $${balance})`;
-                    return;
-                }
-                // 扣除餘額
-                await updateDoc(doc(db, "members", memberDoc.id), { balance: balance - total });
-            }
+    async function getShopReport(type) {
+        const res = document.getElementById('shopResult');
+        res.style.display = 'block'; res.innerHTML = "彙整中...";
+        const now = new Date();
+        const snap = await rdb.ref('sales').once('value');
+        let tTech = 0, tProd = 0, total = 0;
+        let staffPerf = {};
+        const day = now.getDay() || 7;
+        const monday = new Date(now); monday.setHours(0,0,0,0); monday.setDate(now.getDate() - day + 1);
 
-            // 寫入交易紀錄
-            await addDoc(collection(db, "sales"), {
-                staff: staff.toUpperCase(),
-                tech, prod, total, payment,
-                identity: currentIdentity,
-                phone: currentIdentity === 'member' ? phone : "散客",
-                createdAt: serverTimestamp(),
-                dateStr: new Date().toISOString().split('T')[0]
-            });
+        snap.forEach(c => {
+            const d = c.val();
+            const dDate = new Date(d.timestamp);
+            let match = false;
+            if(type === 'today') match = d.date === now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '-');
+            else if(type === 'week') match = d.timestamp >= monday.getTime();
+            else if(type === 'month') match = dDate.getMonth() === now.getMonth() && dDate.getFullYear() === now.getFullYear();
 
-            resBox.innerHTML = `✅ 交易成功！<br>項目：${currentIdentity === 'member'?'會員扣款':'散客消費'}<br>總額：$${total}`;
-            document.getElementById('tech_amt').value = 0;
-            document.getElementById('prod_amt').value = 0;
-        } catch (e) {
-            resBox.innerHTML = "❌ 雲端錯誤: " + e.message;
-        }
-    };
+            if(match) {
+                const sT = Number(d.tech || 0); const sP = Number(d.prod || 0);
+                tTech += sT; tProd += sP; total += (sT + sP);
+                staffPerf[d.staff] = (staffPerf[d.staff] || 0) + (sT + sP);
+            }
+        });
 
-    // 個人業績查詢
-    window.getDesignerReport = async () => {
-        const target = document.getElementById('q_staff').value.trim().toUpperCase();
-        const resBox = document.getElementById('queryResult');
-        if (!target) return alert("請輸入設計師姓名");
-
-        resBox.style.display = 'block';
-        resBox.innerHTML = "查詢中...";
-
-        const q = query(collection(db, "sales"), where("staff", "==", target));
-        const snap = await getDocs(q);
-        
-        let tTech = 0, tProd = 0;
-        snap.forEach(d => {
-            const data = d.data();
-            tTech += (data.tech || 0);
-            tProd += (data.prod || 0);
-        });
-
-        resBox.innerHTML = `<h3>👤 ${target} 累計業績</h3>技術營收：$${tTech}<br>產品營收：$${tProd}<br><hr><b>總計：$${tTech + tProd}</b>`;
-    };
-
-    // 店務報表
-    window.getShopReport = async (type) => {
-        const resBox = document.getElementById('shopResult');
-        resBox.style.display = 'block';
-        resBox.innerHTML = "正在計算全店數據...";
-
-        const snap = await getDocs(collection(db, "sales"));
-        let tTech = 0, tProd = 0, total = 0;
-        let staffPerf = {};
-        const now = new Date();
-
-        snap.forEach(d => {
-            const data = d.data();
-            if (!data.createdAt) return;
-            const saleDate = data.createdAt.toDate();
-            let match = false;
-
-            if (type === 'today') match = saleDate.toDateString() === now.toDateString();
-            else if (type === 'month') match = saleDate.getMonth() === now.getMonth() && saleDate.getFullYear() === now.getFullYear();
-            else if (type === 'week') {
-                const diff = now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1);
-                const monday = new Date(now.setDate(diff));
-                monday.setHours(0,0,0,0);
-                match = saleDate >= monday;
-            }
-
-            if (match) {
-                tTech += data.tech; tProd += data.prod; total += data.total;
-                staffPerf[data.staff] = (staffPerf[data.staff] || 0) + data.total;
-            }
-        });
-
-        let rankHtml = Object.entries(staffPerf)
-            .sort((a, b) => b[1] - a[1])
-            .map(([name, amt], i) => `<div class="item-row"><span>${i+1}. ${name}</span><span>$${amt}</span></div>`)
-            .join("");
-
-        resBox.innerHTML = `<h3>📅 店務報表 (${type})</h3>全店總收：<b>$${total}</b><br>技術: $${tTech} | 產品: $${tProd}<hr>業績排行：<br>${rankHtml || "暫無數據"}`;
-    };
-
-    document.getElementById('btnSubmitSale').onclick = window.processSale;
-    document.getElementById('btnQueryStaff').onclick = window.getDesignerReport;
+        let rankHtml = "";
+        Object.keys(staffPerf).sort((a,b) => staffPerf[b] - staffPerf[a]).forEach((s, i) => {
+            rankHtml += `<div class="item-row"><span>${i+1}. ${s}</span><span>$${staffPerf[s]}</span></div>`;
+        });
+        res.innerHTML = `<h3>📅 ${type==='today'?'今日':(type==='week'?'本週':'本月')}全店</h3>總營收：<b>$${total}</b><br>技術：$${tTech} | 產品：$${tProd}<hr>排行：<br>${rankHtml || "無數據"}`;
+    }
 </script>
 </body>
 </html>
