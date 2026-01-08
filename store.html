@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUXE Inventory | 黑金奢華庫存管理</title>
+    <title>黑金奢華庫存管理</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
@@ -133,7 +133,7 @@
     <main>
         <section v-show="page === 1" class="max-w-xl mx-auto">
             <div class="luxury-card p-10 rounded-3xl border-t-2 border-t-gold/50">
-                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">ITEM REGISTRATION</h2>
+                <h2 class="text-xl gold-text mb-8 tracking-[5px] text-center">美業庫存管理</h2>
                 <div class="space-y-6 text-sm">
                     <div>
                         <label class="block opacity-40 mb-2">物品名稱 / Name</label>
@@ -157,7 +157,7 @@
                         <label class="block opacity-40 mb-2">安全水位 / Safety Line</label>
                         <input v-model.number="newItem.safeValue" type="number" class="w-full p-4 rounded-xl">
                     </div>
-                    <button type="button" @click.stop="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl shadow-lg">存入金庫系統</button>
+                    <button type="button" @click.stop="addItem" class="gold-btn-main w-full py-5 mt-4 rounded-xl shadow-lg">存入倉庫系統</button>
                 </div>
             </div>
         </section>
@@ -306,3 +306,4 @@
 
 </body>
 </html>
+
