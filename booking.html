@@ -20,14 +20,14 @@
             min-height: 100vh; padding-bottom: 120px;
         }
 
-        /* --- 強化的返回首頁按鈕 --- */
+        /* --- 返回首頁按鈕 --- */
         .home-btn {
             position: fixed;
             top: 15px;
             left: 15px;
-            z-index: 9999; /* 確保在最上層 */
-            background: #000; /* 純黑背景 */
-            border: 2px solid var(--gold-bright); /* 粗金邊 */
+            z-index: 9999;
+            background: #000;
+            border: 2px solid var(--gold-bright);
             color: var(--gold-bright);
             padding: 10px 18px;
             border-radius: 12px;
@@ -38,6 +38,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s;
         }
         .home-btn:active {
             transform: scale(0.9);
@@ -45,10 +46,9 @@
             color: #000;
         }
 
-        .panel { display: none; width: 92%; max-width: 420px; padding-top: 60px; } /* 增加頂部間距避開按鈕 */
+        .panel { display: none; width: 92%; max-width: 420px; padding-top: 60px; }
         .panel.active { display: block; }
 
-        /* 輪播區 */
         .carousel-section { width: 100%; position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
         .main-display-area { position: relative; width: 100%; height: 300px; display: flex; justify-content: center; align-items: center; margin-top: 15px; }
         #main-photo {
@@ -85,31 +85,22 @@
 
         .calendar-table { width: 100%; border-collapse: collapse; color: #ccc; }
         .calendar-table th { color: var(--gold-bright); font-size: 12px; padding: 10px 0; }
-        .calendar-table td { width: 14%; height: 40px; font-size: 14px; cursor: pointer; border-radius: 8px; position: relative; }
+        .calendar-table td { width: 14%; height: 40px; font-size: 14px; cursor: pointer; border-radius: 8px; text-align: center; }
         .calendar-table td.has-event { background: var(--gold-bright) !important; color: #000 !important; font-weight: bold; }
-        .calendar-table td.selected-date { outline: 2px solid #fff; }
 
         .tab-switcher { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; background: #111; border-radius: 50px; padding: 5px; width: 240px; border: 1px solid #333; z-index: 100; }
         .tab-btn { flex: 1; padding: 12px; border-radius: 40px; border: none; background: transparent; color: #666; font-size: 14px; cursor: pointer; }
         .tab-btn.active { background: var(--gold-bright); color: #000; font-weight: bold; }
 
-        .history-item { background: rgba(255,255,255,0.04); padding: 16px; border-radius: 18px; margin-bottom: 12px; border-left: 4px solid var(--gold-bright); }
-        .ref-photo-thumb { width: 60px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 10px; border: 1px solid var(--gold-bright); }
-
         .photo-wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .photo-wall-item { text-align: center; }
-        .photo-wall-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; border: 1px solid var(--gold-dim); }
-        .photo-wall-item span { display: block; font-size: 11px; color: var(--gold-bright); margin-top: 4px; }
-        
-        .badge { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #ccc; }
-        .badge.none { color: #d4af37; background: rgba(212, 175, 55, 0.1); }
+        .photo-wall-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid var(--gold-dim); }
     </style>
 </head>
 <body>
 
-<button class="home-btn" onclick="goHome()">
-    🏠 返回首頁
-</button>
+    <button class="home-btn" onclick="goHome()">
+        🏠 返回首頁
+    </button>
 
     <div id="client" class="panel active">
         <h1 style="color:var(--gold-bright); text-align:center; letter-spacing:10px; margin: 10px 0 5px;">VOGUE</h1>
@@ -148,23 +139,12 @@
             <div style="display: flex; gap: 10px;"><input type="date" id="appDate"><input type="time" id="appTime"></div>
             <button class="btn" onclick="addBooking()">送出預約並回傳照片</button>
         </div>
-        <div id="history-section"><div id="my-list"></div></div>
+        <div id="my-list"></div>
     </div>
 
     <div id="designer" class="panel">
         <h1 style="text-align:center; color:var(--gold-bright);" id="designer-title">ATELIER</h1>
-        <div class="glass-card">
-            <h3 id="cal-month-title" style="color:var(--gold-bright); text-align:center;">月曆</h3>
-            <table class="calendar-table" id="calendar-body">
-                <thead><tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </div>
         <div id="designer-content"></div>
-        <div class="glass-card" id="wall-section" style="margin-top:20px;">
-            <h3 style="color:var(--gold-bright); margin-top:0;">📸 客戶參考照</h3>
-            <div class="photo-wall" id="photo-wall"></div>
-        </div>
     </div>
 
     <div class="tab-switcher">
@@ -173,9 +153,8 @@
     </div>
 
     <script type="module">
-        // 此處請保留您原本的 Firebase 初始化與所有邏輯函數 (與上一次回覆一致)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
@@ -191,37 +170,24 @@
         const db = getDatabase(app);
         const bookingRef = ref(db, 'vogue_bookings');
 
-        // (保持原有的 window.onload, switchTab, addBooking 等所有函數...)
-        // [此處省略以節省篇幅，請延用您手上的完整 Script 內容]
-        
         let photoList = JSON.parse(localStorage.getItem('vogue_local_photos') || '[]');
-        let myBookingIDs = JSON.parse(localStorage.getItem('vogue_my_bookings') || '[]');
         let currentIdx = 0;
-        let allBookings = {};
-        let selectedDateFilter = null;
-        let currentAuthUser = "";
 
-        window.onload = () => { 
-            if(document.getElementById('appDate')) document.getElementById('appDate').valueAsDate = new Date(); 
-            renderGallery(); 
-            initCalendar(); 
+        // --- 強制掛載函數到 window (解決 module 作用域問題) ---
+
+        window.goHome = () => {
+            // 切換回客戶端 UI
+            window.switchTab('client');
+            // 回到頂部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 如果希望徹底重啟，可以解除下行註解：
+            // location.reload();
         };
-
-        onValue(bookingRef, (snap) => {
-            allBookings = snap.val() || {};
-            updateCalendarHighlights();
-            renderLists();
-            renderPhotoWall();
-        });
 
         window.switchTab = (t) => {
             if(t === 'designer') {
                 const code = prompt("請輸入管理碼");
-                if(code === '1111') currentAuthUser = "設計師 A";
-                else if(code === '2222') currentAuthUser = "設計師 B";
-                else if(code === '0000') currentAuthUser = "Admin";
-                else { alert("碼錯囉！"); return; }
-                document.getElementById('designer-title').innerText = currentAuthUser + " 後台";
+                if(code !== '0000') { alert("碼錯囉！"); return; }
             }
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
@@ -229,28 +195,59 @@
             document.getElementById('btn-' + t).classList.add('active');
         };
 
-        // ... 其餘函數與之前相同
+        window.toggleService = (el) => el.classList.toggle('selected');
+
         window.handleFileUpload = (e) => {
             const file = e.target.files[0];
             const reader = new FileReader();
             reader.onload = (f) => {
                 photoList.push(f.target.result);
                 localStorage.setItem('vogue_local_photos', JSON.stringify(photoList));
-                currentIdx = photoList.length - 1; renderGallery();
+                currentIdx = photoList.length - 1; 
+                renderGallery();
             };
             reader.readAsDataURL(file);
         };
+
         window.renderGallery = () => {
             const main = document.getElementById('main-photo');
             const cnt = document.getElementById('photo-counter');
-            if(photoList.length > 0) { main.src = photoList[currentIdx]; cnt.innerText = `${currentIdx + 1} / ${photoList.length}`; }
-            else { main.src = "https://via.placeholder.com/230x290/111/d4af37?text=VOGUE"; cnt.innerText = "0 / 0"; }
+            if(photoList.length > 0) { 
+                main.src = photoList[currentIdx]; 
+                cnt.innerText = `${currentIdx + 1} / ${photoList.length}`; 
+            }
         };
+
         window.nextImg = () => { if(photoList.length){ currentIdx = (currentIdx + 1) % photoList.length; renderGallery(); } };
         window.prevImg = () => { if(photoList.length){ currentIdx = (currentIdx - 1 + photoList.length) % photoList.length; renderGallery(); } };
-        window.toggleService = (el) => el.classList.toggle('selected');
-        // (省略重複部分)
+
+        window.addBooking = () => {
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            if(!name || !phone) { alert("請填寫姓名與電話"); return; }
+
+            const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
+            
+            push(bookingRef, {
+                name,
+                phone,
+                designer: document.getElementById('selDesigner').value,
+                services,
+                date: document.getElementById('appDate').value,
+                time: document.getElementById('appTime').value,
+                photo: photoList[currentIdx] || null,
+                timestamp: Date.now()
+            }).then(() => {
+                alert("預約成功！");
+                location.reload();
+            });
+        };
+
+        // 初始化
+        window.onload = () => {
+            if(document.getElementById('appDate')) document.getElementById('appDate').valueAsDate = new Date();
+            renderGallery();
+        };
     </script>
 </body>
 </html>
-
