@@ -1,274 +1,290 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>銷售開發系統</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>銷售開發系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-    <style>
-        :root { --gold-bright: #fde68a; --gold-main: #d4af37; --gold-dark: #8e6d13; --bg-black: #050505; }
-        body { background: var(--bg-black); color: var(--gold-main); font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; }
-        
-        /* 奢華返回按鈕樣式 */
-        .luxury-back-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            background: rgba(5, 5, 5, 0.85);
-            border: 1px solid var(--gold-main);
-            border-radius: 30px;
-            color: var(--gold-bright);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        .luxury-back-btn:hover {
-            background: var(--gold-main);
-            color: #000;
-            transform: translateY(-2px);
-        }
+    <style>
+        :root { --gold-bright: #fde68a; --gold-main: #d4af37; --gold-dark: #8e6d13; --bg-black: #050505; }
+        body { background: var(--bg-black); color: var(--gold-main); font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; }
+        
+        /* 奢華返回按鈕樣式 */
+        .luxury-back-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid var(--gold-main);
+            border-radius: 30px;
+            color: var(--gold-bright);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .luxury-back-btn:hover {
+            background: var(--gold-main);
+            color: #000;
+            transform: translateY(-2px);
+        }
 
-        .text-gradient-gold {
-            background: linear-gradient(to bottom, #fff6d5 0%, #d4af37 50%, #8e6d13 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
+        .text-gradient-gold {
+            background: linear-gradient(to bottom, #fff6d5 0%, #d4af37 50%, #8e6d13 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
 
-        /* 呼吸感金框卡片 */
-        .individual-flow-box {
-            position: relative; border-radius: 24px; padding: 1.5px;
-            background: linear-gradient(90deg, #1a1a1a, var(--gold-dark), #1a1a1a, var(--gold-main), #1a1a1a);
-            background-size: 200% 100%;
-            animation: individualFlow 5s linear infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes individualFlow {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        /* --- 修正：黑金流動 + 呼吸效果 --- */
+        @keyframes individualFlow {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
 
-        .glass-panel {
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 23px; width: 100%;
-        }
+        @keyframes goldBreathe {
+            0%, 100% { 
+                box-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+                filter: brightness(1);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+                filter: brightness(1.2);
+            }
+        }
 
-        .btn-gold-action {
-            background: linear-gradient(180deg, var(--gold-bright), var(--gold-main));
-            color: #000; font-weight: 900; padding: 14px; border-radius: 12px; 
-            cursor: pointer; border: 2px solid transparent; transition: all 0.1s;
-            text-align: center;
-        }
-        .btn-gold-action:active {
-            background: #000 !important; color: var(--gold-main) !important;
-            border: 2px solid var(--gold-main); transform: scale(0.95);
-        }
+        .individual-flow-box {
+            position: relative; 
+            border-radius: 24px; 
+            padding: 2px;
+            background: linear-gradient(90deg, #1a1a1a, var(--gold-dark), #fde68a, var(--gold-main), #1a1a1a);
+            background-size: 200% 100%;
+            /* 同時載入流動與呼吸兩個動畫 */
+            animation: 
+                individualFlow 5s linear infinite, 
+                goldBreathe 3s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
 
-        .page { display: none; padding: 20px; padding-top: 60px; } /* 預留返回鍵空間 */
-        .page.active { display: block; }
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 23px; width: 100%;
+        }
 
-        .drawer-container.active .drawer-content { display: block; padding: 0 15px 20px 15px; }
-        .drawer-content { display: none; }
+        .btn-gold-action {
+            background: linear-gradient(180deg, var(--gold-bright), var(--gold-main));
+            color: #000; font-weight: 900; padding: 14px; border-radius: 12px; 
+            cursor: pointer; border: 2px solid transparent; transition: all 0.1s;
+            text-align: center;
+        }
+        .btn-gold-action:active {
+            background: #000 !important; color: var(--gold-main) !important;
+            border: 2px solid var(--gold-main); transform: scale(0.95);
+        }
 
-        input, select {
-            background: rgba(0,0,0,0.7) !important;
-            border: 1px solid var(--gold-dark) !important;
-            color: var(--gold-bright) !important;
-            padding: 12px !important; border-radius: 10px !important; outline: none; width: 100%;
-        }
+        .page { display: none; padding: 20px; padding-top: 60px; } 
+        .page.active { display: block; }
 
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
-            background: rgba(10, 10, 10, 0.95); border-top: 1px solid var(--gold-dark);
-            display: flex; justify-content: space-around; align-items: center; z-index: 100;
-        }
-        .nav-item { color: var(--gold-dark); font-size: 10px; font-weight: 900; text-align: center; }
-        .nav-item.active { color: var(--gold-bright); }
-    </style>
+        .drawer-container.active .drawer-content { display: block; padding: 0 15px 20px 15px; }
+        .drawer-content { display: none; }
+
+        input, select {
+            background: rgba(0,0,0,0.7) !important;
+            border: 1px solid var(--gold-dark) !important;
+            color: var(--gold-bright) !important;
+            padding: 12px !important; border-radius: 10px !important; outline: none; width: 100%;
+        }
+
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+            background: rgba(10, 10, 10, 0.95); border-top: 1px solid var(--gold-dark);
+            display: flex; justify-content: space-around; align-items: center; z-index: 100;
+        }
+        .nav-item { color: var(--gold-dark); font-size: 10px; font-weight: 900; text-align: center; }
+        .nav-item.active { color: var(--gold-bright); }
+    </style>
 </head>
 <body class="pb-24">
 
-    <a href="index.html" class="luxury-back-btn">
-        <span>🏠</span> 返回首頁
-    </a>
+    <a href="index.html" class="luxury-back-btn">
+        <span>🏠</span> 返回首頁
+    </a>
 
-    <div id="page-input" class="page active">
-        <header class="py-6 text-center">
-            <h1 class="text-3xl tracking-widest text-gradient-gold">銷售開發系統</h1>
-        </header>
+    <div id="page-input" class="page active">
+        <header class="py-6 text-center">
+            <h1 class="text-3xl tracking-widest text-gradient-gold">銷售開發系統</h1>
+        </header>
 
-        <div class="individual-flow-box">
-            <div class="glass-panel p-6 space-y-4">
-                <input type="text" id="ipt-name" placeholder="客戶姓名">
-                <input type="tel" id="ipt-phone" placeholder="聯絡電話">
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="text" id="ipt-course" placeholder="項目內容">
-                    <input type="number" id="ipt-value" placeholder="金額">
-                </div>
-                <select id="ipt-stage">
-                    <option value="lead">新開發階段 (LEAD)</option>
-                    <option value="contacted">洽談中階段 (DEAL)</option>
-                    <option value="won">成交紀錄 (WON)</option>
-                </select>
-                <input type="text" id="ipt-contact" placeholder="備註">
-                <button id="btn-save" class="btn-gold-action w-full">同步資料庫</button>
-            </div>
-        </div>
-    </div>
+        <div class="individual-flow-box">
+            <div class="glass-panel p-6 space-y-4">
+                <input type="text" id="ipt-name" placeholder="客戶姓名">
+                <input type="tel" id="ipt-phone" placeholder="聯絡電話">
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="ipt-course" placeholder="項目內容">
+                    <input type="number" id="ipt-value" placeholder="金額">
+                </div>
+                <select id="ipt-stage">
+                    <option value="lead">新開發階段 (LEAD)</option>
+                    <option value="contacted">洽談中階段 (DEAL)</option>
+                    <option value="won">成交紀錄 (WON)</option>
+                </select>
+                <input type="text" id="ipt-contact" placeholder="備註">
+                <button id="btn-save" class="btn-gold-action w-full">同步資料庫</button>
+            </div>
+        </div>
+    </div>
 
-    <div id="page-admin" class="page">
-        <div id="lock-screen" class="py-20 text-center">
-            <h2 class="text-xl font-bold text-gradient-gold mb-6">請輸入密碼解鎖</h2>
-            <input type="password" id="admin-pass" class="text-center w-40 mb-4" maxlength="4">
-            <button onclick="checkPass()" class="btn-gold-action w-40 mx-auto block">進入系統</button>
-        </div>
+    <div id="page-admin" class="page">
+        <div id="lock-screen" class="py-20 text-center">
+            <h2 class="text-xl font-bold text-gradient-gold mb-6">請輸入密碼解鎖</h2>
+            <input type="password" id="admin-pass" class="text-center w-40 mb-4" maxlength="4">
+            <button onclick="checkPass()" class="btn-gold-action w-40 mx-auto block">進入系統</button>
+        </div>
 
-        <div id="admin-content" style="display:none;">
-            <header class="py-4 text-center">
-                <h1 class="text-2xl font-black text-gradient-gold tracking-widest">銷售開發系統</h1>
-            </header>
-            <input type="text" id="search-input" oninput="renderUI()" placeholder="🔍 搜尋..." class="mb-6">
-            <div id="kanban-display" class="space-y-8"></div>
-        </div>
-    </div>
+        <div id="admin-content" style="display:none;">
+            <header class="py-4 text-center">
+                <h1 class="text-2xl font-black text-gradient-gold tracking-widest">銷售開發系統</h1>
+            </header>
+            <input type="text" id="search-input" oninput="renderUI()" placeholder="🔍 搜尋..." class="mb-6">
+            <div id="kanban-display" class="space-y-8"></div>
+        </div>
+    </div>
 
-    <nav class="nav-bar">
-        <div class="nav-item active" id="nav-input" onclick="switchPage('input')">
-            <div class="text-2xl">✍️</div><div>登錄</div>
-        </div>
-        <div class="nav-item" id="nav-admin" onclick="switchPage('admin')">
-            <div class="text-2xl">🗄️</div><div>系統</div>
-        </div>
-    </nav>
+    <nav class="nav-bar">
+        <div class="nav-item active" id="nav-input" onclick="switchPage('input')">
+            <div class="text-2xl">✍️</div><div>登錄</div>
+        </div>
+        <div class="nav-item" id="nav-admin" onclick="switchPage('admin')">
+            <div class="text-2xl">🗄️</div><div>系統</div>
+        </div>
+    </nav>
 
-    <script>
-        // Firebase 與 原有邏輯保持不變 (略)
-        const firebaseConfig = {
-            apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
-            authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
-            projectId: "holyhairsalon-f73bf",
-            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
-            messagingSenderId: "960169055224",
-            appId: "1:960169055224:web:82244b5e65983f89bf3c0d",
-            measurementId: "G-XS22B43TYM"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        let cacheData = {};
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+            authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+            projectId: "holyhairsalon-f73bf",
+            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
+            messagingSenderId: "960169055224",
+            appId: "1:960169055224:web:82244b5e65983f89bf3c0d",
+            measurementId: "G-XS22B43TYM"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        let cacheData = {};
 
-        function switchPage(p) {
-            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
-            document.getElementById('page-'+p).classList.add('active');
-            document.getElementById('nav-'+p).classList.add('active');
-            window.scrollTo(0,0);
-        }
+        function switchPage(p) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+            document.getElementById('page-'+p).classList.add('active');
+            document.getElementById('nav-'+p).classList.add('active');
+            window.scrollTo(0,0);
+        }
 
-        function checkPass() {
-            if(document.getElementById('admin-pass').value === '0000') {
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('admin-content').style.display = 'block';
-            } else { alert('密碼錯誤'); }
-        }
+        function checkPass() {
+            if(document.getElementById('admin-pass').value === '0000') {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+            } else { alert('密碼錯誤'); }
+        }
 
-        document.getElementById('btn-save').addEventListener('click', () => {
-            const name = document.getElementById('ipt-name').value.trim();
-            if(!name) return alert("請填姓名");
-            database.ref('leads').push({
-                name, phone: document.getElementById('ipt-phone').value || "無",
-                course: document.getElementById('ipt-course').value || "未指定",
-                value: document.getElementById('ipt-value').value || 0,
-                stage: document.getElementById('ipt-stage').value,
-                contact: document.getElementById('ipt-contact').value || "無",
-                time: Date.now()
-            }).then(() => { alert("✨ 已同步"); document.getElementById('ipt-name').value = ''; });
-        });
+        document.getElementById('btn-save').addEventListener('click', () => {
+            const name = document.getElementById('ipt-name').value.trim();
+            if(!name) return alert("請填姓名");
+            database.ref('leads').push({
+                name, phone: document.getElementById('ipt-phone').value || "無",
+                course: document.getElementById('ipt-course').value || "未指定",
+                value: document.getElementById('ipt-value').value || 0,
+                stage: document.getElementById('ipt-stage').value,
+                contact: document.getElementById('ipt-contact').value || "無",
+                time: Date.now()
+            }).then(() => { alert("✨ 已同步"); document.getElementById('ipt-name').value = ''; });
+        });
 
-        database.ref('leads').on('value', (snapshot) => {
-            cacheData = snapshot.val() || {};
-            renderUI();
-        });
+        database.ref('leads').on('value', (snapshot) => {
+            cacheData = snapshot.val() || {};
+            renderUI();
+        });
 
-        function renderUI() {
-            const container = document.getElementById('kanban-display');
-            const search = document.getElementById('search-input').value.toLowerCase();
-            container.innerHTML = '';
-            const stages = { lead: '新開發階段', contacted: '洽談中階段', won: '成交紀錄' };
-            
-            const personLatest = {}; const personHistory = {};
-            Object.keys(cacheData).forEach(id => {
-                const item = cacheData[id]; const key = `${item.name}_${item.phone}`;
-                if(!personHistory[key]) personHistory[key] = [];
-                personHistory[key].push({id, ...item});
-                if(!personLatest[key] || item.time > personLatest[key].time) personLatest[key] = { stage: item.stage, time: item.time };
-            });
+        function renderUI() {
+            const container = document.getElementById('kanban-display');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            container.innerHTML = '';
+            const stages = { lead: '新開發階段', contacted: '洽談中階段', won: '成交紀錄' };
+            
+            const personLatest = {}; const personHistory = {};
+            Object.keys(cacheData).forEach(id => {
+                const item = cacheData[id]; const key = `${item.name}_${item.phone}`;
+                if(!personHistory[key]) personHistory[key] = [];
+                personHistory[key].push({id, ...item});
+                if(!personLatest[key] || item.time > personLatest[key].time) personLatest[key] = { stage: item.stage, time: item.time };
+            });
 
-            for (let s in stages) {
-                let stageHtml = `<h2 class="text-xl font-black text-gradient-gold mb-4 border-l-4 border-yellow-700 pl-3">${stages[s]}</h2>`;
-                let hasItem = false;
+            for (let s in stages) {
+                let stageHtml = `<h2 class="text-xl font-black text-gradient-gold mb-4 border-l-4 border-yellow-700 pl-3">${stages[s]}</h2>`;
+                let hasItem = false;
 
-                Object.keys(personLatest).forEach(key => {
-                    if(personLatest[key].stage !== s) return;
-                    const history = personHistory[key].sort((a,b) => b.time - a.time);
-                    if(!history[0].name.toLowerCase().includes(search)) return;
-                    hasItem = true;
-                    
-                    stageHtml += `
-                        <div class="individual-flow-box drawer-container" onclick="this.classList.toggle('active')">
-                            <div class="glass-panel overflow-hidden">
-                                <div class="p-5 flex justify-between items-center">
-                                    <div><div class="text-xl font-bold text-white">${history[0].name}</div><div class="text-[10px] text-yellow-800">${history[0].phone}</div></div>
-                                    <div class="text-right">
-                                        <div class="text-xl font-black text-gradient-gold">$${history.reduce((a,b)=>a+Number(b.value),0).toLocaleString()}</div>
-                                        <div class="text-[9px]">歷程 ${history.length} 筆 ▼</div>
-                                    </div>
-                                </div>
-                                <div class="drawer-content space-y-4" onclick="event.stopPropagation()">
-                                    ${history.map(i => `
-                                        <div class="p-4 bg-black/60 rounded-2xl border border-yellow-900/20 space-y-3">
-                                            <input type="text" id="ed-c-${i.id}" value="${i.course}">
-                                            <input type="number" id="ed-v-${i.id}" value="${i.value}">
-                                            <input type="text" id="ed-t-${i.id}" value="${i.contact}">
-                                            <div class="flex gap-2">
-                                                <button onclick="updateRec('${i.id}')" class="btn-gold-action flex-1 py-2 text-xs">儲存</button>
-                                                <button onclick="deleteRec('${i.id}')" class="px-4 text-red-800 text-xs border border-red-900/20 rounded-xl">刪除</button>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                if(hasItem) container.innerHTML += stageHtml;
-            }
-        }
+                Object.keys(personLatest).forEach(key => {
+                    if(personLatest[key].stage !== s) return;
+                    const history = personHistory[key].sort((a,b) => b.time - a.time);
+                    if(!history[0].name.toLowerCase().includes(search)) return;
+                    hasItem = true;
+                    
+                    stageHtml += `
+                        <div class="individual-flow-box drawer-container" onclick="this.classList.toggle('active')">
+                            <div class="glass-panel overflow-hidden">
+                                <div class="p-5 flex justify-between items-center">
+                                    <div><div class="text-xl font-bold text-white">${history[0].name}</div><div class="text-[10px] text-yellow-800">${history[0].phone}</div></div>
+                                    <div class="text-right">
+                                        <div class="text-xl font-black text-gradient-gold">$${history.reduce((a,b)=>a+Number(b.value),0).toLocaleString()}</div>
+                                        <div class="text-[9px]">歷程 ${history.length} 筆 ▼</div>
+                                    </div>
+                                </div>
+                                <div class="drawer-content space-y-4" onclick="event.stopPropagation()">
+                                    ${history.map(i => `
+                                        <div class="p-4 bg-black/60 rounded-2xl border border-yellow-900/20 space-y-3">
+                                            <input type="text" id="ed-c-${i.id}" value="${i.course}">
+                                            <input type="number" id="ed-v-${i.id}" value="${i.value}">
+                                            <input type="text" id="ed-t-${i.id}" value="${i.contact}">
+                                            <div class="flex gap-2">
+                                                <button onclick="updateRec('${i.id}')" class="btn-gold-action flex-1 py-2 text-xs">儲存</button>
+                                                <button onclick="deleteRec('${i.id}')" class="px-4 text-red-800 text-xs border border-red-900/20 rounded-xl">刪除</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                if(hasItem) container.innerHTML += stageHtml;
+            }
+        }
 
-        function updateRec(id) {
-            database.ref('leads').child(id).update({
-                course: document.getElementById(`ed-c-${id}`).value,
-                value: document.getElementById(`ed-v-${id}`).value,
-                contact: document.getElementById(`ed-t-${id}`).value
-            }).then(() => alert("修改成功"));
-        }
+        function updateRec(id) {
+            database.ref('leads').child(id).update({
+                course: document.getElementById(`ed-c-${id}`).value,
+                value: document.getElementById(`ed-v-${id}`).value,
+                contact: document.getElementById(`ed-t-${id}`).value
+            }).then(() => alert("修改成功"));
+        }
 
-        function deleteRec(id) {
-            if(confirm('確定刪除？')) database.ref('leads').child(id).remove();
-        }
-    </script>
+        function deleteRec(id) {
+            if(confirm('確定刪除？')) database.ref('leads').child(id).remove();
+        }
+    </script>
 </body>
 </html>
