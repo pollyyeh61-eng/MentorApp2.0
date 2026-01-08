@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <base href="./">
-    <title>講師分潤計算 Pro - 呼吸光感版</title>
+    <title>講師分潤計算 Pro - SDK 雲端版</title>
     <style>
         :root {
             --bg-dark: #0f172a;
@@ -12,12 +11,10 @@
             --text-gold: #fbbf24;
             --low-gold: #92400e;
             --bright-gold: #fcd34d;
-            
-            /* 光譜色定義 */
-            --color-sales: #3b82f6;   /* 藍 */
-            --color-score: #10b981;   /* 綠 */
-            --color-new: #f43f5e;     /* 紅 */
-            --color-coop: #8b5cf6;    /* 紫 */
+            --color-sales: #3b82f6;
+            --color-score: #10b981;
+            --color-new: #f43f5e;
+            --color-coop: #8b5cf6;
         }
 
         body {
@@ -26,171 +23,74 @@
             color: #f8fafc;
             margin: 0;
             padding: 20px;
-            padding-top: 80px; /* 增加頂部間距，為返回按鈕留出空間 */
+            padding-top: 80px;
             display: flex;
             justify-content: center;
         }
 
-        /* 奢華返回按鈕樣式 */
         .btn-back-home {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: rgba(30, 41, 59, 0.7); /* 毛玻璃背景 */
-            border: 1px solid var(--text-gold);
-            border-radius: 50px;
-            color: var(--text-gold);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: bold;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed; top: 20px; left: 20px; z-index: 1000;
+            display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+            background: rgba(30, 41, 59, 0.7); border: 1px solid var(--text-gold);
+            border-radius: 50px; color: var(--text-gold); text-decoration: none;
+            font-size: 0.9rem; font-weight: bold; backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); transition: all 0.3s ease;
         }
 
         .btn-back-home:hover {
-            background: var(--text-gold);
-            color: var(--bg-dark);
-            transform: scale(1.05) translateX(5px);
-            box-shadow: 0 0 15px var(--text-gold);
+            background: var(--text-gold); color: var(--bg-dark);
+            transform: scale(1.05); box-shadow: 0 0 15px var(--text-gold);
         }
 
-        .app-container {
-            width: 100%;
-            max-width: 450px;
-        }
+        .app-container { width: 100%; max-width: 450px; }
 
-        /* 呼吸發光邊框動畫 */
         @keyframes breathing-glow {
-            0% { 
-                box-shadow: 0 0 5px rgba(251, 191, 36, 0.2);
-                border-color: var(--low-gold);
-            }
-            50% { 
-                box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-                border-color: var(--bright-gold);
-            }
-            100% { 
-                box-shadow: 0 0 5px rgba(251, 191, 36, 0.2);
-                border-color: var(--low-gold);
-            }
-        }
-
-        /* 按鈕呼吸背景動畫 */
-        @keyframes breathing-bg {
-            0% { background-color: #78350f; } 
-            50% { background-color: #d97706; } 
-            100% { background-color: #78350f; }
+            0%, 100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); border-color: var(--low-gold); }
+            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); border-color: var(--bright-gold); }
         }
 
         .result-card {
-            background: #1e293b;
-            border: 2px solid var(--low-gold);
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 25px;
-            animation: breathing-glow 4s ease-in-out infinite;
+            background: #1e293b; border: 2px solid var(--low-gold);
+            border-radius: 24px; padding: 30px; text-align: center;
+            margin-bottom: 25px; animation: breathing-glow 4s ease-in-out infinite;
         }
 
-        .total-amount {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--text-gold);
-            margin: 10px 0;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
-        }
+        .total-amount { font-size: 2.5rem; font-weight: 900; color: var(--text-gold); margin: 10px 0; }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; }
 
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; }
 
         input, select {
-            width: 100%;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 14px;
-            color: white;
-            font-size: 1rem;
-            box-sizing: border-box;
-            outline: none;
-            transition: all 0.4s ease;
+            width: 100%; background: #0f172a; border: 1px solid #334155;
+            border-radius: 12px; padding: 14px; color: white; font-size: 1rem;
+            box-sizing: border-box; outline: none; transition: all 0.3s ease;
         }
 
-        #salesAmount:hover, #salesAmount:focus { border-color: var(--color-sales); box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
-        #satisfactionScore:hover, #satisfactionScore:focus { border-color: var(--color-score); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
-        #newStudentCount:hover, #newStudentCount:focus { border-color: var(--color-new); box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); }
-        #cooperationStatus:hover, #cooperationStatus:focus { border-color: var(--color-coop); box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
+        input:focus { border-color: var(--text-gold); }
 
         .btn-copy {
-            width: 100%;
-            border: none;
-            padding: 16px;
-            border-radius: 14px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            animation: breathing-bg 4s ease-in-out infinite;
-            transition: transform 0.2s, filter 0.3s;
+            width: 100%; border: none; padding: 16px; border-radius: 14px;
+            color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            background-color: #78350f; transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .btn-copy:hover { transform: translateY(-2px); filter: brightness(1.2); }
-        .btn-copy:active { transform: scale(0.98); }
+        .btn-copy:hover { background-color: #d97706; transform: translateY(-2px); }
 
         .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin-top: 20px; padding-top: 20px; border-top: 1px solid #334155;
         }
 
-        .detail-item {
-            text-align: left;
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .detail-item span {
-            display: block;
-            color: #f8fafc;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
+        .detail-item { text-align: left; font-size: 0.8rem; color: #94a3b8; }
+        .detail-item span { display: block; color: #f8fafc; font-size: 1rem; font-weight: 600; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-<a href="index.html" class="btn-back-home">
-    <span>🏠</span> 返回首頁
-</a>
+<a href="index.html" class="btn-back-home">🏠 返回首頁</a>
 
 <div class="app-container">
     <div class="result-card">
@@ -207,33 +107,53 @@
 
     <div class="card">
         <div class="input-group">
+            <label>👤 講師姓名</label>
+            <input type="text" id="instructorName" placeholder="請輸入姓名">
+        </div>
+
+        <div class="input-group">
             <label>💰 課程銷售總額</label>
-            <input type="number" id="salesAmount" value="50000" oninput="calculate()">
+            <input type="number" id="salesAmount" value="50000">
         </div>
 
         <div class="input-group">
             <label>⭐ 學員滿意度 (80分起算獎勵)</label>
-            <input type="number" id="satisfactionScore" value="95" oninput="calculate()">
+            <input type="number" id="satisfactionScore" value="95">
         </div>
 
         <div class="input-group">
             <label>🚀 新客招募人數</label>
-            <input type="number" id="newStudentCount" value="5" oninput="calculate()">
+            <input type="number" id="newStudentCount" value="5">
         </div>
 
         <div class="input-group">
             <label>🤝 合作模式</label>
-            <select id="cooperationStatus" onchange="calculate()">
+            <select id="cooperationStatus">
                 <option value="false">一般個人開課</option>
                 <option value="true">協同合作 (+3%)</option>
             </select>
         </div>
 
-        <button class="btn-copy" onclick="copyReport()">複製分潤報表</button>
+        <button id="btnSaveAndCopy" class="btn-copy">複製並上傳雲端報表</button>
     </div>
 </div>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
+        authDomain: "mentor-app-b76e3.firebaseapp.com",
+        projectId: "mentor-app-b76e3",
+        storageBucket: "mentor-app-b76e3.firebasestorage.app",
+        messagingSenderId: "757249551762",
+        appId: "1:757249551762:web:512533e0a85dc1ad47654b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const PARAMS = {
         baseRate: 0.15,
         satisfactionBonus: 0.0005, 
@@ -258,18 +178,43 @@
         document.getElementById('det-perf').textContent = `NT$ ${Math.round(perfBonus).toLocaleString()}`;
         document.getElementById('det-new').textContent = `NT$ ${Math.round(newBonus).toLocaleString()}`;
         document.getElementById('det-coop').textContent = `NT$ ${Math.round(coopBonus).toLocaleString()}`;
+        
+        return { total, baseProfit, perfBonus, newBonus, coopBonus };
     }
 
-    function copyReport() {
-        const report = `【講師結算報表】\n總分潤：${document.getElementById('totalProfit').textContent}\n基礎：${document.getElementById('det-base').textContent}\n績效：${document.getElementById('det-perf').textContent}\n新客：${document.getElementById('det-new').textContent}\n合作：${document.getElementById('det-coop').textContent}`;
-        navigator.clipboard.writeText(report).then(() => alert('報表已複製！'));
-    }
+    // 監聽所有輸入欄位
+    ['salesAmount', 'satisfactionScore', 'newStudentCount', 'cooperationStatus'].forEach(id => {
+        document.getElementById(id).addEventListener('input', calculate);
+    });
+
+    // 複製並存檔
+    document.getElementById('btnSaveAndCopy').onclick = async () => {
+        const name = document.getElementById('instructorName').value.trim();
+        if (!name) return alert('請輸入講師姓名以利存檔');
+
+        const results = calculate();
+        const report = `【講師結算報表】\n講師：${name}\n總分潤：${document.getElementById('totalProfit').textContent}\n基礎：${document.getElementById('det-base').textContent}\n績效：${document.getElementById('det-perf').textContent}\n新客：${document.getElementById('det-new').textContent}\n合作：${document.getElementById('det-coop').textContent}`;
+
+        try {
+            await addDoc(collection(db, "profit_records"), {
+                instructor: name,
+                salesAmount: parseFloat(document.getElementById('salesAmount').value),
+                totalProfit: results.total,
+                details: results,
+                createdAt: serverTimestamp()
+            });
+
+            await navigator.clipboard.writeText(report);
+            alert('報表已成功上傳雲端並複製到剪貼簿！');
+        } catch (e) {
+            console.error(e);
+            alert('雲端儲存失敗，但報表已複製。');
+            await navigator.clipboard.writeText(report);
+        }
+    };
 
     window.onload = calculate;
 </script>
 
 </body>
 </html>
-
-
-
