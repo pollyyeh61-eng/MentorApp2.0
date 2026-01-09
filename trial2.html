@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* 導航列與按鈕樣式 (同 index.html 風格) */
+        /* 導航列樣式 */
         .auth-bar {
             width: 100%; display: flex; justify-content: flex-end;
             padding: 15px 25px; gap: 10px; position: fixed; top: 0; z-index: 200;
@@ -51,7 +51,6 @@
             display: flex; justify-content: center; align-items: center;
             cursor: pointer; transition: 0.3s; text-decoration: none; font-size: 18px;
         }
-
         .nav-icon-btn:hover { background: var(--gold-bright); transform: scale(1.1); }
 
         /* 主容器 */
@@ -61,7 +60,7 @@
             position: relative; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); margin-top: 60px;
         }
 
-        /* 內容區塊與網格 */
+        /* 內容網格 */
         .management-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 12px; padding: 25px 0; }
         .block {
             padding: 15px; border-radius: 8px; text-align: center;
@@ -74,23 +73,19 @@
         .sub-items li { margin-bottom: 8px; font-size: 13px; color: var(--text-silver); cursor: pointer; padding: 4px 8px; }
         .sub-items li:hover { color: var(--gold-bright); background: rgba(212, 175, 55, 0.15); }
 
-        /* 外部連結文字標籤 */
+        /* 文字標籤連結 */
         .external-link-text { position: absolute; font-size: 16px; font-weight: bold; color: var(--gold-dim); writing-mode: vertical-rl; cursor: pointer; }
         .text-management { top: 50%; left: -30px; transform: translateY(-50%); }
         .text-preface { top: 50%; left: -55px; transform: translateY(-50%); }
         .text-holding { top: 50%; right: -55px; transform: translateY(-50%); }
         .top-bottom-mgt-text { position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: bold; color: var(--gold-dim); cursor: pointer; }
         .text-top-mgt { top: 8px; } .text-cost-mgt { bottom: 8px; }
-
-        /* 彈窗 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #151515; border: 1px solid var(--gold-bright); padding: 25px; border-radius: 15px; width: 320px; }
     </style>
 </head>
 <body>
 
     <div class="auth-bar" id="auth-bar">
-        <button class="auth-btn" onclick="openAuthModal()">登入學堂</button>
+        <button class="auth-btn" onclick="alert('請回首頁登入')">登入學堂</button>
     </div>
 
     <div class="side-nav">
@@ -158,34 +153,35 @@
             window.isLoggedIn = !!user;
             document.getElementById('auth-bar').innerHTML = user ? 
                 `<button class="auth-btn" onclick="location.href='index.html'">👤 返回個人中心</button>` : 
-                `<button class="auth-btn" onclick="alert('請回首頁登入')">登入學堂</button>`;
+                `<button class="auth-btn" onclick="location.href='index.html'">登入學堂</button>`;
         });
     </script>
 
     <script>
-        // 修正後的連結對照表 (對應您的原版內容)
+        // 重要修正：對應您檔案列表中的真實檔名
         const linkUrls = {
-            'top-price-mgt': 'https://sites.google.com/view/webcourse001/%E5%83%B9%E6%A0%BC%E7%AE%A1%E7%90%86',
-            'bottom-cost-mgt': 'https://drive.google.com/file/d/14qUKcjBlMhrGQpNFsb5CUxfUWHeBagkP/view?usp=sharing',
-            'total-preface': 'https://sites.google.com/view/webcourse001/%E5%89%8D%E8%A8%80/',
+            'total-preface': '1前言.html',
+            'financial-mgt': '2財務管理.html',
+            'talent-mgt': '3人才管理.html',
+            'inventory-mgt': '4庫存管理.html',
+            'customer-mgt': '5顧客管理.html',
+            'sentiment-mgt': '6客情管理.html',
+            'booking-mgt': '7預約管理.html',
+            'marketing-mgt': '8行銷管理.html',
+            'activity-mgt': '9活動管理.html',
+            'community-mgt': '10社區管理.html',
+            'supplier-mgt': '11供應商管理.html',
+            'brand-mgt': '12品牌管理.html',
+            'top-price-mgt': '13價格管理.html',
+            // 以下維持外部 Drive 連結 (或您可以自行建立檔案後修改)
             'total-management': 'https://drive.google.com/file/d/1OFOMi1jE9KRMp2eHoL1T4eeGUm3peq9g/view?usp=sharing',
             'total-holding-label': 'https://drive.google.com/file/d/19jz8RCEfCmmBI_ki8mlXP0BeEa7NIM14/view?usp=sharing',
+            'bottom-cost-mgt': 'https://drive.google.com/file/d/14qUKcjBlMhrGQpNFsb5CUxfUWHeBagkP/view?usp=sharing',
             'top-external-overview': 'https://drive.google.com/file/d/1cFAh4to7Jyau-JrV75RzHXexsyTGuePA/view?usp=sharing',
             'internal-operations-overview': 'https://drive.google.com/file/d/1WqYvrwuDqktlYV94Blb3ETpxL5rJ4cG5/view?usp=sharing',
             'bottom-external-overview': 'https://drive.google.com/file/d/1T6i6smjMgfm40HrLm3zzoC5FrTuOCTbG/view?usp=sharing',
             'left-external': 'https://drive.google.com/file/d/1DaYJLu4EH68bJcOUMOY46Tem85JxRByF/view?usp=drive_link',
-            'right-external': 'https://drive.google.com/file/d/1MU1Z2cH0L5sNmV-TqaWWp9zUvRiDoxyV/view?usp=drive_link',
-            'customer-mgt': 'https://sites.google.com/view/webcourse001/%E9%A1%A7%E5%AE%A2%E7%AE%A1%E7%90%86',
-            'sentiment-mgt': 'https://sites.google.com/view/webcourse001/%E5%AE%A2%E6%83%85%E7%AE%A1%E7%90%86',
-            'booking-mgt': 'https://sites.google.com/view/webcourse001/%E9%A0%90%E7%B4%84%E7%AE%A1%E7%90%86',
-            'financial-mgt': 'https://sites.google.com/view/webcourse001/%E8%B2%A1%E5%8B%99%E7%AE%A1%E7%90%86',
-            'talent-mgt': 'https://sites.google.com/view/webcourse001/%E4%BA%BA%E6%89%8D%E7%AE%A1%E7%90%86',
-            'inventory-mgt': 'https://sites.google.com/view/webcourse001/%E5%BA%AB%E5%AD%98%E7%AE%A1%E7%90%86',
-            'marketing-mgt': 'https://sites.google.com/view/webcourse001/%E8%A1%8C%E9%8A%B7%E7%AE%A1%E7%90%86',
-            'activity-mgt': 'https://sites.google.com/view/webcourse001/%E6%B4%BB%E5%8B%95%E7%AE%A1%E7%90%86',
-            'community-mgt': 'https://sites.google.com/view/webcourse001/%E7%A4%BE%E5%8D%80%E7%AE%A1%E7%90%86',
-            'supplier-mgt': 'https://sites.google.com/view/webcourse001/%E4%BE%9B%E6%87%89%E5%95%86%E7%AE%A1%E7%90%86',
-            'brand-mgt': 'https://sites.google.com/view/webcourse001/%E5%93%81%E7%89%8C%E7%AE%A1%E7%90%86',
+            'right-external': 'https://drive.google.com/file/d/1MU1Z2cH0L5sNmV-TqaWWp9zUvRiDoxyV/view?usp=drive_link'
         };
 
         window.navTo = function(key) {
@@ -195,9 +191,15 @@
                 return;
             }
             const url = linkUrls[key];
-            if (url) window.open(url, '_blank');
+            if (url) {
+                // 如果是本地 .html 檔案，在目前視窗開啟；如果是外部連結，在新分頁開啟
+                if (url.endsWith('.html')) {
+                    location.href = url;
+                } else {
+                    window.open(url, '_blank');
+                }
+            }
         };
     </script>
 </body>
 </html>
-
