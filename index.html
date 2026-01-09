@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -7,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>活力美髮線上學堂</title>
     <style>
-        /* 保留你原本的所有奢華黑金 CSS 樣式 */
         :root {
             --bg: #080808;
             --gold: #D4AF37;
@@ -24,6 +22,7 @@
         .nav-btn { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
         .nav-btn:hover { background: var(--gold); color: #000; }
         header h1 { font-size: 1.8rem; letter-spacing: 5px; background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; text-align: center; font-weight: 700; }
+        
         .main-container { width: 100%; max-width: 350px; }
         .btn-large { background: rgba(212, 175, 55, 0.08); border: 1px solid var(--gold); border-radius: 14px; padding: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; cursor: pointer; }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -31,12 +30,22 @@
         @keyframes breathe { 0%, 100% { border-color: rgba(212, 175, 55, 0.2); } 50% { border-color: rgba(212, 175, 55, 0.5); } }
         .icon { font-size: 26px; margin-bottom: 12px; }
         .btn-title { font-size: 0.95rem; font-weight: 500; text-align: center; }
+
+        /* 彈窗樣式 */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #151515; border: 1px solid var(--gold); padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; }
-        .terms-scroll { height: 120px; overflow-y: scroll; background: #000; border: 1px solid #333; padding: 10px; font-size: 0.75rem; color: #ccc; margin: 10px 0; }
-        input[type="text"], input[type="password"], input[type="tel"], textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; margin: 5px 0; border-radius: 8px; box-sizing: border-box; }
-        .primary-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .primary-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
+        
+        /* 會員中心 1.0 版專屬樣式 */
+        .profile-avatar-container {
+            width: 110px; height: 110px; margin: 0 auto 15px;
+            border: 2px solid var(--gold); border-radius: 50%;
+            overflow: hidden; cursor: pointer; background: #222;
+        }
+        #profile-img-display { width: 100%; height: 100%; object-fit: cover; }
+        .input-label { font-size: 0.8rem; color: var(--gold); margin-bottom: 4px; display: block; text-align: left; }
+        
+        input[type="text"], input[type="password"], input[type="tel"] { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin-bottom: 12px; border-radius: 10px; box-sizing: border-box; }
+        .primary-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
         footer { font-size: 0.7rem; color: var(--gold); opacity: 0.6; padding: 20px; text-align: center; }
     </style>
 </head>
@@ -67,7 +76,7 @@
             <div class="btn" onclick="navigateToApp('customer.html')"><div class="icon">🤝</div><span class="btn-title">客戶管理</span></div>
             <div class="btn" onclick="navigateToApp('store.html')"><div class="icon">📦</div><span class="btn-title">庫存管理</span></div>
             <div class="btn" onclick="navigateToApp('points.html')"><div class="icon">✨</div><span class="btn-title">升等集點</span></div>
-            <div class="btn" onclick="navigateToApp('trial2.html')"><div class="icon">📈</div><span class="btn-title">經營課程</span></div>
+            <div class="btn" onclick="location.href='trial2.html'"><div class="icon">📈</div><span class="btn-title">經營課程</span></div>
             <div class="btn" onclick="navigateToApp('sale.html')"><div class="icon">🚀</div><span class="btn-title">銷售開發</span></div>
             <div class="btn" onclick="navigateToApp('profit.html')"><div class="icon">🧮</div><span class="btn-title">分潤計算</span></div>
             <div class="btn" onclick="navigateToApp('student.html')"><div class="icon">🏆</div><span class="btn-title">學員關卡</span></div>
@@ -79,32 +88,31 @@
             <h3 style="text-align:center; margin-top:0;">登入啟動學堂</h3>
             <input type="text" id="email" placeholder="Email (自動記憶)">
             <input type="password" id="password" placeholder="通行密碼">
-            
-            <div id="terms-area">
-                <div class="terms-scroll">
-                    <h4>📋 服務條款與個資保護</h4>
-                    一、帳號規範：限本人使用，嚴禁轉借他人。<br>
-                    二、個資處理：顧客數據加密處理，平台僅提供技術支持。<br>
-                    三、免責聲明：測試階段系統可能因更新而中斷。
-                </div>
-                <div style="font-size:0.8rem; display:flex; align-items:center; gap:8px; margin-bottom:15px;">
-                    <input type="checkbox" id="agree-check" onchange="document.getElementById('login-btn').disabled = !this.checked">
-                    <label for="agree-check">我已閱讀並同意以上條款</label>
-                </div>
-            </div>
-
-            <button id="login-btn" class="primary-btn" disabled onclick="handleAuth()">登入並進入學堂</button>
+            <button id="login-btn" class="primary-btn" onclick="handleAuth()">登入並進入學堂</button>
             <button class="nav-btn" style="width:100%; margin-top:10px; border:none;" onclick="closeModal('auth-modal')">取消</button>
         </div>
     </div>
 
     <div id="profile-modal" class="modal">
-        <div class="modal-content">
-            <h3 style="text-align:center">個人會員中心</h3>
-            <input type="text" id="u-name" placeholder="顯示名稱" oninput="autoSave()">
-            <input type="tel" id="u-phone" placeholder="聯絡電話" oninput="autoSave()">
-            <textarea id="u-bio" placeholder="自我介紹" rows="3" oninput="autoSave()"></textarea>
-            <button class="primary-btn" onclick="saveFinal()">修正並儲存</button>
+        <div class="modal-content" style="text-align: center;">
+            <h2 style="color:var(--gold); margin-top:0;">會員中心</h2>
+            
+            <span class="input-label">個人頭像 (點擊圓圈上傳)</span>
+            <div class="profile-avatar-container" onclick="document.getElementById('avatar-input').click()">
+                <img id="profile-img-display" src="https://via.placeholder.com/110" alt="Avatar">
+                <input type="file" id="avatar-input" style="display:none;" onchange="previewImage(this)">
+            </div>
+
+            <span class="input-label">登入帳號 / Email</span>
+            <input type="text" id="u-email" readonly style="background:#222; color:#888;">
+
+            <span class="input-label">顯示名稱 / 暱稱</span>
+            <input type="text" id="u-name" placeholder="例如: polly">
+
+            <span class="input-label">聯絡電話</span>
+            <input type="tel" id="u-phone" placeholder="輸入電話號碼">
+
+            <button class="primary-btn" onclick="saveProfileData()">雙向同步儲存</button>
             <button class="nav-btn" style="width:100%; margin-top:10px; border:none;" onclick="closeModal('profile-modal')">關閉</button>
         </div>
     </div>
@@ -114,20 +122,21 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // 這是前端專用的 SDK 配置 (非私鑰 JSON)
         const firebaseConfig = {
             apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
             authDomain: "mentor-app-b76e3.firebaseapp.com",
             projectId: "mentor-app-b76e3",
             storageBucket: "mentor-app-b76e3.firebasestorage.app",
             messagingSenderId: "757249551762",
-            appId: "1:757249551762:web:512533e0a85dc1ad47654b"
+            appId: "1:757249551762:web:512533e0a85dc1ad47654b",
+            databaseURL: "https://mentor-app-b76e3-default-rtdb.firebaseio.com/"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        window.auth = auth;
+        const db = getDatabase(app);
 
         // 監控登入狀態
         onAuthStateChanged(auth, (user) => {
@@ -135,8 +144,9 @@
                 window.isLoggedIn = true;
                 document.getElementById('guest-zone').style.display = 'none';
                 document.getElementById('user-zone').style.display = 'block';
-                loadLocalData();
+                document.getElementById('u-email').value = user.email;
                 localStorage.setItem('cached_email', user.email);
+                loadUserData(user.uid);
             } else {
                 window.isLoggedIn = false;
                 document.getElementById('guest-zone').style.display = 'block';
@@ -144,13 +154,45 @@
             }
         });
 
-        // 處理登入
+        // 載入雲端資料
+        async function loadUserData(uid) {
+            const snapshot = await get(ref(db, 'users/' + uid));
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                document.getElementById('u-name').value = data.nickname || '';
+                document.getElementById('u-phone').value = data.phone || '';
+                if (data.avatar) document.getElementById('profile-img-display').src = data.avatar;
+            }
+        }
+
+        // 雙向同步儲存
+        window.saveProfileData = async () => {
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            const nickname = document.getElementById('u-name').value;
+            const phone = document.getElementById('u-phone').value;
+            const avatar = document.getElementById('profile-img-display').src;
+
+            try {
+                await set(ref(db, 'users/' + user.uid), {
+                    nickname: nickname,
+                    phone: phone,
+                    avatar: avatar,
+                    email: user.email
+                });
+                alert("會員資料已同步至雲端伺服器！");
+                closeModal('profile-modal');
+            } catch (err) {
+                alert("儲存失敗: " + err.message);
+            }
+        };
+
         window.handleAuth = async function() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                localStorage.setItem('terms_agreed', 'true');
                 closeModal('auth-modal');
                 alert("學堂啟動成功！");
             } catch (e) {
@@ -166,49 +208,25 @@
                 openAuthModal();
                 return;
             }
-            // 帶入 Token 到分頁，增加安全性
-            const token = await auth.currentUser.getIdToken();
-            window.location.href = `${url}?token=${token}`;
+            location.href = url;
+        };
+
+        window.previewImage = (input) => {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById('profile-img-display').src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
         };
     </script>
 
     <script>
-        // UI 輔助功能
         function openAuthModal() {
-            const hasAgreed = localStorage.getItem('terms_agreed') === 'true';
             document.getElementById('email').value = localStorage.getItem('cached_email') || '';
-            document.getElementById('terms-area').style.display = hasAgreed ? 'none' : 'block';
-            document.getElementById('login-btn').disabled = !hasAgreed;
             document.getElementById('auth-modal').style.display = 'flex';
         }
-
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        // 個人資料本機快取
-        function autoSave() {
-            const data = {
-                name: document.getElementById('u-name').value,
-                phone: document.getElementById('u-phone').value,
-                bio: document.getElementById('u-bio').value
-            };
-            localStorage.setItem('hair_member_data', JSON.stringify(data));
-        }
-
-        function loadLocalData() {
-            const saved = JSON.parse(localStorage.getItem('hair_member_data'));
-            if(saved) {
-                document.getElementById('u-name').value = saved.name || '';
-                document.getElementById('u-phone').value = saved.phone || '';
-                document.getElementById('u-bio').value = saved.bio || '';
-            }
-        }
-
-        function saveFinal() {
-            autoSave();
-            alert("資料已儲存！");
-            closeModal('profile-modal');
-        }
     </script>
 </body>
 </html>
