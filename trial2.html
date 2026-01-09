@@ -18,6 +18,7 @@
         body {
             font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif;
             display: flex;
+            flex-direction: column; /* 讓 auth-bar 置頂 */
             justify-content: center;
             align-items: center;
             min-height: 100vh; 
@@ -27,15 +28,39 @@
             overflow-x: hidden;
         }
 
-        /* 系統導航列：位置下移避免遮擋文字 */
+        /* 登入控制列 */
+        .auth-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 25px;
+            gap: 10px;
+            position: fixed;
+            top: 0;
+            z-index: 200;
+        }
+
+        .auth-btn {
+            background: rgba(20,20,20,0.8);
+            border: 1px solid var(--gold-dim);
+            color: var(--text-gold);
+            padding: 6px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+        .auth-btn:hover { border-color: var(--gold-bright); color: #fff; }
+
+        /* 系統導航列 */
         .side-nav {
             position: fixed;
             left: 15px;
-            top: 60%; /* 從 50% 下移到 60%，避開上方標題文字 */
+            top: 60%;
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 12px; /* 縮小間距更精緻 */
+            gap: 12px;
             z-index: 100;
         }
 
@@ -43,7 +68,7 @@
             width: 45px; height: 45px;
             background: rgba(20,20,20,0.9);
             border: 1px solid var(--gold-dim);
-            border-radius: 50%; /* 改為圓形更符合流線感 */
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -70,6 +95,7 @@
             border: 2px solid var(--gold-dim); 
             position: relative;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            margin-top: 50px;
         }
 
         .container::before {
@@ -79,7 +105,7 @@
         }
         @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
 
-        /* 外部連結與標題 */
+        /* 文字連結樣式 */
         .external-link-text {
             position: absolute; font-size: 16px; font-weight: bold;
             color: var(--gold-dim); writing-mode: vertical-rl; 
@@ -111,23 +137,52 @@
 
         .main-title { font-size: 16px; font-weight: bold; color: var(--gold-bright); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
         .sub-items { list-style: none; padding: 0; text-align: left; }
-        .sub-items li { margin-bottom: 8px; font-size: 13px; color: var(--text-silver); transition: 0.3s; }
+        .sub-items li { margin-bottom: 8px; font-size: 13px; color: var(--text-silver); transition: 0.3s; cursor: pointer; }
         .sub-items li:hover { color: #fff; padding-left: 5px; }
 
-        /* 手機端微調 */
+        /* 彈窗樣式 */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #151515; border: 1px solid var(--gold-bright); padding: 25px;
+            border-radius: 15px; width: 85%; max-width: 320px; position: relative;
+        }
+        input, textarea {
+            width: 100%; background: #000; border: 1px solid #333; color: #fff;
+            padding: 10px; margin: 8px 0; border-radius: 8px; box-sizing: border-box;
+        }
+        .primary-btn {
+            width: 100%; background: var(--gold-bright); color: #000; border: none;
+            padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;
+        }
+
+        .profile-pic-box {
+            width: 80px; height: 80px; border: 1px dashed var(--gold-dim);
+            margin: 0 auto 15px; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; overflow: hidden;
+        }
+        #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
         @media (max-width: 600px) {
-            .side-nav { left: 8px; top: 65%; } /* 手機端再往下移一點 */
+            .side-nav { left: 8px; top: 65%; }
             .nav-icon-btn { width: 38px; height: 38px; font-size: 16px; }
+            .management-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
+    <div class="auth-bar" id="auth-bar">
+        <button class="auth-btn" onclick="openAuthModal()">登入系統</button>
+    </div>
+
     <div class="side-nav">
-        <a href="pos.html" class="nav-icon-btn" title="收銀系統">💰</a>
-        <a href="customer.html" class="nav-icon-btn" title="客戶系統">💎</a>
-        <a href="store.html" class="nav-icon-btn" title="庫存系統">📦</a>
-        <a href="student.html" class="nav-icon-btn" title="訓練系統">🎓</a>
+        <div class="nav-icon-btn" onclick="navigateToApp('pos.html')" title="收銀系統">💰</div>
+        <div class="nav-icon-btn" onclick="navigateToApp('customer.html')" title="客戶系統">💎</div>
+        <div class="nav-icon-btn" onclick="navigateToApp('store.html')" title="庫存系統">📦</div>
+        <div class="nav-icon-btn" onclick="navigateToApp('student.html')" title="訓練系統">🎓</div>
     </div>
 
     <div class="container">
@@ -150,16 +205,16 @@
                 <div class="block">
                     <div class="main-title">上外部管理</div>
                     <ul class="sub-items">
-                        <li onclick="location.href='customer.html'">1. 顧客管理系統 (點擊進入)</li>
+                        <li onclick="navigateToApp('customer.html')">1. 顧客管理系統</li>
                         <li>2. 客情分析報告</li>
                     </ul>
                 </div>
                 <div class="block">
                     <div class="main-title">核心內部管理</div>
                     <ul class="sub-items">
-                        <li onclick="location.href='pos.html'">1. 財務收銀系統 (點擊進入)</li>
-                        <li onclick="location.href='student.html'">2. 人才訓練系統 (點擊進入)</li>
-                        <li onclick="location.href='store.html'">3. 庫存金庫系統 (點擊進入)</li>
+                        <li onclick="navigateToApp('pos.html')">1. 財務收銀系統</li>
+                        <li onclick="navigateToApp('student.html')">2. 人才訓練系統</li>
+                        <li onclick="navigateToApp('store.html')">3. 庫存金庫系統</li>
                     </ul>
                 </div>
                 <div class="block">
@@ -180,8 +235,128 @@
         </div>
     </div>
 
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="text-align:center; color:var(--gold-bright);">LUXE 認證</h2>
+            <input type="text" id="email" placeholder="管理員帳號">
+            <input type="password" id="password" placeholder="存取密碼">
+            <button class="primary-btn" onclick="handleFirebaseLogin()">啟動總部系統</button>
+            <button class="auth-btn" style="width:100%; border:none; margin-top:10px;" onclick="closeModal('login-modal')">取消</button>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="text-align:center; color:var(--gold-bright);">管理員中心</h3>
+            <div class="profile-pic-box" onclick="document.getElementById('file-input').click()" style="cursor:pointer">
+                <span id="pic-placeholder">📷</span>
+                <img id="preview-img">
+            </div>
+            <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
+            <input type="text" id="user-name" placeholder="管理員姓名" oninput="autoSave()">
+            <textarea id="user-bio" placeholder="經營理念" oninput="autoSave()"></textarea>
+            <button class="primary-btn" onclick="saveToCloud()">儲存設定</button>
+            <button class="auth-btn" style="width:100%; border:none; margin-top:10px;" onclick="closeModal('profile-modal')">關閉</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
+            authDomain: "mentor-app-b76e3.firebaseapp.com",
+            projectId: "mentor-app-b76e3",
+            appId: "1:757249551762:web:512533e0a85dc1ad47654b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            const authBar = document.getElementById('auth-bar');
+            if (user) {
+                window.isLoggedIn = true;
+                authBar.innerHTML = `
+                    <button class="auth-btn" onclick="openModal('profile-modal')">👤 會員中心</button>
+                    <button class="auth-btn" onclick="window.doLogout()">登出</button>`;
+                loadSavedData();
+            } else {
+                window.isLoggedIn = false;
+                authBar.innerHTML = `<button class="auth-btn" onclick="openAuthModal()">登入系統</button>`;
+            }
+        });
+
+        window.handleFirebaseLogin = async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            try {
+                await signInWithEmailAndPassword(auth, e, p);
+                closeModal('login-modal');
+            } catch (err) { alert("驗證失敗，請檢查權限。"); }
+        };
+
+        window.doLogout = () => signOut(auth).then(() => location.reload());
+
+        window.navigateToApp = (url) => {
+            if (!window.isLoggedIn) {
+                alert("系統鎖定中，請先完成登入。");
+                openAuthModal();
+                return;
+            }
+            window.location.href = url;
+        };
+    </script>
+
     <script>
-        // 這裡可以加入更多點擊邏輯
+        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        function openAuthModal() { openModal('login-modal'); }
+
+        // 資料暫存與預覽
+        window.previewFile = function() {
+            const file = document.getElementById('file-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const img = document.getElementById('preview-img');
+                img.src = reader.result;
+                img.style.display = 'block';
+                document.getElementById('pic-placeholder').style.display = 'none';
+                autoSave();
+            }
+            if (file) reader.readAsDataURL(file);
+        }
+
+        window.autoSave = () => {
+            const data = {
+                name: document.getElementById('user-name').value,
+                bio: document.getElementById('user-bio').value,
+                photo: document.getElementById('preview-img').src
+            };
+            localStorage.setItem('luxe_user_data', JSON.stringify(data));
+        }
+
+        window.loadSavedData = () => {
+            const saved = localStorage.getItem('luxe_user_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('user-name').value = data.name || '';
+                document.getElementById('user-bio').value = data.bio || '';
+                if (data.photo && data.photo.startsWith('data:image')) {
+                    const img = document.getElementById('preview-img');
+                    img.src = data.photo;
+                    img.style.display = 'block';
+                    document.getElementById('pic-placeholder').style.display = 'none';
+                }
+            }
+        }
+
+        window.saveToCloud = () => {
+            autoSave();
+            alert("經營資料已同步至 LUXE 雲端。");
+            closeModal('profile-modal');
+        }
     </script>
 </body>
 </html>
