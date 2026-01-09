@@ -31,20 +31,22 @@
         .icon { font-size: 26px; margin-bottom: 12px; }
         .btn-title { font-size: 0.95rem; font-weight: 500; text-align: center; }
 
-        /* 彈窗樣式 */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #151515; border: 1px solid var(--gold); padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; }
+        .modal-content { background: #151515; border: 1px solid var(--gold); padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
         
-        /* 會員中心 1.0 版專屬樣式 */
+        /* 會員中心 1.0 風格 */
         .profile-avatar-container {
-            width: 110px; height: 110px; margin: 0 auto 15px;
+            width: 100px; height: 100px; margin: 0 auto 15px;
             border: 2px solid var(--gold); border-radius: 50%;
             overflow: hidden; cursor: pointer; background: #222;
         }
         #profile-img-display { width: 100%; height: 100%; object-fit: cover; }
-        .input-label { font-size: 0.8rem; color: var(--gold); margin-bottom: 4px; display: block; text-align: left; }
+        .input-label { font-size: 0.75rem; color: var(--gold); margin-bottom: 4px; display: block; text-align: left; opacity: 0.8; }
         
-        input[type="text"], input[type="password"], input[type="tel"] { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin-bottom: 12px; border-radius: 10px; box-sizing: border-box; }
+        input[type="text"], input[type="password"], input[type="tel"] { 
+            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
+            padding: 12px; margin-bottom: 12px; border-radius: 10px; box-sizing: border-box; 
+        }
         .primary-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
         footer { font-size: 0.7rem; color: var(--gold); opacity: 0.6; padding: 20px; text-align: center; }
     </style>
@@ -64,7 +66,7 @@
     <header><h1>學堂隨身助理</h1></header>
 
     <div class="main-container">
-        <div class="btn-large" onclick="navigateToApp('http://entrance.hairweb.net/')">
+        <div class="btn-large" onclick="location.href='http://entrance.hairweb.net/'">
             <div class="icon" style="margin-right: 12px;">🌐</div>
             <span class="btn-title" style="font-size: 1.1rem; font-weight: 700;">美學入口平台</span>
         </div>
@@ -85,7 +87,7 @@
 
     <div id="auth-modal" class="modal">
         <div class="modal-content">
-            <h3 style="text-align:center; margin-top:0;">登入啟動學堂</h3>
+            <h3 style="margin-top:0;">登入啟動學堂</h3>
             <input type="text" id="email" placeholder="Email (自動記憶)">
             <input type="password" id="password" placeholder="通行密碼">
             <button id="login-btn" class="primary-btn" onclick="handleAuth()">登入並進入學堂</button>
@@ -94,17 +96,17 @@
     </div>
 
     <div id="profile-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
+        <div class="modal-content">
             <h2 style="color:var(--gold); margin-top:0;">會員中心</h2>
             
             <span class="input-label">個人頭像 (點擊圓圈上傳)</span>
             <div class="profile-avatar-container" onclick="document.getElementById('avatar-input').click()">
-                <img id="profile-img-display" src="https://via.placeholder.com/110" alt="Avatar">
+                <img id="profile-img-display" src="https://via.placeholder.com/100" alt="Avatar">
                 <input type="file" id="avatar-input" style="display:none;" onchange="previewImage(this)">
             </div>
 
-            <span class="input-label">登入帳號 / Email</span>
-            <input type="text" id="u-email" readonly style="background:#222; color:#888;">
+            <span class="input-label">登入帳號 / Email (具記憶功能)</span>
+            <input type="text" id="u-email" placeholder="請輸入 Email">
 
             <span class="input-label">顯示名稱 / 暱稱</span>
             <input type="text" id="u-name" placeholder="例如: polly">
@@ -127,11 +129,11 @@
         const firebaseConfig = {
             apiKey: "AIzaSyAM4d9GqtSjNOlfguew8BktZ8ptrnBzvpc",
             authDomain: "mentor-app-b76e3.firebaseapp.com",
+            databaseURL: "https://mentor-app-b76e3-default-rtdb.firebaseio.com",
             projectId: "mentor-app-b76e3",
             storageBucket: "mentor-app-b76e3.firebasestorage.app",
             messagingSenderId: "757249551762",
-            appId: "1:757249551762:web:512533e0a85dc1ad47654b",
-            databaseURL: "https://mentor-app-b76e3-default-rtdb.firebaseio.com/"
+            appId: "1:757249551762:web:512533e0a85dc1ad47654b"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -144,8 +146,12 @@
                 window.isLoggedIn = true;
                 document.getElementById('guest-zone').style.display = 'none';
                 document.getElementById('user-zone').style.display = 'block';
-                document.getElementById('u-email').value = user.email;
-                localStorage.setItem('cached_email', user.email);
+                
+                // 優先載入 Firebase 帳號或本地快取
+                const displayEmail = user.email || localStorage.getItem('cached_email') || '';
+                document.getElementById('u-email').value = displayEmail;
+                localStorage.setItem('cached_email', displayEmail);
+                
                 loadUserData(user.uid);
             } else {
                 window.isLoggedIn = false;
@@ -154,37 +160,52 @@
             }
         });
 
-        // 載入雲端資料
+        // 載入資料 (對應 Rules: members 節點)
         async function loadUserData(uid) {
-            const snapshot = await get(ref(db, 'users/' + uid));
+            const memberRef = ref(db, 'members/' + uid);
+            const snapshot = await get(memberRef);
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                document.getElementById('u-name').value = data.nickname || '';
+                document.getElementById('u-name').value = data.name || '';
                 document.getElementById('u-phone').value = data.phone || '';
+                document.getElementById('u-email').value = data.email || auth.currentUser.email;
                 if (data.avatar) document.getElementById('profile-img-display').src = data.avatar;
             }
         }
 
-        // 雙向同步儲存
+        // 雙向同步儲存 [對應 Rules: members/$member_id]
         window.saveProfileData = async () => {
             const user = auth.currentUser;
-            if (!user) return;
+            if (!user) return alert("請先登入");
             
-            const nickname = document.getElementById('u-name').value;
-            const phone = document.getElementById('u-phone').value;
-            const avatar = document.getElementById('profile-img-display').src;
+            const nameVal = document.getElementById('u-name').value;
+            const emailVal = document.getElementById('u-email').value;
+            const phoneVal = document.getElementById('u-phone').value;
+            const avatarData = document.getElementById('profile-img-display').src;
 
             try {
-                await set(ref(db, 'users/' + user.uid), {
-                    nickname: nickname,
-                    phone: phone,
-                    avatar: avatar,
-                    email: user.email
-                });
+                const memberRef = ref(db, 'members/' + user.uid);
+                const snapshot = await get(memberRef);
+                let currentData = snapshot.exists() ? snapshot.val() : {};
+
+                // 組合新舊資料，確保不覆蓋 stamps 和 total_spent
+                const updatedData = {
+                    ...currentData,
+                    name: nameVal,
+                    email: emailVal,
+                    phone: phoneVal,
+                    avatar: avatarData,
+                    last_updated: new Date().toISOString()
+                };
+
+                await set(memberRef, updatedData);
+                localStorage.setItem('cached_email', emailVal); // 記憶 Email
+                
                 alert("會員資料已同步至雲端伺服器！");
                 closeModal('profile-modal');
             } catch (err) {
-                alert("儲存失敗: " + err.message);
+                alert("儲存失敗：您可能沒有權限或格式錯誤");
+                console.error(err);
             }
         };
 
@@ -202,7 +223,7 @@
 
         window.handleLogout = () => { if(confirm("確定登出？")) signOut(auth); };
 
-        window.navigateToApp = async function(url) {
+        window.navigateToApp = function(url) {
             if (!window.isLoggedIn) {
                 alert("請先完成登入哦！");
                 openAuthModal();
