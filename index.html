@@ -5,39 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>活力美髮線上學堂</title>
+    
     <style>
+        /* --- 登入密碼層樣式 --- */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000 !important; /* 強制全黑，防止變白 */
+            display: none; /* 預設隱藏，由 JS 控制顯示 */
+            flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 99999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .login-card {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #D4AF37;
+            text-align: center;
+            width: 80%; max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .login-card img { width: 80px; margin-bottom: 20px; }
+        .login-card h2 { color: #D4AF37; margin-bottom: 10px; font-size: 24px; }
+        .login-card p { color: #888; margin-bottom: 20px; font-size: 14px; }
+        .login-card input {
+            width: 100%; padding: 12px; margin-bottom: 20px;
+            border-radius: 8px; border: 1px solid #333;
+            background: #000; color: #fff; text-align: center;
+            box-sizing: border-box; font-size: 18px;
+        }
+        .login-card button {
+            width: 100%; padding: 12px;
+            background: #D4AF37; border: none; border-radius: 8px;
+            color: #000; font-weight: bold; cursor: pointer;
+            font-size: 16px; transition: 0.3s;
+        }
+
+        /* --- 原始網頁樣式 --- */
         :root {
             --bg: #080808;
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
         }
-        <script>
-  (function() {
-    // 1. 檢查是否已經在 App 獨立模式運行 (Standalone)
-    const isAppMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    
-    // 2. 檢查是否已經過授權
-    const isAuthorized = localStorage.getItem('mentor_paid_access');
-
-    // 如果是從 App 打開，且尚未驗證密碼
-    if (isAppMode && !isAuthorized) {
-      const password = prompt("歡迎來到學堂數位助理！本app為付費課程，請輸入您的授權密碼：");
-      
-      if (password === "1010") { // 您可以將 1010 改為您想要的密碼
-        alert("驗證成功！正在進入學堂數位助理...");
-        localStorage.setItem('mentor_paid_access', 'true');
-      } else {
-        alert("密碼錯誤，請聯繫客服獲取授權。");
-        // 鎖定畫面，不讓進入
-        document.body.innerHTML = "<div style='background:#000;color:#D4AF37;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;text-align:center;'><h1>🔒 本課程僅限付費學員訪問</h1><p>請重新啟動 App 並輸入正確密碼</p></div>";
-      }
-    } 
-    // 如果學員是用「瀏覽器網頁」打開，可以顯示一個提醒
-    else if (!isAppMode && !isAuthorized) {
-      console.log("當前為網頁瀏覽模式，建議安裝 App 以獲得完整課程體驗。");
-    }
-  })();
-</script>
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
@@ -61,7 +72,6 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #151515; border: 1px solid var(--gold); padding: 20px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
         
-        /* 會員中心 1.0 風格 */
         .profile-avatar-container {
             width: 100px; height: 100px; margin: 0 auto 15px;
             border: 2px solid var(--gold); border-radius: 50%;
@@ -79,6 +89,16 @@
     </style>
 </head>
 <body>
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <img src="logo.png" alt="Logo">
+            <h2>學堂數位助理</h2>
+            <p>本 App 為付費課程，請輸入授權密碼</p>
+            <input type="password" id="app-pw-input" placeholder="請輸入 4 位密碼">
+            <button onclick="checkAppPassword()">解鎖學堂</button>
+        </div>
+    </div>
 
     <div class="top-nav">
         <div id="guest-zone">
@@ -125,28 +145,48 @@
     <div id="profile-modal" class="modal">
         <div class="modal-content">
             <h2 style="color:var(--gold); margin-top:0;">會員中心</h2>
-            
             <span class="input-label">個人頭像 (點擊圓圈上傳)</span>
             <div class="profile-avatar-container" onclick="document.getElementById('avatar-input').click()">
                 <img id="profile-img-display" src="https://via.placeholder.com/100" alt="Avatar">
                 <input type="file" id="avatar-input" style="display:none;" onchange="previewImage(this)">
             </div>
-
-            <span class="input-label">登入帳號 / Email (具記憶功能)</span>
+            <span class="input-label">登入帳號 / Email</span>
             <input type="text" id="u-email" placeholder="請輸入 Email">
-
             <span class="input-label">顯示名稱 / 暱稱</span>
             <input type="text" id="u-name" placeholder="例如: polly">
-
             <span class="input-label">聯絡電話</span>
             <input type="tel" id="u-phone" placeholder="輸入電話號碼">
-
             <button class="primary-btn" onclick="saveProfileData()">雙向同步儲存</button>
             <button class="nav-btn" style="width:100%; margin-top:10px; border:none;" onclick="closeModal('profile-modal')">關閉</button>
         </div>
     </div>
 
     <footer>VITALITY HAIR ACADEMY © 2026</footer>
+
+    <script>
+      (function() {
+        // 檢查是否為 App 模式
+        const isAppMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        const isAuthorized = localStorage.getItem('mentor_paid_access');
+
+        // 只有在 App 模式且未授權時，才顯示漂亮的登入層
+        if (isAppMode && !isAuthorized) {
+          document.getElementById('login-overlay').style.display = 'flex';
+        }
+      })();
+
+      function checkAppPassword() {
+        const userInput = document.getElementById('app-pw-input').value;
+        if (userInput === "1010") {
+          alert("驗證成功！正在進入學堂數位助理...");
+          localStorage.setItem('mentor_paid_access', 'true');
+          document.getElementById('login-overlay').style.display = 'none';
+        } else {
+          alert("密碼錯誤，請聯繫客服獲取授權。");
+          document.getElementById('app-pw-input').value = "";
+        }
+      }
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -167,18 +207,14 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // 監控登入狀態
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.isLoggedIn = true;
                 document.getElementById('guest-zone').style.display = 'none';
                 document.getElementById('user-zone').style.display = 'block';
-                
-                // 優先載入 Firebase 帳號或本地快取
                 const displayEmail = user.email || localStorage.getItem('cached_email') || '';
                 document.getElementById('u-email').value = displayEmail;
                 localStorage.setItem('cached_email', displayEmail);
-                
                 loadUserData(user.uid);
             } else {
                 window.isLoggedIn = false;
@@ -187,7 +223,6 @@
             }
         });
 
-        // 載入資料 (對應 Rules: members 節點)
         async function loadUserData(uid) {
             const memberRef = ref(db, 'members/' + uid);
             const snapshot = await get(memberRef);
@@ -200,40 +235,23 @@
             }
         }
 
-        // 雙向同步儲存 [對應 Rules: members/$member_id]
         window.saveProfileData = async () => {
             const user = auth.currentUser;
             if (!user) return alert("請先登入");
-            
             const nameVal = document.getElementById('u-name').value;
             const emailVal = document.getElementById('u-email').value;
             const phoneVal = document.getElementById('u-phone').value;
             const avatarData = document.getElementById('profile-img-display').src;
-
             try {
                 const memberRef = ref(db, 'members/' + user.uid);
                 const snapshot = await get(memberRef);
                 let currentData = snapshot.exists() ? snapshot.val() : {};
-
-                // 組合新舊資料，確保不覆蓋 stamps 和 total_spent
-                const updatedData = {
-                    ...currentData,
-                    name: nameVal,
-                    email: emailVal,
-                    phone: phoneVal,
-                    avatar: avatarData,
-                    last_updated: new Date().toISOString()
-                };
-
+                const updatedData = { ...currentData, name: nameVal, email: emailVal, phone: phoneVal, avatar: avatarData, last_updated: new Date().toISOString() };
                 await set(memberRef, updatedData);
-                localStorage.setItem('cached_email', emailVal); // 記憶 Email
-                
+                localStorage.setItem('cached_email', emailVal);
                 alert("會員資料已同步至雲端伺服器！");
                 closeModal('profile-modal');
-            } catch (err) {
-                alert("儲存失敗：您可能沒有權限或格式錯誤");
-                console.error(err);
-            }
+            } catch (err) { alert("儲存失敗"); }
         };
 
         window.handleAuth = async function() {
@@ -243,22 +261,13 @@
                 await signInWithEmailAndPassword(auth, email, pass);
                 closeModal('auth-modal');
                 alert("學堂啟動成功！");
-            } catch (e) {
-                alert("驗證失敗：帳號密碼不正確");
-            }
+            } catch (e) { alert("驗證失敗"); }
         };
-
         window.handleLogout = () => { if(confirm("確定登出？")) signOut(auth); };
-
         window.navigateToApp = function(url) {
-            if (!window.isLoggedIn) {
-                alert("請先完成登入哦！");
-                openAuthModal();
-                return;
-            }
+            if (!window.isLoggedIn) { alert("請先完成登入哦！"); openAuthModal(); return; }
             location.href = url;
         };
-
         window.previewImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -278,4 +287,3 @@
     </script>
 </body>
 </html>
-
