@@ -11,6 +11,33 @@
             --gold: #D4AF37;
             --gold-light: #FCF6BA;
         }
+        <script>
+  (function() {
+    // 1. 檢查是否已經在 App 獨立模式運行 (Standalone)
+    const isAppMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    
+    // 2. 檢查是否已經過授權
+    const isAuthorized = localStorage.getItem('mentor_paid_access');
+
+    // 如果是從 App 打開，且尚未驗證密碼
+    if (isAppMode && !isAuthorized) {
+      const password = prompt("歡迎來到學堂數位助理！本app為付費課程，請輸入您的授權密碼：");
+      
+      if (password === "1010") { // 您可以將 1010 改為您想要的密碼
+        alert("驗證成功！正在進入學堂數位助理...");
+        localStorage.setItem('mentor_paid_access', 'true');
+      } else {
+        alert("密碼錯誤，請聯繫客服獲取授權。");
+        // 鎖定畫面，不讓進入
+        document.body.innerHTML = "<div style='background:#000;color:#D4AF37;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;text-align:center;'><h1>🔒 本課程僅限付費學員訪問</h1><p>請重新啟動 App 並輸入正確密碼</p></div>";
+      }
+    } 
+    // 如果學員是用「瀏覽器網頁」打開，可以顯示一個提醒
+    else if (!isAppMode && !isAuthorized) {
+      console.log("當前為網頁瀏覽模式，建議安裝 App 以獲得完整課程體驗。");
+    }
+  })();
+</script>
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
@@ -251,3 +278,4 @@
     </script>
 </body>
 </html>
+
