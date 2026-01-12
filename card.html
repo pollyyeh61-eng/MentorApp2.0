@@ -12,16 +12,39 @@
       --btn-save: #00ff88; --btn-edit: #00d4ff; --btn-delete: #ff4d4d;
     }
 
-    /* --- 新增：黑金呼吸邊框動畫 --- */
+    /* --- 新增：返回按鈕樣式 --- */
+    .home-back-btn {
+      position: absolute;
+      top: 20px;
+      left: 15px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold-light);
+      color: var(--gold-light);
+      padding: 8px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: bold;
+      z-index: 1000;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .home-back-btn:hover {
+      background: var(--gold-light);
+      color: #000;
+    }
+
     @keyframes gold-glow {
         0% { border-color: var(--gold-dark); box-shadow: 0 0 15px rgba(122, 92, 13, 0.4); }
         50% { border-color: var(--gold-light); box-shadow: 0 0 30px rgba(241, 196, 15, 0.6); }
         100% { border-color: var(--gold-dark); box-shadow: 0 0 15px rgba(122, 92, 13, 0.4); }
     }
 
-    body { font-family: 'PingFang TC', sans-serif; background: var(--bg-dark); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+    body { font-family: 'PingFang TC', sans-serif; background: var(--bg-dark); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; margin: 0; position: relative; }
     
-    /* --- 修正：套用呼吸效果到 container --- */
+    /* 增加 container 上邊距防止被按鈕遮擋 */
     .container { 
         width: 100%; 
         max-width: 450px; 
@@ -30,7 +53,8 @@
         border-radius: 28px; 
         border: 2px solid var(--gold-dark); 
         box-sizing: border-box; 
-        animation: gold-glow 4s infinite ease-in-out; /* 呼吸靈魂 */
+        animation: gold-glow 4s infinite ease-in-out; 
+        margin-top: 50px; /* 增加頂部空間 */
     }
 
     h1 { color: var(--gold-light); text-align: center; letter-spacing: 2px; }
@@ -64,6 +88,8 @@
   </style>
 </head>
 <body>
+
+<a href="index.html" class="home-back-btn">← 首頁</a>
 
 <div id="status" class="status-msg">同步成功</div>
 
@@ -108,144 +134,7 @@
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, push, onValue, update, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyC0hBN9TH3UJSOsx5XVyQ08f_2RUckvXYU",
-    authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-    databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
-    projectId: "holyhairsalon-f73bf",
-    storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
-    messagingSenderId: "960169055224",
-    appId: "1:960169055224:web:4f8a45c0d3e31a93bf3c0d"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  let globalMembers = {};
-
-  // 1. 智慧匹配邏輯 (姓名或手機)
-  window.autoMatchMember = () => {
-    const inputPhone = document.getElementById('phone').value.trim();
-    const inputName = document.getElementById('name').value.trim();
-    
-    // 優先匹配手機，其次姓名
-    const matched = Object.entries(globalMembers).find(([id, m]) => 
-      (inputPhone && m.phone === inputPhone) || (inputName && m.name === inputName)
-    );
-
-    if (matched) {
-      const [id, data] = matched;
-      document.getElementById('memberId').value = id;
-      document.getElementById('name').value = data.name;
-      document.getElementById('phone').value = data.phone || "";
-      document.getElementById('level').value = data.level;
-    } else {
-      document.getElementById('memberId').value = "";
-    }
-  };
-
-  window.autoFillAmount = () => {
-    const prices = { "VIP 尊爵": 100000, "白金金鑽": 50000, "黃金銀鑽": 20000, "白銀銅鑽": 10000, "普通會員": 0 };
-    document.getElementById('amount').value = prices[document.getElementById('level').value] || 0;
-  };
-
-  window.handleSave = async () => {
-    const id = document.getElementById('memberId').value;
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const level = document.getElementById('level').value;
-    const amount = Number(document.getElementById('amount').value);
-    const note = document.getElementById('note').value || "無備註";
-    const type = document.querySelector('input[name="transType"]:checked').value;
-    
-    if (!name || !phone) return alert("請務必輸入「姓名」與「手機號碼」以便建檔！");
-
-    const dateFull = new Date().toLocaleString('zh-TW', {hour12:false});
-    const dateShort = dateFull.split(' ')[0];
-
-    try {
-      let memberRef, currentData = { totalDeposit: 0, totalSpend: 0, history: [] };
-      if (id) {
-        memberRef = ref(db, 'members/' + id);
-        const snap = await get(memberRef);
-        if (snap.exists()) currentData = snap.val();
-      } else {
-        memberRef = push(ref(db, 'members'));
-      }
-
-      const newDep = type === 'deposit' ? (currentData.totalDeposit || 0) + amount : (currentData.totalDeposit || 0);
-      const newSpe = type === 'spend' ? (currentData.totalSpend || 0) + amount : (currentData.totalSpend || 0);
-      const newBalance = newDep - newSpe;
-
-      const newHistory = currentData.history || [];
-      newHistory.unshift({ date: dateShort, fullTime: dateFull, type: type==='deposit'?'儲值':'消費', amount, note, afterBalance: newBalance });
-
-      await update(memberRef, {
-        name, phone, level, totalDeposit: newDep, totalSpend: newSpe, balance: newBalance,
-        history: newHistory.slice(0, 50), lastUpdate: Date.now()
-      });
-
-      document.getElementById('memberForm').reset();
-      document.getElementById('memberId').value = '';
-      showStatus("✅ 會員檔案已同步");
-    } catch (e) { alert("系統錯誤，請檢查網路！"); }
-  };
-
-  onValue(ref(db, 'members'), (snapshot) => {
-    globalMembers = snapshot.val() || {};
-    const listDiv = document.getElementById('memberList');
-    listDiv.innerHTML = '';
-    const weights = { "VIP 尊爵": 5, "白金金鑽": 4, "黃金銀鑽": 3, "白銀銅鑽": 2, "普通會員": 1 };
-    const sorted = Object.entries(globalMembers).sort(([,a], [,b]) => weights[b.level] - weights[a.level] || (b.balance - a.balance));
-
-    sorted.forEach(([id, m], index) => {
-      const card = document.createElement('div');
-      card.className = 'member-card';
-      card.innerHTML = `
-        <div class="card-header" onclick="toggleDrawer('${id}')">
-          <div class="rank-badge">RANK ${index + 1}</div>
-          <div style="color:var(--gold-light); font-weight:bold;">${m.name} <span style="font-size:0.75rem; color:#666; font-weight:normal;">| ${m.level}</span></div>
-          <div style="margin-top:5px; font-size:0.8rem; color:#888;">📱 ${m.phone}</div>
-          <div style="margin-top:10px;"><span style="font-size:0.8rem; color:#888;">可用餘額</span><br><span class="balance-tag">$${m.balance || 0}</span></div>
-        </div>
-        <div class="drawer" id="drawer-${id}">
-          <div style="font-size:0.85rem; color:var(--gold-light); margin-bottom:12px; font-weight:bold;">📜 歷史交易 (點擊看備註)</div>
-          ${(m.history || []).map((h, i) => `
-            <div class="history-item" onclick="toggleDetail('${id}-${i}', event)">
-              <div class="history-item-top">
-                <span>${h.date} <b style="color:${h.type==='儲值'?'#00ff88':'#ff4d4d'}">${h.type}</b></span>
-                <span>$${h.amount} ➔ $${h.afterBalance}</span>
-              </div>
-              <div class="detail-box" id="detail-${id}-${i}">
-                <div style="color:var(--gold-light);">🕒 時間：${h.fullTime}</div>
-                <div>📝 項目：${h.note}</div>
-              </div>
-            </div>
-          `).join('')}
-          <div class="btn-group">
-            <button class="btn-action" onclick="editMember('${id}')">選取</button>
-            <button class="btn-action" onclick="deleteMember('${id}','${m.name}')" style="color:#ff4d4d">刪除</button>
-          </div>
-        </div>
-      `;
-      listDiv.appendChild(card);
-    });
-  });
-
-  window.toggleDrawer = (id) => document.getElementById(`drawer-${id}`).classList.toggle('open');
-  window.toggleDetail = (detailId, event) => { event.stopPropagation(); document.getElementById(`detail-${detailId}`).classList.toggle('show'); };
-  window.editMember = (id) => {
-    const m = globalMembers[id];
-    document.getElementById('memberId').value = id;
-    document.getElementById('name').value = m.name;
-    document.getElementById('phone').value = m.phone || "";
-    document.getElementById('level').value = m.level;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-  window.deleteMember = async (id, n) => { if (confirm(`確定刪除 ${n}？`)) await remove(ref(db, 'members/' + id)); };
-  function showStatus(msg) { const s = document.getElementById('status'); s.innerText = msg; s.style.display = 'block'; setTimeout(() => s.style.display = 'none', 3000); }
+  // ... 這裡請保留您原本完整的 Firebase 腳本代碼 ...
 </script>
 </body>
 </html>
