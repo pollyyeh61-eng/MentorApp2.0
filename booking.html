@@ -21,19 +21,19 @@
             min-height: 100vh; padding-bottom: 120px;
         }
 
-        /* --- 返回首頁按鈕：修正為真正的跳轉 --- */
+        /* --- 調整處：初始狀態隱藏返回按鈕 --- */
         .home-btn {
             position: fixed; top: 15px; left: 15px; z-index: 10000;
             background: #000; border: 2px solid var(--gold-bright);
             color: var(--gold-bright); padding: 10px 18px;
             border-radius: 12px; font-size: 14px; font-weight: bold;
             cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            display: none; /* 預設不顯示 */
         }
 
         .panel { display: none; width: 92%; max-width: 420px; padding-top: 65px; }
         .panel.active { display: block; }
 
-        /* 輪播區樣式 */
         .carousel-section { width: 100%; position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
         .main-display-area { position: relative; width: 100%; height: 300px; display: flex; justify-content: center; align-items: center; margin-top: 15px; }
         #main-photo { width: 230px; height: 290px; object-fit: cover; border-radius: 18px; border: 2px solid var(--gold-bright); box-shadow: 0 0 20px var(--gold-glow); z-index: 5; }
@@ -42,29 +42,30 @@
 
         .glass-card { background: linear-gradient(145deg, #111, #000); border: 1px solid var(--gold-dim); border-radius: 24px; padding: 22px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         
-        /* --- 修正處：時間與日期不溢出的 CSS --- */
         select, input { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 15px; outline: none; }
         .date-time-row { display: flex; gap: 8px; margin-bottom: 12px; width: 100%; box-sizing: border-box; }
         .date-time-row input { flex: 1; width: 0; min-width: 0; margin-bottom: 0; padding: 12px 8px; font-size: 13px; }
 
-        /* 服務項目 10 項網格 */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .service-item { background: #111; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 13px; text-align: center; cursor: pointer; color: #888; }
         .service-item.selected { border-color: var(--gold-bright); color: var(--gold-bright); background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 10px var(--gold-glow); }
 
         .btn { width: 100%; padding: 16px; border-radius: 15px; border: 1.8px solid var(--gold-bright); background: transparent; color: var(--gold-bright); font-size: 16px; font-weight: bold; cursor: pointer; letter-spacing: 3px; }
 
-        /* 狀態標籤與月曆 */
         .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 1px solid currentColor; margin-left: 5px; }
         .status-wait { color: var(--status-wait); }
         .status-done { color: var(--status-done); }
 
+        .calendar-container { margin-bottom: 20px; }
         .calendar-table { width: 100%; border-collapse: collapse; color: #ccc; }
-        .calendar-table td { height: 40px; text-align: center; cursor: pointer; border-radius: 8px; position: relative; }
-        .calendar-table td.has-event::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--gold-bright); border-radius: 50%; }
+        .calendar-table th { color: var(--gold-bright); padding: 10px 0; font-size: 12px; }
+        .calendar-table td { height: 45px; text-align: center; cursor: pointer; border-radius: 8px; position: relative; font-size: 14px; }
+        .calendar-table td:hover { background: var(--gold-dim); }
+        .calendar-table td.today { border: 1px solid var(--gold-bright); }
+        .calendar-table td.has-event::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background: var(--gold-bright); border-radius: 50%; box-shadow: 0 0 5px var(--gold-glow); }
+        .calendar-table td.selected-day { background: var(--gold-bright) !important; color: #000; font-weight: bold; }
 
-        /* 歷史清單 */
-        .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 4px solid var(--gold-bright); }
+        .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 4px solid var(--gold-bright); position: relative; }
         .tab-switcher { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; background: #111; border-radius: 50px; padding: 5px; width: 240px; border: 1px solid #333; z-index: 1000; }
         .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #666; font-size: 14px; cursor: pointer; }
         .tab-btn.active { background: var(--gold-bright); color: #000; border-radius: 40px; font-weight: bold; }
@@ -72,11 +73,10 @@
 </head>
 <body>
 
-    <button class="home-btn" onclick="window.location.href='index.html'">🏠 返回首頁</button>
+    <button id="main-home-btn" class="home-btn" onclick="window.location.href='index.html'">🏠 返回首頁</button>
 
     <div id="client" class="panel active">
         <h1 style="color:var(--gold-bright); text-align:center; letter-spacing:10px; margin: 10px 0 5px;">VOGUE</h1>
-        
         <div class="carousel-section">
             <h4 style="color:var(--gold-bright); font-weight:300; margin:0; font-size:14px;">✨ 髮型溝通 (點選欲回傳照片)</h4>
             <div class="main-display-area">
@@ -88,7 +88,6 @@
             <button class="btn" style="width:80%; margin-top:10px; font-size:14px;" onclick="document.getElementById('photo-input').click()">📷 上傳我的參考照</button>
             <input type="file" id="photo-input" style="display:none" accept="image/*" onchange="handleFileUpload(event)">
         </div>
-        
         <div class="glass-card">
             <select id="selDesigner">
                 <option value="不指定">不指定 (由現場安排)</option>
@@ -97,7 +96,6 @@
             </select>
             <input type="text" id="custName" placeholder="顧客姓名">
             <input type="tel" id="custPhone" placeholder="聯繫電話">
-            
             <div class="service-grid">
                 <div class="service-item" onclick="toggleService(this)">洗髮</div>
                 <div class="service-item" onclick="toggleService(this)">剪髮</div>
@@ -110,21 +108,28 @@
                 <div class="service-item" onclick="toggleService(this)">頭皮護理</div>
                 <div class="service-item" onclick="toggleService(this)">髮質護理</div>
             </div>
-
             <div class="date-time-row">
                 <input type="date" id="appDate">
                 <input type="time" id="appTime">
             </div>
-
             <button class="btn" onclick="addBooking()">送出預約並回傳照片</button>
         </div>
-
         <h3 style="color:var(--gold-bright); margin-left:10px;">預約接單狀態</h3>
         <div id="my-list"></div>
     </div>
 
     <div id="designer" class="panel">
-        <h1 style="text-align:center; color:var(--gold-bright);">管理後台</h1>
+        <h1 style="text-align:center; color:var(--gold-bright); margin-bottom: 20px;">管理後台</h1>
+        <div class="glass-card calendar-container">
+            <h4 id="calendar-month" style="text-align:center; color:var(--gold-bright); margin-top:0;"></h4>
+            <table class="calendar-table">
+                <thead>
+                    <tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
+        </div>
+        <h3 id="selected-date-title" style="color:var(--gold-bright); margin-left:10px;">今日預約清單</h3>
         <div id="designer-content"></div>
     </div>
 
@@ -151,12 +156,22 @@
         const db = getDatabase(app);
         const bookingRef = ref(db, 'vogue_bookings');
 
-        // 全域掛載確保 HTML 可以呼叫
+        let allBookings = {};
+        let selectedDate = new Date().toISOString().split('T')[0];
+
+        // --- 調整處：控制返回按鈕顯示邏輯 ---
         window.switchTab = (t) => {
+            const homeBtn = document.getElementById('main-home-btn');
+            
             if(t === 'designer') {
                 const code = prompt("請輸入管理碼");
                 if(code !== '0000') return;
+                homeBtn.style.display = 'block'; // 進入後台才顯示
+                renderCalendar(); 
+            } else {
+                homeBtn.style.display = 'none'; // 回到客戶入口就隱藏
             }
+            
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -168,7 +183,6 @@
         let photoList = JSON.parse(localStorage.getItem('vogue_local_photos') || '[]');
         let currentIdx = 0;
 
-        // 保留輪播與上傳功能
         window.handleFileUpload = (e) => {
             const file = e.target.files[0];
             const reader = new FileReader();
@@ -187,51 +201,115 @@
         window.nextImg = () => { if(photoList.length){ currentIdx = (currentIdx + 1) % photoList.length; renderGallery(); } };
         window.prevImg = () => { if(photoList.length){ currentIdx = (currentIdx - 1 + photoList.length) % photoList.length; renderGallery(); } };
 
-        // 預約功能 (包含 Status 狀態)
         window.addBooking = () => {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            if(!name || !phone) { alert("必填姓名電話"); return; }
+            const date = document.getElementById('appDate').value;
+            const time = document.getElementById('appTime').value;
+            if(!name || !phone || !date) { alert("必填姓名、電話與日期"); return; }
             const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
             push(bookingRef, {
-                name, phone,
-                services,
-                date: document.getElementById('appDate').value,
-                time: document.getElementById('appTime').value,
+                name, phone, services, date, time,
                 status: "待接單", 
                 timestamp: Date.now()
-            }).then(() => alert("預約成功！"));
+            }).then(() => {
+                alert("預約成功！");
+                document.querySelectorAll('.service-item').forEach(i => i.classList.remove('selected'));
+            });
         };
 
-        // 讀取資料：包含客戶看的「接單狀態」與設計師的「接單按鈕」
-        onValue(bookingRef, (snap) => {
-            const data = snap.val();
-            const myList = document.getElementById('my-list');
-            const designerList = document.getElementById('designer-content');
-            myList.innerHTML = ""; designerList.innerHTML = "";
-            if(data) {
-                Object.keys(data).reverse().forEach(key => {
-                    const b = data[key];
-                    const stClass = b.status === "已接單" ? "status-done" : "status-wait";
-                    const itemHtml = `
-                        <div class="history-item">
-                            <div style="display:flex; justify-content:space-between;">
-                                <span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span>
-                                <small>${b.date} ${b.time}</small>
-                            </div>
-                            <div style="font-size:12px; color:#999; margin-top:5px;">項目：${b.services.join(', ')}</div>
-                            </div>
-                    `;
-                    myList.innerHTML += itemHtml;
-                    
-                    const dHtml = itemHtml.replace('</div>', `<button onclick="accept('${key}')" style="margin-top:10px; background:var(--gold-bright); border:none; padding:4px 10px; border-radius:4px;">${b.status==='已接單'?'已處理':'點擊接單'}</button></div>`);
-                    designerList.innerHTML += dHtml;
-                });
+        function renderCalendar() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            document.getElementById('calendar-month').innerText = `${year}年 ${month + 1}月`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const tbody = document.getElementById('calendar-body');
+            tbody.innerHTML = "";
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                let row = document.createElement("tr");
+                for (let j = 0; j < 7; j++) {
+                    let cell = document.createElement("td");
+                    if (i === 0 && j < firstDay) {
+                        cell.innerHTML = "";
+                    } else if (date > daysInMonth) {
+                        break;
+                    } else {
+                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                        cell.innerText = date;
+                        const hasBooking = Object.values(allBookings).some(b => b.date === dateStr);
+                        if (hasBooking) cell.classList.add('has-event');
+                        if (dateStr === selectedDate) cell.classList.add('selected-day');
+                        cell.onclick = () => {
+                            selectedDate = dateStr;
+                            document.getElementById('selected-date-title').innerText = `${dateStr} 預約詳情`;
+                            renderCalendar();
+                            updateDesignerList();
+                        };
+                        date++;
+                    }
+                    row.appendChild(cell);
+                }
+                tbody.appendChild(row);
+                if (date > daysInMonth) break;
             }
+        }
+
+        onValue(bookingRef, (snap) => {
+            allBookings = snap.val() || {};
+            const myList = document.getElementById('my-list');
+            myList.innerHTML = ""; 
+            Object.keys(allBookings).reverse().forEach(key => {
+                const b = allBookings[key];
+                const stClass = b.status === "已接單" ? "status-done" : "status-wait";
+                myList.innerHTML += `
+                    <div class="history-item">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span>
+                            <small>${b.date} ${b.time}</small>
+                        </div>
+                        <div style="font-size:12px; color:#999; margin-top:5px;">項目：${b.services.join(', ')}</div>
+                    </div>
+                `;
+            });
+            updateDesignerList();
+            if(document.getElementById('designer').classList.contains('active')) renderCalendar();
         });
 
-        window.accept = (key) => update(ref(db, `vogue_bookings/${key}`), { status: "已接單" });
+        function updateDesignerList() {
+            const designerList = document.getElementById('designer-content');
+            designerList.innerHTML = "";
+            const filtered = Object.keys(allBookings).filter(key => allBookings[key].date === selectedDate);
+            if(filtered.length === 0) {
+                designerList.innerHTML = `<p style="text-align:center; color:#666; margin-top:20px;">此日期尚無預約</p>`;
+                return;
+            }
+            filtered.forEach(key => {
+                const b = allBookings[key];
+                const stClass = b.status === "已接單" ? "status-done" : "status-wait";
+                designerList.innerHTML += `
+                    <div class="history-item">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span>
+                            <small>${b.time}</small>
+                        </div>
+                        <div style="font-size:12px; color:#999; margin-top:5px;">
+                            電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>
+                            項目：${b.services.join(', ')}
+                        </div>
+                        <button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold;">
+                            ${b.status === '已接單' ? '✅ 已完成接單' : '點擊接單'}
+                        </button>
+                    </div>
+                `;
+            });
+        }
 
+        window.accept = (key) => update(ref(db, `vogue_bookings/${key}`), { status: "已接單" });
         window.onload = () => { renderGallery(); };
     </script>
 </body>
