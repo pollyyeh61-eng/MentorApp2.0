@@ -21,14 +21,13 @@
             min-height: 100vh; padding-bottom: 120px;
         }
 
-        /* --- 調整處：初始狀態隱藏返回按鈕 --- */
         .home-btn {
             position: fixed; top: 15px; left: 15px; z-index: 10000;
             background: #000; border: 2px solid var(--gold-bright);
             color: var(--gold-bright); padding: 10px 18px;
             border-radius: 12px; font-size: 14px; font-weight: bold;
             cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-            display: none; /* 預設不顯示 */
+            display: none;
         }
 
         .panel { display: none; width: 92%; max-width: 420px; padding-top: 65px; }
@@ -81,10 +80,10 @@
             <h4 style="color:var(--gold-bright); font-weight:300; margin:0; font-size:14px;">✨ 髮型溝通 (點選欲回傳照片)</h4>
             <div class="main-display-area">
                 <div class="nav-arrow prev-btn" onclick="prevImg()">&#10094;</div>
-                <img id="main-photo" src="https://via.placeholder.com/230x290/111/d4af37?text=VOGUE" alt="展示">
+                <img id="main-photo" src="hair1.png" alt="展示">
                 <div class="nav-arrow next-btn" onclick="nextImg()">&#10095;</div>
             </div>
-            <p id="photo-counter" style="color:#666; font-size:12px; margin-top:10px;">0 / 0</p>
+            <p id="photo-counter" style="color:#666; font-size:12px; margin-top:10px;">1 / 1</p>
             <button class="btn" style="width:80%; margin-top:10px; font-size:14px;" onclick="document.getElementById('photo-input').click()">📷 上傳我的參考照</button>
             <input type="file" id="photo-input" style="display:none" accept="image/*" onchange="handleFileUpload(event)">
         </div>
@@ -159,17 +158,16 @@
         let allBookings = {};
         let selectedDate = new Date().toISOString().split('T')[0];
 
-        // --- 調整處：控制返回按鈕顯示邏輯 ---
         window.switchTab = (t) => {
             const homeBtn = document.getElementById('main-home-btn');
             
             if(t === 'designer') {
                 const code = prompt("請輸入管理碼");
                 if(code !== '0000') return;
-                homeBtn.style.display = 'block'; // 進入後台才顯示
+                homeBtn.style.display = 'block';
                 renderCalendar(); 
             } else {
-                homeBtn.style.display = 'none'; // 回到客戶入口就隱藏
+                homeBtn.style.display = 'none';
             }
             
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -180,7 +178,8 @@
 
         window.toggleService = (el) => el.classList.toggle('selected');
 
-        let photoList = JSON.parse(localStorage.getItem('vogue_local_photos') || '[]');
+        // 預設加入同層檔案的 hair1.png
+        let photoList = JSON.parse(localStorage.getItem('vogue_local_photos') || '["hair1.png"]');
         let currentIdx = 0;
 
         window.handleFileUpload = (e) => {
@@ -193,11 +192,16 @@
             };
             reader.readAsDataURL(file);
         };
+
         window.renderGallery = () => {
             const main = document.getElementById('main-photo');
             const cnt = document.getElementById('photo-counter');
-            if(photoList.length > 0) { main.src = photoList[currentIdx]; cnt.innerText = `${currentIdx + 1} / ${photoList.length}`; }
+            if(photoList.length > 0) { 
+                main.src = photoList[currentIdx]; 
+                cnt.innerText = `${currentIdx + 1} / ${photoList.length}`; 
+            }
         };
+
         window.nextImg = () => { if(photoList.length){ currentIdx = (currentIdx + 1) % photoList.length; renderGallery(); } };
         window.prevImg = () => { if(photoList.length){ currentIdx = (currentIdx - 1 + photoList.length) % photoList.length; renderGallery(); } };
 
