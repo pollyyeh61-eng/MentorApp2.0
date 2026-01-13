@@ -120,7 +120,6 @@
             <button class="btn" onclick="addBooking()">送出預約並回傳照片</button>
         </div>
         <h3 style="color:var(--gold-bright); margin-left:10px;">您的預約狀態</h3>
-        <p id="client-hint" style="color:#666; font-size:12px; margin-left:10px; margin-bottom:10px;">請輸入電話以查看個人預約紀錄</p>
         <div id="my-list"></div>
     </div>
 
@@ -281,16 +280,14 @@
         window.renderMyList = () => {
             const myList = document.getElementById('my-list');
             const custPhone = document.getElementById('custPhone').value.trim();
-            const hint = document.getElementById('client-hint');
             myList.innerHTML = ""; 
-            if (!custPhone) { hint.style.display = "block"; return; }
-            hint.style.display = "none";
+            if (!custPhone) return;
             const keys = Object.keys(allBookings).reverse();
             keys.forEach(key => {
                 const b = allBookings[key];
                 if (b.phone === custPhone) {
                     const stClass = b.status === "已接單" ? "status-done" : "status-wait";
-                    myList.innerHTML += `<div class="history-item"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span><small>${b.date} ${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">項目：${b.services.join(', ')}</div></div>`;
+                    myList.innerHTML += `<div class="history-item"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span><small>${b.date} ${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">項目：${b.services ? b.services.join(', ') : ''}</div></div>`;
                 }
             });
         };
@@ -299,15 +296,21 @@
             const futureDrawer = document.getElementById('future-list-drawer');
             const archiveDrawer = document.getElementById('history-archive-drawer');
             const futureCountEl = document.getElementById('future-count');
-            futureDrawer.innerHTML = "";
-            archiveDrawer.innerHTML = "";
+            futureDrawer.innerHTML = ""; archiveDrawer.innerHTML = "";
             let futureCount = 0;
             const todayStr = new Date().toLocaleDateString('en-CA'); 
-            const keys = Object.keys(allBookings).sort((a,b) => allBookings[b].date.localeCompare(allBookings[a].date));
+            
+            // 安全排序：防止 date 為 undefined 導致 localeCompare 報錯
+            const keys = Object.keys(allBookings).sort((a,b) => {
+                const dateA = allBookings[a].date || "";
+                const dateB = allBookings[b].date || "";
+                return dateB.localeCompare(dateA);
+            });
+
             keys.forEach(key => {
                 const b = allBookings[key];
-                if (b.status === "已接單") {
-                    const itemHtml = `<div class="archive-item"><span style="color:#00ff00">●</span> <b>${b.date}</b> | ${b.name} (${b.phone})<br><small style="color:#888;">項目：${b.services.join(', ')}</small></div>`;
+                if (b.status === "已接單" && b.date) {
+                    const itemHtml = `<div class="archive-item"><span style="color:#00ff00">●</span> <b>${b.date}</b> | ${b.name} (${b.phone})<br><small style="color:#888;">項目：${b.services ? b.services.join(', ') : '未填'}</small></div>`;
                     if (b.date >= todayStr) {
                         futureCount++; futureDrawer.innerHTML += itemHtml;
                     } else {
@@ -330,7 +333,7 @@
             }
             filtered.forEach(key => {
                 const b = allBookings[key];
-                designerList.innerHTML += `<div class="history-item" style="border-left-color:#ff4d4d;"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge status-wait">待接單</span></span><small>${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>項目：${b.services.join(', ')}</div><button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold; color:#000;">確認預約 (移至未來行程)</button></div>`;
+                designerList.innerHTML += `<div class="history-item" style="border-left-color:#ff4d4d;"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge status-wait">待接單</span></span><small>${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>項目：${b.services ? b.services.join(', ') : ''}</div><button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold; color:#000;">確認預約 (移至未來行程)</button></div>`;
             });
         }
 
