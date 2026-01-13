@@ -69,12 +69,11 @@
         .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #666; font-size: 14px; cursor: pointer; }
         .tab-btn.active { background: var(--gold-bright); color: #000; border-radius: 40px; font-weight: bold; }
 
-        /* --- 新增：抽屜設計樣式 --- */
-        .drawer { margin-top: 15px; border: 1px solid #333; border-radius: 15px; overflow: hidden; }
+        .drawer { margin-top: 15px; border: 1px solid #333; border-radius: 15px; overflow: hidden; width: 100%; }
         .drawer-header { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .drawer-content { display: none; background: #000; padding: 10px; max-height: 400px; overflow-y: auto; }
+        .drawer-content { display: none; background: #000; padding: 10px; max-height: 350px; overflow-y: auto; }
         .drawer.open .drawer-content { display: block; }
-        .archive-item { font-size: 12px; padding: 10px; border-bottom: 1px solid #222; }
+        .archive-item { font-size: 12px; padding: 12px; border-bottom: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -128,16 +127,7 @@
     <div id="designer" class="panel">
         <h1 style="text-align:center; color:var(--gold-bright); margin-bottom: 20px;">管理後台</h1>
         
-        <div class="drawer" onclick="this.classList.toggle('open')">
-            <div class="drawer-header">
-                <span style="color:#ff4d4d; font-weight:bold;">⚠️ 今日待處理預約</span>
-                <span id="wait-count" style="background:#ff4d4d; color:#fff; padding:2px 8px; border-radius:10px; font-size:12px;">0</span>
-            </div>
-            <div class="drawer-content" id="wait-list-drawer">
-                </div>
-        </div>
-
-        <div class="glass-card calendar-container" style="margin-top:20px;">
+        <div class="glass-card calendar-container">
             <h4 id="calendar-month" style="text-align:center; color:var(--gold-bright); margin-top:0;"></h4>
             <table class="calendar-table">
                 <thead>
@@ -150,13 +140,22 @@
         <h3 id="selected-date-title" style="color:var(--gold-bright); margin-left:10px;">今日預約清單</h3>
         <div id="designer-content"></div>
 
-        <div class="drawer" style="margin-top:30px;" onclick="this.classList.toggle('open')">
+        <hr style="border:0; border-top:1px solid #333; margin:25px 0;">
+
+        <div class="drawer" onclick="this.classList.toggle('open')">
             <div class="drawer-header">
-                <span style="color:var(--gold-bright);">📁 歷史預約歸檔總表</span>
-                <span style="font-size:12px; color:#666;">點擊展開 ▾</span>
+                <span style="color:var(--gold-bright); font-weight:bold;">🔮 未來預約總表 (今日起)</span>
+                <span id="future-count" style="background:var(--gold-bright); color:#000; padding:2px 8px; border-radius:10px; font-size:12px;">0</span>
             </div>
-            <div class="drawer-content" id="history-archive-drawer">
-                </div>
+            <div class="drawer-content" id="future-list-drawer"></div>
+        </div>
+
+        <div class="drawer" onclick="this.classList.toggle('open')">
+            <div class="drawer-header">
+                <span style="color:#888;">📁 歷史歸檔總表 (昨日前)</span>
+                <span style="font-size:12px; color:#666;">展開 ▾</span>
+            </div>
+            <div class="drawer-content" id="history-archive-drawer"></div>
         </div>
     </div>
 
@@ -193,9 +192,7 @@
                 if(code !== '0000') return;
                 homeBtn.style.display = 'block';
                 renderCalendar(); 
-            } else {
-                homeBtn.style.display = 'none';
-            }
+            } else { homeBtn.style.display = 'none'; }
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -238,9 +235,7 @@
             if(!name || !phone || !date) { alert("必填姓名、電話與日期"); return; }
             const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
             push(bookingRef, {
-                name, phone, services, date, time,
-                status: "待接單", 
-                timestamp: Date.now()
+                name, phone, services, date, time, status: "待接單", timestamp: Date.now()
             }).then(() => {
                 alert("預約成功！");
                 document.querySelectorAll('.service-item').forEach(i => i.classList.remove('selected'));
@@ -256,31 +251,30 @@
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const tbody = document.getElementById('calendar-body');
             tbody.innerHTML = "";
-            let date = 1;
+            let dateNum = 1;
             for (let i = 0; i < 6; i++) {
                 let row = document.createElement("tr");
                 for (let j = 0; j < 7; j++) {
                     let cell = document.createElement("td");
                     if (i === 0 && j < firstDay) { cell.innerHTML = ""; }
-                    else if (date > daysInMonth) { break; }
+                    else if (dateNum > daysInMonth) { break; }
                     else {
-                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                        cell.innerText = date;
+                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dateNum).padStart(2, '0')}`;
+                        cell.innerText = dateNum;
                         const hasBooking = Object.values(allBookings).some(b => b.date === dateStr);
                         if (hasBooking) cell.classList.add('has-event');
                         if (dateStr === selectedDate) cell.classList.add('selected-day');
                         cell.onclick = () => {
                             selectedDate = dateStr;
                             document.getElementById('selected-date-title').innerText = `${dateStr} 預約詳情`;
-                            renderCalendar();
-                            updateDesignerList();
+                            renderCalendar(); updateDesignerList();
                         };
-                        date++;
+                        dateNum++;
                     }
                     row.appendChild(cell);
                 }
                 tbody.appendChild(row);
-                if (date > daysInMonth) break;
+                if (dateNum > daysInMonth) break;
             }
         }
 
@@ -292,65 +286,52 @@
             if (!custPhone) { hint.style.display = "block"; return; }
             hint.style.display = "none";
             const keys = Object.keys(allBookings).reverse();
-            let count = 0;
             keys.forEach(key => {
                 const b = allBookings[key];
                 if (b.phone === custPhone) {
-                    count++;
                     const stClass = b.status === "已接單" ? "status-done" : "status-wait";
                     myList.innerHTML += `<div class="history-item"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span><small>${b.date} ${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">項目：${b.services.join(', ')}</div></div>`;
                 }
             });
-            if (count === 0 && custPhone.length >= 8) {
-                myList.innerHTML = `<p style="text-align:center; color:#666; font-size:14px;">查無此電話的預約紀錄</p>`;
-            }
         };
 
-        // --- 核心更新：後台歸檔與統計渲染 ---
         onValue(bookingRef, (snap) => {
             allBookings = snap.val() || {};
             renderMyList();
             updateDesignerList();
-            renderAdminDrawers(); // 渲染抽屜
+            renderAdminDrawers();
             if(document.getElementById('designer').classList.contains('active')) renderCalendar();
         });
 
         function renderAdminDrawers() {
-            const waitListDrawer = document.getElementById('wait-list-drawer');
+            const futureDrawer = document.getElementById('future-list-drawer');
             const archiveDrawer = document.getElementById('history-archive-drawer');
-            const waitCountEl = document.getElementById('wait-count');
+            const futureCountEl = document.getElementById('future-count');
             
-            waitListDrawer.innerHTML = "";
+            futureDrawer.innerHTML = "";
             archiveDrawer.innerHTML = "";
             
-            let waitCount = 0;
-            const keys = Object.keys(allBookings).reverse();
+            let futureCount = 0;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const keys = Object.keys(allBookings).sort((a,b) => allBookings[b].date.localeCompare(allBookings[a].date));
 
             keys.forEach(key => {
                 const b = allBookings[key];
-                const stClass = b.status === "已接單" ? "status-done" : "status-wait";
-
-                // 統計與填充待接單抽屜 (不限日期，看所有待處理)
-                if (b.status !== "已接單") {
-                    waitCount++;
-                    waitListDrawer.innerHTML += `
-                        <div class="archive-item">
-                            <b>${b.name}</b> (${b.date} ${b.time})<br>
-                            項目：${b.services.join(', ')}
-                        </div>`;
-                }
-
-                // 填充歷史總表
-                archiveDrawer.innerHTML += `
+                const itemHtml = `
                     <div class="archive-item">
                         <span style="color:${b.status==='已接單'?'#00ff00':'#ff4d4d'}">●</span> 
-                        <b>${b.date}</b> - ${b.name} (${b.phone})<br>
-                        內容：${b.services.join(', ')} [${b.status}]
+                        <b>${b.date}</b> | ${b.name} (${b.phone})<br>
+                        <small style="color:#888;">項目：${b.services.join(', ')} [${b.status}]</small>
                     </div>`;
-            });
 
-            waitCountEl.innerText = waitCount;
-            if(waitCount === 0) waitListDrawer.innerHTML = `<p style="color:#666; font-size:12px; text-align:center;">暫無待處理預約</p>`;
+                if (b.date >= todayStr) {
+                    futureCount++;
+                    futureDrawer.innerHTML += itemHtml;
+                } else {
+                    archiveDrawer.innerHTML += itemHtml;
+                }
+            });
+            futureCountEl.innerText = futureCount;
         }
 
         function updateDesignerList() {
@@ -364,7 +345,20 @@
             filtered.forEach(key => {
                 const b = allBookings[key];
                 const stClass = b.status === "已接單" ? "status-done" : "status-wait";
-                designerList.innerHTML += `<div class="history-item"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span><small>${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>項目：${b.services.join(', ')}</div><button onclick="event.stopPropagation(); accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold;">${b.status === '已接單' ? '✅ 已完成接單' : '點擊接單'}</button></div>`;
+                designerList.innerHTML += `
+                    <div class="history-item">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span>
+                            <small>${b.time}</small>
+                        </div>
+                        <div style="font-size:12px; color:#999; margin-top:5px;">
+                            電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>
+                            項目：${b.services.join(', ')}
+                        </div>
+                        <button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold;">
+                            ${b.status === '已接單' ? '✅ 已完成接單' : '點擊接單'}
+                        </button>
+                    </div>`;
             });
         }
 
@@ -373,4 +367,3 @@
     </script>
 </body>
 </html>
-
