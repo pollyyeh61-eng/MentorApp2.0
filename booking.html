@@ -137,14 +137,14 @@
             </table>
         </div>
         
-        <h3 id="selected-date-title" style="color:var(--gold-bright); margin-left:10px;">今日預約清單</h3>
+        <h3 id="selected-date-title" style="color:#ff4d4d; margin-left:10px;">⚠️ 待處理預約單 (請接單)</h3>
         <div id="designer-content"></div>
 
         <hr style="border:0; border-top:1px solid #333; margin:25px 0;">
 
         <div class="drawer" onclick="this.classList.toggle('open')">
             <div class="drawer-header">
-                <span style="color:var(--gold-bright); font-weight:bold;">🔮 未來預約總表 (今日起)</span>
+                <span style="color:var(--gold-bright); font-weight:bold;">🔮 未來行程表 (已確認)</span>
                 <span id="future-count" style="background:var(--gold-bright); color:#000; padding:2px 8px; border-radius:10px; font-size:12px;">0</span>
             </div>
             <div class="drawer-content" id="future-list-drawer"></div>
@@ -152,7 +152,7 @@
 
         <div class="drawer" onclick="this.classList.toggle('open')">
             <div class="drawer-header">
-                <span style="color:#888;">📁 歷史歸檔總表 (昨日前)</span>
+                <span style="color:#888;">📁 歷史結案歸檔 (已完成)</span>
                 <span style="font-size:12px; color:#666;">展開 ▾</span>
             </div>
             <div class="drawer-content" id="history-archive-drawer"></div>
@@ -261,12 +261,13 @@
                     else {
                         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dateNum).padStart(2, '0')}`;
                         cell.innerText = dateNum;
-                        const hasBooking = Object.values(allBookings).some(b => b.date === dateStr);
-                        if (hasBooking) cell.classList.add('has-event');
+                        // 日曆小點點顯示該天是否有「待接單」的案子
+                        const hasWait = Object.values(allBookings).some(b => b.date === dateStr && b.status === "待接單");
+                        if (hasWait) cell.classList.add('has-event');
                         if (dateStr === selectedDate) cell.classList.add('selected-day');
                         cell.onclick = () => {
                             selectedDate = dateStr;
-                            document.getElementById('selected-date-title').innerText = `${dateStr} 預約詳情`;
+                            document.getElementById('selected-date-title').innerText = `${dateStr} 待處理清單`;
                             renderCalendar(); updateDesignerList();
                         };
                         dateNum++;
@@ -303,6 +304,7 @@
             if(document.getElementById('designer').classList.contains('active')) renderCalendar();
         });
 
+        // 核心邏輯修正：抽屜過濾
         function renderAdminDrawers() {
             const futureDrawer = document.getElementById('future-list-drawer');
             const archiveDrawer = document.getElementById('history-archive-drawer');
@@ -317,46 +319,56 @@
 
             keys.forEach(key => {
                 const b = allBookings[key];
-                const itemHtml = `
-                    <div class="archive-item">
-                        <span style="color:${b.status==='已接單'?'#00ff00':'#ff4d4d'}">●</span> 
-                        <b>${b.date}</b> | ${b.name} (${b.phone})<br>
-                        <small style="color:#888;">項目：${b.services.join(', ')} [${b.status}]</small>
-                    </div>`;
+                
+                // 只有「已接單」的才會進入抽屜
+                if (b.status === "已接單") {
+                    const itemHtml = `
+                        <div class="archive-item">
+                            <span style="color:#00ff00">●</span> 
+                            <b>${b.date}</b> | ${b.name} (${b.phone})<br>
+                            <small style="color:#888;">項目：${b.services.join(', ')}</small>
+                        </div>`;
 
-                if (b.date >= todayStr) {
-                    futureCount++;
-                    futureDrawer.innerHTML += itemHtml;
-                } else {
-                    archiveDrawer.innerHTML += itemHtml;
+                    if (b.date >= todayStr) {
+                        futureCount++;
+                        futureDrawer.innerHTML += itemHtml;
+                    } else {
+                        archiveDrawer.innerHTML += itemHtml;
+                    }
                 }
             });
             futureCountEl.innerText = futureCount;
         }
 
+        // 核心邏輯修正：首頁只顯示「待接單」
         function updateDesignerList() {
             const designerList = document.getElementById('designer-content');
             designerList.innerHTML = "";
-            const filtered = Object.keys(allBookings).filter(key => allBookings[key].date === selectedDate);
+            
+            // 過濾該日期「待接單」的資料
+            const filtered = Object.keys(allBookings).filter(key => 
+                allBookings[key].date === selectedDate && allBookings[key].status === "待接單"
+            );
+
             if(filtered.length === 0) {
-                designerList.innerHTML = `<p style="text-align:center; color:#666; margin-top:20px;">此日期尚無預約</p>`;
+                designerList.innerHTML = `<p style="text-align:center; color:#666; margin-top:20px;">此日期無待處理預約</p>`;
                 return;
             }
+
             filtered.forEach(key => {
                 const b = allBookings[key];
-                const stClass = b.status === "已接單" ? "status-done" : "status-wait";
                 designerList.innerHTML += `
-                    <div class="history-item">
+                    <div class="history-item" style="border-left-color:#ff4d4d;">
                         <div style="display:flex; justify-content:space-between;">
-                            <span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span>
+                            <span><b>${b.name}</b> <span class="status-badge status-wait">待接單</span></span>
                             <small>${b.time}</small>
                         </div>
                         <div style="font-size:12px; color:#999; margin-top:5px;">
                             電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>
                             項目：${b.services.join(', ')}
                         </div>
-                        <button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold;">
-                            ${b.status === '已接單' ? '✅ 已完成接單' : '點擊接單'}
+                        <button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold; color:#000;">
+                            確認預約 (移至未來行程)
                         </button>
                     </div>`;
             });
