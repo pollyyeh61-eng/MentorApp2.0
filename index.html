@@ -7,12 +7,20 @@
     <title>活力美髮線上學堂</title>
     
     <style>
+        /* --- 變數設定 --- */
+        :root {
+            --bg: #080808;
+            --gold: #D4AF37;
+            --gold-light: #FCF6BA;
+            --gold-main: #D4AF37;
+        }
+
         /* --- 登入密碼層樣式 --- */
         #login-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000 !important; /* 強制全黑，防止變白 */
-            display: none; /* 預設隱藏，由 JS 控制顯示 */
+            background: #000000 !important;
+            display: none;
             flex-direction: column;
             align-items: center; justify-content: center;
             z-index: 99999;
@@ -22,13 +30,13 @@
             background: #1a1a1a;
             padding: 40px;
             border-radius: 15px;
-            border: 1px solid #D4AF37;
+            border: 1px solid var(--gold);
             text-align: center;
             width: 80%; max-width: 350px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .login-card img { width: 80px; margin-bottom: 20px; }
-        .login-card h2 { color: #D4AF37; margin-bottom: 10px; font-size: 24px; }
+        .login-card h2 { color: var(--gold); margin-bottom: 10px; font-size: 24px; }
         .login-card p { color: #888; margin-bottom: 20px; font-size: 14px; }
         .login-card input {
             width: 100%; padding: 12px; margin-bottom: 20px;
@@ -38,17 +46,12 @@
         }
         .login-card button {
             width: 100%; padding: 12px;
-            background: #D4AF37; border: none; border-radius: 8px;
+            background: var(--gold); border: none; border-radius: 8px;
             color: #000; font-weight: bold; cursor: pointer;
             font-size: 16px; transition: 0.3s;
         }
 
-        /* --- 原始網頁樣式 --- */
-        :root {
-            --bg: #080808;
-            --gold: #D4AF37;
-            --gold-light: #FCF6BA;
-        }
+        /* --- 主網頁樣式 --- */
         body {
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #080808 100%);
@@ -59,12 +62,14 @@
         .top-nav { width: 100%; display: flex; justify-content: flex-end; padding: 10px 0; gap: 10px; z-index: 100; }
         .nav-btn { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
         .nav-btn:hover { background: var(--gold); color: #000; }
+        
         header h1 { font-size: 1.8rem; letter-spacing: 5px; background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; text-align: center; font-weight: 700; }
         
         .main-container { width: 100%; max-width: 350px; }
         .btn-large { background: rgba(212, 175, 55, 0.08); border: 1px solid var(--gold); border-radius: 14px; padding: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; cursor: pointer; }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; padding: 22px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; animation: breathe 4s infinite ease-in-out; }
+        
         @keyframes breathe { 0%, 100% { border-color: rgba(212, 175, 55, 0.2); } 50% { border-color: rgba(212, 175, 55, 0.5); } }
         .icon { font-size: 26px; margin-bottom: 12px; }
         .btn-title { font-size: 0.95rem; font-weight: 500; text-align: center; }
@@ -85,33 +90,25 @@
             padding: 12px; margin-bottom: 12px; border-radius: 10px; box-sizing: border-box; 
         }
         .primary-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
+        
+        /* 條款內容外框 */
+        .terms-box {
+            background: #000;
+            border: 1px solid #333;
+            padding: 10px;
+            margin-top: 10px;
+            height: 120px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            color: #bbb;
+            text-align: left;
+            line-height: 1.5;
+            border-radius: 8px;
+        }
+        .terms-box h4 { color: var(--gold); margin: 10px 0 5px 0; font-size: 0.85rem; }
+        
         footer { font-size: 0.7rem; color: var(--gold); opacity: 0.6; padding: 20px; text-align: center; }
-    /* 條款內容外框 */
-.terms-box {
-    background: #000;
-    border: 1px solid #333;
-    padding: 10px;
-    margin-top: 10px;
-    height: 120px; /* 固定高度 */
-    overflow-y: auto; /* 超出時顯示捲軸 */
-    font-size: 0.75rem;
-    color: #bbb;
-    text-align: left;
-    line-height: 1.5;
-    border-radius: 8px;
-}
-.terms-box h4 {
-    color: var(--gold);
-    margin: 10px 0 5px 0;
-    font-size: 0.85rem;
-
-:root {
-    --bg: #080808;
-    --gold: #D4AF37;
-    --gold-light: #FCF6BA;
-    --gold-main: #D4AF37; /* 補上這行避免顏色抓不到 */
-}
-    style>
+    </style>
 </head>
 <body>
 
@@ -157,7 +154,7 @@
         </div>
     </div>
 
-<div id="auth-modal" class="modal">
+    <div id="auth-modal" class="modal">
         <div class="modal-content">
             <h3 style="margin-top:0;">登入啟動學堂</h3>
             <input type="text" id="email" placeholder="Email (自動記憶)">
@@ -166,25 +163,15 @@
             <div id="registerOnly">
                 <label style="font-size: 0.8rem; color: var(--gold); margin-top:15px; display: block;">2026 學員服務與個資保護條款</label>
                 <div class="terms-box">
-                    <strong>為確保 活力美髮學堂（以下簡稱「本平台」）之種子學員權益，請詳閱以下條款：</strong><br><br>
-                    <h4>一、 帳號安全與權限規範</h4>
-                    1. 專屬權限：本平台核發之帳號僅限學員本人使用，嚴禁轉借、租賃。<br>
-                    2. 安全義務：凡經正確帳密登入之行為，均視為學員本人操作。
-                    
-                    <h4>二、 會員個資與數據處理</h4>
-                    1. 個資授權：學員透過 App 蒐集之顧客名單，所有權歸屬學員經營之沙龍所有。<br>
-                    2. 隱私保護：本平台採用 AES 加密技術，未經授權不得將數據提供給第三方進行商業用途。
-                    
-                    <h4>三、 金流、儲值與點數管理</h4>
-                    1. 功能定義：App 內「錢包餘額」僅供內部管理記錄，本平台不經手實際法定貨幣。<br>
-                    2. 對帳責任：學員應定期複核帳務。若有紛爭，由學員與其顧客自行協商解決。
-                    
-                    <h4>四、 系統免責聲明</h4>
-                    1. 開發階段：本系統處於「種子測試階段」。若因故障或天災導致中斷，本平台不負賠償責任。<br>
-                    2. 更新義務：學員應配合更新至最新版本以確保數據安全。
-                    
-                    <h4>五、 爭議解決</h4>
-                    本協議之解釋與適用，以 [台灣/高雄] 地方法院為第一審管轄法院。
+                    <strong>為確保 活力美髮學堂之種子學員權益，請詳閱：</strong><br><br>
+                    <h4>一、 帳號安全</h4>
+                    1. 帳號僅限學員本人使用，嚴禁轉借。<br>
+                    <h4>二、 個資與隱私</h4>
+                    1. 學員蒐集之顧客名單歸屬沙龍所有。本平台採用 AES 加密。<br>
+                    <h4>三、 點數管理</h4>
+                    1. 錢包餘額僅供記錄，不經手實際貨幣。<br>
+                    <h4>四、 系統免責</h4>
+                    1. 本系統處於測試階段，若故障不負賠償責任。
                 </div>
                 <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin: 15px 0;">
                     <input type="checkbox" id="agreeCheck" style="width: 18px; height: 18px; margin: 0;"> 
@@ -219,28 +206,31 @@
     <footer>VITALITY HAIR ACADEMY © 2026</footer>
 
     <script>
-      (function() {
-        // 檢查是否為 App 模式
-        const isAppMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        const isAuthorized = localStorage.getItem('mentor_paid_access');
+        (function() {
+            const isAuthorized = localStorage.getItem('mentor_paid_access');
+            if (!isAuthorized) {
+                document.getElementById('login-overlay').style.display = 'flex';
+            }
+        })();
 
-        // 只有在 App 模式且未授權時，才顯示漂亮的登入層
-        if (!isAuthorized) {
-          document.getElementById('login-overlay').style.display = 'flex';
+        function checkAppPassword() {
+            const userInput = document.getElementById('app-pw-input').value;
+            if (userInput === "1010") {
+                alert("驗證成功！正在進入學堂數位助理...");
+                localStorage.setItem('mentor_paid_access', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+            } else {
+                alert("密碼錯誤，請聯繫客服獲取授權。");
+                document.getElementById('app-pw-input').value = "";
+            }
         }
-      })();
 
-      function checkAppPassword() {
-        const userInput = document.getElementById('app-pw-input').value;
-        if (userInput === "1010") {
-          alert("驗證成功！正在進入學堂數位助理...");
-          localStorage.setItem('mentor_paid_access', 'true');
-          document.getElementById('login-overlay').style.display = 'none';
-        } else {
-          alert("密碼錯誤，請聯繫客服獲取授權。");
-          document.getElementById('app-pw-input').value = "";
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function openAuthModal() {
+            document.getElementById('email').value = localStorage.getItem('cached_email') || '';
+            document.getElementById('auth-modal').style.display = 'flex';
         }
-      }
     </script>
 
     <script type="module">
@@ -290,6 +280,30 @@
             }
         }
 
+        window.handleAuth = async function() {
+            const isAgreed = document.getElementById('agreeCheck').checked;
+            if (!isAgreed) {
+                alert("請先閱讀並勾選同意「個資保護條款」後再進行操作。");
+                return;
+            }
+
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+
+            if (!email || !pass) {
+                alert("請輸入帳號與密碼");
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                closeModal('auth-modal');
+                alert("學堂啟動成功！");
+            } catch (e) { 
+                alert("驗證失敗，請檢查帳號密碼是否正確。"); 
+            }
+        };
+
         window.saveProfileData = async () => {
             const user = auth.currentUser;
             if (!user) return alert("請先登入");
@@ -299,30 +313,23 @@
             const avatarData = document.getElementById('profile-img-display').src;
             try {
                 const memberRef = ref(db, 'members/' + user.uid);
-                const snapshot = await get(memberRef);
-                let currentData = snapshot.exists() ? snapshot.val() : {};
-                const updatedData = { ...currentData, name: nameVal, email: emailVal, phone: phoneVal, avatar: avatarData, last_updated: new Date().toISOString() };
-                await set(memberRef, updatedData);
+                await set(memberRef, { 
+                    name: nameVal, email: emailVal, phone: phoneVal, 
+                    avatar: avatarData, last_updated: new Date().toISOString() 
+                });
                 localStorage.setItem('cached_email', emailVal);
-                alert("會員資料已同步至雲端伺服器！");
+                alert("會員資料已同步！");
                 closeModal('profile-modal');
             } catch (err) { alert("儲存失敗"); }
         };
 
-        window.handleAuth = async function() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                closeModal('auth-modal');
-                alert("學堂啟動成功！");
-            } catch (e) { alert("驗證失敗"); }
-        };
         window.handleLogout = () => { if(confirm("確定登出？")) signOut(auth); };
+        
         window.navigateToApp = function(url) {
             if (!window.isLoggedIn) { alert("請先完成登入哦！"); openAuthModal(); return; }
             location.href = url;
         };
+
         window.previewImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -331,42 +338,5 @@
             }
         };
     </script>
-window.handleAuth = async function() {
-    // --- 新增：檢查隱私協議是否勾選 ---
-    const isAgreed = document.getElementById('agreeCheck').checked;
-    if (!isAgreed) {
-        alert("請先閱讀並勾選同意「個資保護條款」後再進行操作。");
-        return; // 中斷函式，不執行登入
-    }
-
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('password').value;
-
-    if (!email || !pass) {
-        alert("請輸入帳號與密碼");
-        return;
-    }
-
-    try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        closeModal('auth-modal');
-        alert("學堂啟動成功！");
-    } catch (e) { 
-        alert("驗證失敗，請檢查帳號密碼是否正確。"); 
-    }
-};
-    <script>
-        function openAuthModal() {
-            document.getElementById('email').value = localStorage.getItem('cached_email') || '';
-            document.getElementById('auth-modal').style.display = 'flex';
-        }
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    </script>
 </body>
 </html>
-
-
-
-
-
