@@ -325,7 +325,30 @@
             }
         };
     </script>
+window.handleAuth = async function() {
+    // --- 新增：檢查隱私協議是否勾選 ---
+    const isAgreed = document.getElementById('agreeCheck').checked;
+    if (!isAgreed) {
+        alert("請先閱讀並勾選同意「個資保護條款」後再進行操作。");
+        return; // 中斷函式，不執行登入
+    }
 
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+
+    if (!email || !pass) {
+        alert("請輸入帳號與密碼");
+        return;
+    }
+
+    try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        closeModal('auth-modal');
+        alert("學堂啟動成功！");
+    } catch (e) { 
+        alert("驗證失敗，請檢查帳號密碼是否正確。"); 
+    }
+};
     <script>
         function openAuthModal() {
             document.getElementById('email').value = localStorage.getItem('cached_email') || '';
@@ -336,6 +359,7 @@
     </script>
 </body>
 </html>
+
 
 
 
