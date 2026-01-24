@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOGUE 獲利機器 - 全功能終極版</title>
+    <title>VOGUE 獲利機器 - 完整終極版</title>
     <style>
         :root {
             --dark-bg: #000; --gold: #d4af37; --gold-dim: rgba(212, 175, 55, 0.1);
-            --font-main: 18px; --font-large: 20px;
+            --font-main: 18px; /* 黃金比例字體 */
+            --font-large: 20px;
             --status-wait: #ff4d4d; --status-ready: #00ff00; --status-auto: #00d4ff;
         }
         body {
@@ -18,59 +19,50 @@
         .panel { display: none; width: 92%; max-width: 420px; padding-top: 20px; }
         .panel.active { display: block; }
 
-        /* 卡片與輸入 */
         .glass-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         input, textarea { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
         
-        /* 服務項目網格 */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .service-item { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 16px; text-align: center; cursor: pointer; color: #888; }
         .service-item.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
 
-        /* 客戶端叮嚀區塊 */
+        /* 客戶端感謝叮嚀呈現區 */
         .thanks-note { background: var(--gold-dim); border: 1px solid var(--gold); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 15px; color: var(--gold); line-height: 1.5; }
-        .thanks-note::before { content: "💬 設計師叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
+        .thanks-note::before { content: "💬 設計師給您的叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; opacity: 0.8; }
 
-        /* 按鈕樣式 */
         .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; margin-top: 5px; }
-        .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 10px !important; font-size: 14px; margin-top: 10px; }
+        .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 10px !important; font-size: 14px; margin-top: 10px; border-radius: 12px; width: 100%; cursor: pointer; }
         
-        /* 狀態標籤 */
         .status-badge { padding: 4px 10px; border-radius: 8px; font-size: 14px; font-weight: bold; }
         .tag-wait { background: var(--status-wait); color: #fff; }
         .tag-ready { background: var(--status-ready); color: #000; }
         .tag-auto { background: var(--status-auto); color: #000; }
 
-        .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 5px solid var(--gold); }
-        .booking-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 1px solid #444; }
-
-        /* 設計師端抽屜 */
+        .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 5px solid var(--gold); position: relative; }
+        
+        /* 抽屜設計 */
         .drawer-box { background: #111; border-radius: 15px; margin-bottom: 10px; overflow: hidden; border: 1px solid #222; }
         .drawer-btn { width: 100%; padding: 15px; background: #1a1a1a; border: none; color: var(--gold); display: flex; justify-content: space-between; font-size: 18px; cursor: pointer; }
         .drawer-content { display: none; padding: 15px; background: #000; }
 
-        /* 底部切換 */
         .tab-switcher { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; background: #111; border-radius: 50px; padding: 5px; border: 1px solid #333; z-index: 1000; }
         .tab-btn { padding: 12px 25px; border: none; background: transparent; color: #666; font-size: 14px; cursor: pointer; }
         .tab-btn.active { background: var(--gold); color: #000; border-radius: 40px; font-weight: bold; }
-
-        /* 日曆區塊樣式 */
-        .calendar-section { margin-bottom: 30px; background: #0a0a0a; border-radius: 15px; padding: 10px; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <div id="client" class="panel active">
-        <h2 style="color:var(--gold); text-align:center;">VOGUE 客戶預約</h2>
+        <h2 style="color:var(--gold); text-align:center;">VOGUE 客戶預約進度</h2>
         
         <div class="glass-card">
-            <p style="margin:0 0 10px 0; color:var(--gold);">🔍 輸入電話查詢進度與叮嚀</p>
-            <input type="tel" id="trackPhone" placeholder="您的聯絡電話" oninput="renderClientTracker()">
+            <p style="margin:0 0 10px 0; color:var(--gold);">🔍 輸入電話查看叮嚀與進度</p>
+            <input type="tel" id="trackPhone" placeholder="您的電話號碼" oninput="renderClientTracker()">
             <div id="client-tracker-list"></div>
         </div>
 
         <div class="glass-card">
-            <p style="margin:0 0 10px 0; color:var(--gold);">✂️ 線上快速預約</p>
+            <p style="margin:0 0 10px 0; color:var(--gold);">✂️ 線上預約服務</p>
             <input type="text" id="custName" placeholder="顧客姓名">
             <input type="tel" id="custPhone" placeholder="聯繫電話">
             <div class="service-grid">
@@ -89,28 +81,28 @@
             <input type="date" id="appDate">
             <label style="font-size:14px; color:#666;">預約時間</label>
             <input type="time" id="appTime">
-            <button class="btn-action" onclick="addBooking()">確認送出預約</button>
+            <button class="btn-action" onclick="addBooking()">送出預約</button>
         </div>
     </div>
 
     <div id="designer" class="panel">
-        <h2 style="color:var(--gold); text-align:center;">VOGUE 管理後台</h2>
+        <h2 style="color:var(--gold); text-align:center;">設計師管理後台</h2>
         
-        <div class="calendar-section">
-            <p style="color:var(--gold); margin:5px 0;">📅 日曆檢索 (查看特定日預約)</p>
+        <div class="glass-card">
+            <p style="color:var(--gold); margin:0 0 10px 0;">📅 日曆檢索</p>
             <input type="date" id="calFilter" onchange="renderDesigner()">
         </div>
 
-        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理單 (待接單/已接單)</h3>
+        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理訂單</h3>
         <div id="designer-list"></div>
 
-        <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 歷史歸檔抽屜</h3>
+        <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 客戶歷史歸檔</h3>
         <div id="archive-section"></div>
     </div>
 
     <div class="tab-switcher">
         <button class="tab-btn active" id="btn-client" onclick="switchTab('client')">客戶端</button>
-        <button class="tab-btn" id="btn-designer" onclick="switchTab('designer')">設計師端</button>
+        <button class="tab-btn" id="btn-designer" onclick="switchTab('designer')">後台管理</button>
     </div>
 
     <script type="module">
@@ -130,7 +122,7 @@
         let allData = {};
 
         window.switchTab = (t) => {
-            if(t === 'designer' && prompt("請輸入管理代碼") !== '0000') return;
+            if(t === 'designer' && prompt("請輸入管理碼") !== '0000') return;
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -146,30 +138,30 @@
             if(!name || !phone || !date) return alert("資訊未填全");
 
             push(bookingRef, { name, phone, date, time, services, status: "待接單", note: "", ts: Date.now() });
-            alert("預約已送出！");
+            alert("預約成功！");
         };
 
-        // 核心邏輯：結案服務、叮嚀同步、60天自動提醒
+        // 核心：結案、發送叮嚀、排定60天提醒
         window.completeOrder = (key) => {
             const noteText = document.getElementById(`note-${key}`).value;
             const order = allData[key];
-            const next60Days = new Date(order.date);
-            next60Days.setDate(next60Days.getDate() + 60);
+            const d = new Date(order.date);
+            d.setDate(d.getDate() + 60);
 
-            // 1. 本單狀態改為已完成並存入叮嚀
+            // 更新本單並存入叮嚀
             update(ref(db, `vogue_bookings/${key}`), { status: "已完成", note: noteText });
 
-            // 2. 自動產生 60 天後的提醒單
+            // 自動新增 60 天後的提醒單
             push(bookingRef, {
-                name: order.name, phone: order.phone, services: ["(回訪建議提醒)"],
-                date: next60Days.toISOString().split('T')[0], time: "10:00",
-                status: "系統提醒", note: "該提醒客人回來服務了！", ts: Date.now()
+                name: order.name, phone: order.phone, services: ["(60天回訪提醒)"],
+                date: d.toISOString().split('T')[0], time: "10:00",
+                status: "系統提醒", note: "該聯繫客人口嘍！", ts: Date.now()
             });
-            alert("服務結案！已排定60天後提醒。");
+            alert("已結案並排定 60 天後提醒！");
         };
 
         window.cancelOrder = (key) => {
-            if(confirm("確定取消這筆預約嗎？")) update(ref(db, `vogue_bookings/${key}`), { status: "已取消" });
+            if(confirm("確定要取消這筆預約嗎？")) update(ref(db, `vogue_bookings/${key}`), { status: "已取消" });
         };
 
         onValue(bookingRef, (snap) => {
@@ -178,6 +170,7 @@
             renderDesigner();
         });
 
+        // 客戶端渲染：包含叮嚀顯示
         window.renderClientTracker = () => {
             const phone = document.getElementById('trackPhone').value;
             const list = document.getElementById('client-tracker-list');
@@ -185,10 +178,10 @@
             if(phone.length < 4) return;
             Object.values(allData).reverse().forEach(b => {
                 if(b.phone === phone && b.status !== '已取消') {
-                    let badgeClass = b.status === '待接單' ? 'tag-wait' : (b.status === '已接單' ? 'tag-ready' : 'tag-auto');
+                    let c = b.status === '待接單' ? 'tag-wait' : (b.status === '已接單' ? 'tag-ready' : 'tag-auto');
                     list.innerHTML += `
                         <div style="padding:15px; border-bottom:1px solid #222;">
-                            <b>${b.date} ${b.time}</b> <span class="status-badge ${badgeClass}">${b.status}</span><br>
+                            <b>${b.date} ${b.time}</b> <span class="status-badge ${c}">${b.status}</span><br>
                             <small>${b.services?.join(',')}</small>
                             ${b.note ? `<div class="thanks-note">${b.note}</div>` : ''}
                         </div>`;
@@ -196,6 +189,7 @@
             });
         };
 
+        // 設計師端渲染：包含日曆、接單、結案(叮嚀)、取消、抽屜
         function renderDesigner() {
             const list = document.getElementById('designer-list');
             const archive = document.getElementById('archive-section');
@@ -206,10 +200,8 @@
             Object.keys(allData).reverse().forEach(key => {
                 const b = allData[key];
                 
-                // 只有「非完成」且「非取消」的單子會顯示在待處理區
                 if(b.status !== '已完成' && b.status !== '已取消') {
-                    // 如果有選日期日曆，則只過濾該日
-                    if(calVal && b.date !== calVal) return;
+                    if(calVal && b.date !== calVal) return; // 日曆過濾
 
                     let isAuto = b.status === '系統提醒';
                     list.innerHTML += `
@@ -220,26 +212,25 @@
                             <div style="margin-top:10px;">
                                 ${b.status==='待接單' ? `<button class="btn-action" onclick="update(ref(db, 'vogue_bookings/${key}'), {status:'已接單'})">確認接單</button>` : ''}
                                 ${b.status==='已接單' ? `
-                                    <textarea id="note-${key}" placeholder="寫下給客人的感謝叮嚀..."></textarea>
-                                    <button class="btn-action" style="background:#00ff00" onclick="completeOrder('${key}')">服務完成(存叮嚀並排提醒)</button>
+                                    <textarea id="note-${key}" placeholder="寫下本次感謝與提醒事項..."></textarea>
+                                    <button class="btn-action" style="background:#00ff00" onclick="completeOrder('${key}')">服務完成並發送叮嚀</button>
                                 ` : ''}
-                                <button class="btn-action btn-cancel" onclick="cancelOrder('${key}')">取消預約</button>
+                                <button class="btn-cancel" onclick="cancelOrder('${key}')">取消預約</button>
                             </div>
                         </div>`;
                 } else if(b.status === '已完成') {
-                    // 歸檔到抽屜
                     if(!groups[b.name]) groups[b.name] = [];
                     groups[b.name].push(b);
                 }
             });
 
-            // 渲染抽屜
+            // 抽屜歸檔
             for(let name in groups) {
                 const historyHtml = groups[name].map(h => `<div style="padding:8px 0; border-bottom:1px solid #222; font-size:14px;">📅 ${h.date} - ${h.services?.join(',')}</div>`).join('');
                 archive.innerHTML += `
                     <div class="drawer-box">
                         <button class="drawer-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
-                            <span>👤 ${name}</span> <span>${groups[name].length}次 ▾</span>
+                            <span>👤 ${name}</span> <span>${groups[name].length}次服務 ▾</span>
                         </button>
                         <div class="drawer-content">${historyHtml}</div>
                     </div>`;
