@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOGUE 獲利機器 - 完整終極版</title>
+    <title>VOGUE 獲利機器 - 全功能回歸版</title>
     <style>
         :root {
             --dark-bg: #000; --gold: #d4af37; --gold-dim: rgba(212, 175, 55, 0.1);
-            --font-main: 18px; /* 黃金比例字體 */
+            --font-main: 18px; /* 黃金比例 */
             --font-large: 20px;
             --status-wait: #ff4d4d; --status-ready: #00ff00; --status-auto: #00d4ff;
         }
@@ -19,16 +19,23 @@
         .panel { display: none; width: 92%; max-width: 420px; padding-top: 20px; }
         .panel.active { display: block; }
 
+        /* 照片滾動與預覽 */
+        .sample-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; margin-bottom: 20px; }
+        .sample-img { width: 110px; height: 150px; object-fit: cover; border-radius: 12px; border: 1px solid #333; flex-shrink: 0; }
+        .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 15px; text-align: center; color: #888; margin-bottom: 15px; font-size: 15px; cursor: pointer; }
+        #preview-img { width: 100%; border-radius: 10px; display: none; margin-top: 10px; }
+
         .glass-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         input, textarea { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
-        
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 14px; margin-left: 5px; }
+
+        /* 客戶端感謝叮嚀區 */
+        .thanks-note { background: var(--gold-dim); border: 1px solid var(--gold); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 15px; color: var(--gold); line-height: 1.5; }
+        .thanks-note::before { content: "💬 設計師給您的叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
+
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .service-item { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 16px; text-align: center; cursor: pointer; color: #888; }
         .service-item.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
-
-        /* 客戶端感謝叮嚀呈現區 */
-        .thanks-note { background: var(--gold-dim); border: 1px solid var(--gold); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 15px; color: var(--gold); line-height: 1.5; }
-        .thanks-note::before { content: "💬 設計師給您的叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; opacity: 0.8; }
 
         .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; margin-top: 5px; }
         .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 10px !important; font-size: 14px; margin-top: 10px; border-radius: 12px; width: 100%; cursor: pointer; }
@@ -39,8 +46,8 @@
         .tag-auto { background: var(--status-auto); color: #000; }
 
         .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 5px solid var(--gold); position: relative; }
-        
-        /* 抽屜設計 */
+        .booking-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 1px solid #444; }
+
         .drawer-box { background: #111; border-radius: 15px; margin-bottom: 10px; overflow: hidden; border: 1px solid #222; }
         .drawer-btn { width: 100%; padding: 15px; background: #1a1a1a; border: none; color: var(--gold); display: flex; justify-content: space-between; font-size: 18px; cursor: pointer; }
         .drawer-content { display: none; padding: 15px; background: #000; }
@@ -53,10 +60,15 @@
 <body>
 
     <div id="client" class="panel active">
-        <h2 style="color:var(--gold); text-align:center;">VOGUE 客戶預約進度</h2>
-        
+        <h2 style="color:var(--gold); text-align:center;">VOGUE 造型範本</h2>
+        <div class="sample-scroll">
+            <img src="https://images.unsplash.com/photo-1560869713-7d0a294308ed?w=400" class="sample-img">
+            <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400" class="sample-img">
+            <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400" class="sample-img">
+        </div>
+
         <div class="glass-card">
-            <p style="margin:0 0 10px 0; color:var(--gold);">🔍 輸入電話查看叮嚀與進度</p>
+            <p style="margin:0 0 10px 0; color:var(--gold);">🔍 查詢進度與設計師叮嚀</p>
             <input type="tel" id="trackPhone" placeholder="您的電話號碼" oninput="renderClientTracker()">
             <div id="client-tracker-list"></div>
         </div>
@@ -77,23 +89,30 @@
                 <div class="service-item" onclick="this.classList.toggle('selected')">髮質護理</div>
                 <div class="service-item" onclick="this.classList.toggle('selected')">造型設計</div>
             </div>
-            <label style="font-size:14px; color:#666;">預約日期</label>
+
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <span>📷 上傳參考圖片</span>
+                <input type="file" id="fileInput" hidden accept="image/*" onchange="previewFile()">
+                <img id="preview-img">
+            </div>
+
+            <label>預約日期</label>
             <input type="date" id="appDate">
-            <label style="font-size:14px; color:#666;">預約時間</label>
+            <label>預約時間</label>
             <input type="time" id="appTime">
-            <button class="btn-action" onclick="addBooking()">送出預約</button>
+            <button class="btn-action" onclick="addBooking()">送出預約單</button>
         </div>
     </div>
 
     <div id="designer" class="panel">
-        <h2 style="color:var(--gold); text-align:center;">設計師管理後台</h2>
+        <h2 style="color:var(--gold); text-align:center;">後台管理系統</h2>
         
         <div class="glass-card">
             <p style="color:var(--gold); margin:0 0 10px 0;">📅 日曆檢索</p>
             <input type="date" id="calFilter" onchange="renderDesigner()">
         </div>
 
-        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理訂單</h3>
+        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理單</h3>
         <div id="designer-list"></div>
 
         <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 客戶歷史歸檔</h3>
@@ -102,7 +121,7 @@
 
     <div class="tab-switcher">
         <button class="tab-btn active" id="btn-client" onclick="switchTab('client')">客戶端</button>
-        <button class="tab-btn" id="btn-designer" onclick="switchTab('designer')">後台管理</button>
+        <button class="tab-btn" id="btn-designer" onclick="switchTab('designer')">設計師端</button>
     </div>
 
     <script type="module">
@@ -120,9 +139,21 @@
         const bookingRef = ref(db, 'vogue_bookings');
 
         let allData = {};
+        let currentImg = "";
+
+        window.previewFile = () => {
+            const file = document.getElementById('fileInput').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                currentImg = reader.result;
+                document.getElementById('preview-img').src = currentImg;
+                document.getElementById('preview-img').style.display = 'block';
+            }
+            if(file) reader.readAsDataURL(file);
+        };
 
         window.switchTab = (t) => {
-            if(t === 'designer' && prompt("請輸入管理碼") !== '0000') return;
+            if(t === 'designer' && prompt("管理代碼") !== '0000') return;
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -135,29 +166,27 @@
             const date = document.getElementById('appDate').value;
             const time = document.getElementById('appTime').value;
             const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
-            if(!name || !phone || !date) return alert("資訊未填全");
+            if(!name || !phone || !date || !time) return alert("請填寫完整資訊");
 
-            push(bookingRef, { name, phone, date, time, services, status: "待接單", note: "", ts: Date.now() });
+            push(bookingRef, { name, phone, date, time, services, img: currentImg, status: "待接單", note: "", ts: Date.now() });
             alert("預約成功！");
+            location.reload();
         };
 
-        // 核心：結案、發送叮嚀、排定60天提醒
         window.completeOrder = (key) => {
             const noteText = document.getElementById(`note-${key}`).value;
             const order = allData[key];
             const d = new Date(order.date);
             d.setDate(d.getDate() + 60);
 
-            // 更新本單並存入叮嚀
             update(ref(db, `vogue_bookings/${key}`), { status: "已完成", note: noteText });
 
-            // 自動新增 60 天後的提醒單
             push(bookingRef, {
-                name: order.name, phone: order.phone, services: ["(60天回訪提醒)"],
+                name: order.name, phone: order.phone, services: ["(系統回訪提醒)"],
                 date: d.toISOString().split('T')[0], time: "10:00",
-                status: "系統提醒", note: "該聯繫客人口嘍！", ts: Date.now()
+                status: "系統提醒", note: "設計師關心您：該回來整理頭髮囉！", ts: Date.now()
             });
-            alert("已結案並排定 60 天後提醒！");
+            alert("已結案並排定60天提醒！");
         };
 
         window.cancelOrder = (key) => {
@@ -170,7 +199,6 @@
             renderDesigner();
         });
 
-        // 客戶端渲染：包含叮嚀顯示
         window.renderClientTracker = () => {
             const phone = document.getElementById('trackPhone').value;
             const list = document.getElementById('client-tracker-list');
@@ -189,7 +217,6 @@
             });
         };
 
-        // 設計師端渲染：包含日曆、接單、結案(叮嚀)、取消、抽屜
         function renderDesigner() {
             const list = document.getElementById('designer-list');
             const archive = document.getElementById('archive-section');
@@ -199,21 +226,19 @@
 
             Object.keys(allData).reverse().forEach(key => {
                 const b = allData[key];
-                
                 if(b.status !== '已完成' && b.status !== '已取消') {
-                    if(calVal && b.date !== calVal) return; // 日曆過濾
-
+                    if(calVal && b.date !== calVal) return;
                     let isAuto = b.status === '系統提醒';
                     list.innerHTML += `
                         <div class="history-item" style="border-left-color:${isAuto?'#00d4ff':'var(--gold)'}">
                             <b>${b.name}</b> (${b.phone}) <span class="status-badge ${isAuto?'tag-auto':(b.status==='待接單'?'tag-wait':'tag-ready')}">${b.status}</span><br>
                             <small>📅 ${b.date} / ⏰ ${b.time}</small><br>
-                            <small>項目：${b.services?.join(',')}</small>
+                            ${b.img ? `<img src="${b.img}" class="booking-img" onclick="window.open(this.src)">` : ''}
                             <div style="margin-top:10px;">
                                 ${b.status==='待接單' ? `<button class="btn-action" onclick="update(ref(db, 'vogue_bookings/${key}'), {status:'已接單'})">確認接單</button>` : ''}
                                 ${b.status==='已接單' ? `
-                                    <textarea id="note-${key}" placeholder="寫下本次感謝與提醒事項..."></textarea>
-                                    <button class="btn-action" style="background:#00ff00" onclick="completeOrder('${key}')">服務完成並發送叮嚀</button>
+                                    <textarea id="note-${key}" placeholder="給客人的叮嚀/感謝..."></textarea>
+                                    <button class="btn-action" style="background:#00ff00" onclick="completeOrder('${key}')">服務完成並傳送叮嚀</button>
                                 ` : ''}
                                 <button class="btn-cancel" onclick="cancelOrder('${key}')">取消預約</button>
                             </div>
@@ -224,13 +249,12 @@
                 }
             });
 
-            // 抽屜歸檔
             for(let name in groups) {
-                const historyHtml = groups[name].map(h => `<div style="padding:8px 0; border-bottom:1px solid #222; font-size:14px;">📅 ${h.date} - ${h.services?.join(',')}</div>`).join('');
+                const historyHtml = groups[name].map(h => `<div style="padding:8px 0; border-bottom:1px solid #222; font-size:14px;">📅 ${h.date} - ${h.services?.join(',')}<br><small style="color:var(--gold)">歷史叮嚀：${h.note||'無'}</small></div>`).join('');
                 archive.innerHTML += `
                     <div class="drawer-box">
                         <button class="drawer-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
-                            <span>👤 ${name}</span> <span>${groups[name].length}次服務 ▾</span>
+                            <span>👤 ${name}</span> <span>${groups[name].length}次 ▾</span>
                         </button>
                         <div class="drawer-content">${historyHtml}</div>
                     </div>`;
