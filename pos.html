@@ -146,140 +146,168 @@
 </div>
 
 <script>
-    // Firebase 初始化代碼保持不變
-    const firebaseConfig = {
-        apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
-        authDomain: "holyhairsalon-f73bf.firebaseapp.com",
-        databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
-        projectId: "holyhairsalon-f73bf",
-        appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const rdb = firebase.database();
+   // Firebase 初始化
+const firebaseConfig = {
+    apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+    authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+    databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+    projectId: "holyhairsalon-f73bf",
+    appId: "1:960169055224:web:ab3b0c2ddb0a9082bf3c0d"
+};
+firebase.initializeApp(firebaseConfig);
+const rdb = firebase.database();
 
-    let currentIdentity = 'member';
+// ★ 設定：請確保此處名稱與您名冊中的店長名稱一模一樣
+const MANAGER_NAME = "店長"; 
 
-    function setIdentity(type) {
-        currentIdentity = type;
-        document.getElementById('btn-member').classList.toggle('active', type === 'member');
-        document.getElementById('btn-guest').classList.toggle('active', type === 'guest');
-        
-        if(type === 'guest') {
-            document.getElementById('phone-group').style.display = 'none';
-            document.getElementById('payment').value = '現金';
-        } else {
-            document.getElementById('phone-group').style.display = 'block';
-            document.getElementById('payment').value = '儲值金';
-        }
+let currentIdentity = 'member';
+
+// 1. 身份切換 (保留原樣)
+function setIdentity(type) {
+    currentIdentity = type;
+    document.getElementById('btn-member').classList.toggle('active', type === 'member');
+    document.getElementById('btn-guest').classList.toggle('active', type === 'guest');
+    if(type === 'guest') {
+        document.getElementById('phone-group').style.display = 'none';
+        document.getElementById('payment').value = '現金';
+    } else {
+        document.getElementById('phone-group').style.display = 'block';
+        document.getElementById('payment').value = '儲值金';
     }
+}
 
-    function showTab(name) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(name).classList.add('active');
-        if(window.event) window.event.currentTarget.classList.add('active');
-    }
+// 2. 分頁切換 (保留原樣)
+function showTab(name) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    if(window.event) window.event.currentTarget.classList.add('active');
+}
 
-    async function processSale() {
-        const phone = document.getElementById('phone').value;
-        const staff = document.getElementById('staff').value.trim();
-        const tech = Number(document.getElementById('tech_amt').value || 0);
-        const prod = Number(document.getElementById('prod_amt').value || 0);
-        const total = tech + prod;
-        const payment = document.getElementById('payment').value;
-        const res = document.getElementById('saleResult');
+// 3. 收銀交易 (保留原樣)
+async function processSale() {
+    const phone = document.getElementById('phone').value;
+    const staff = document.getElementById('staff').value.trim();
+    const tech = Number(document.getElementById('tech_amt').value || 0);
+    const prod = Number(document.getElementById('prod_amt').value || 0);
+    const total = tech + prod;
+    const payment = document.getElementById('payment').value;
+    const res = document.getElementById('saleResult');
 
-        if(!staff || total <= 0) return alert("請輸入金額與設計師");
-        res.style.display = 'block'; res.innerHTML = "處理中...";
+    if(!staff || total <= 0) return alert("請輸入金額與設計師");
+    res.style.display = 'block'; res.innerHTML = "處理中...";
 
-        try {
-            if (currentIdentity === 'member' && payment === '儲值金') {
-                let mKey = null, mBal = 0;
-                const snap = await rdb.ref('members').once('value');
-                snap.forEach(c => {
-                    if(c.val().phone === phone || c.key === phone) { mKey = c.key; mBal = Number(c.val().balance || 0); }
-                });
-                if(!mKey) return res.innerHTML = "❌ 找不到會員資料";
-                if(mBal < total) return res.innerHTML = `❌ 餘額不足 ($${mBal})`;
-                await rdb.ref(`members/${mKey}`).update({ balance: mBal - total });
-            }
-
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '-');
-
-            await rdb.ref('sales').push({
-                staff, tech, prod, total, payment, 
-                identity: currentIdentity,
-                phone: (currentIdentity === 'member' ? phone : "散客"),
-                timestamp: now.getTime(),
-                date: dateStr
+    try {
+        if (currentIdentity === 'member' && payment === '儲值金') {
+            let mKey = null, mBal = 0;
+            const snap = await rdb.ref('members').once('value');
+            snap.forEach(c => {
+                if(c.val().phone === phone || c.key === phone) { mKey = c.key; mBal = Number(c.val().balance || 0); }
             });
+            if(!mKey) return res.innerHTML = "❌ 找不到會員資料";
+            if(mBal < total) return res.innerHTML = `❌ 餘額不足 ($${mBal})`;
+            await rdb.ref(`members/${mKey}`).update({ balance: mBal - total });
+        }
 
-            res.innerHTML = `✅ 交易成功！<br>項目：${currentIdentity === 'member'?'會員':'散客'}<br>總計：$${total}`;
-            document.getElementById('tech_amt').value = "0"; document.getElementById('prod_amt').value = "0";
-            if(currentIdentity === 'member') document.getElementById('phone').value = "";
-        } catch (e) { res.innerHTML = "❌ 錯誤: " + e.message; }
-    }
-
-    async function getDesignerReport() {
-        const target = document.getElementById('q_staff').value.trim().toUpperCase();
-        const res = document.getElementById('queryResult');
-        res.style.display = 'block'; res.innerHTML = "計算中...";
-        const snap = await rdb.ref('sales').once('value');
-        let tTech = 0, tProd = 0, count = 0;
-        snap.forEach(c => {
-            const d = c.val();
-            if(d.staff && d.staff.toUpperCase() === target) {
-                tTech += Number(d.tech || 0); tProd += Number(d.prod || 0); count++;
-            }
-        });
-        res.innerHTML = `<h3>${target} 業績</h3>技術：$${tTech}<br>產品：$${tProd}<br><b>總計：$${tTech+tProd}</b>`;
-    }
-
-    async function getShopReport(type) {
-        const res = document.getElementById('shopResult');
-        res.style.display = 'block'; res.innerHTML = "彙整中...";
         const now = new Date();
-        const snap = await rdb.ref('sales').once('value');
-        let tTech = 0, tProd = 0, total = 0;
-        let staffPerf = {};
-        const day = now.getDay() || 7;
-        const monday = new Date(now); monday.setHours(0,0,0,0); monday.setDate(now.getDate() - day + 1);
+        const dateStr = now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '-');
 
-        snap.forEach(c => {
-            const d = c.val();
-            const dDate = new Date(d.timestamp);
-            let match = false;
-            if(type === 'today') match = d.date === now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '-');
-            else if(type === 'week') match = d.timestamp >= monday.getTime();
-            else if(type === 'month') match = dDate.getMonth() === now.getMonth() && dDate.getFullYear() === now.getFullYear();
-
-            if(match) {
-                const sT = Number(d.tech || 0); const sP = Number(d.prod || 0);
-                tTech += sT; tProd += sP; total += (sT + sP);
-                staffPerf[d.staff] = (staffPerf[d.staff] || 0) + (sT + sP);
-            }
+        await rdb.ref('sales').push({
+            staff, tech, prod, total, payment, 
+            identity: currentIdentity,
+            phone: (currentIdentity === 'member' ? phone : "散客"),
+            timestamp: now.getTime(),
+            date: dateStr
         });
-// 假設 totalService 是全店技術總額，totalProduct 是全店產品總額
-const totalService = /* 您 POS 計算出的技術總和 */;
 
-const updates = {};
-// 設計師們依舊同步各自的總業績
-Object.keys(staffPerf).forEach(name => {
-    updates[`salon/staff/${name}/perf`] = staffPerf[name];
-});
+        res.innerHTML = `✅ 交易成功！<br>項目：${currentIdentity === 'member'?'會員':'散客'}<br>總計：$${total}`;
+        document.getElementById('tech_amt').value = "0"; document.getElementById('prod_amt').value = "0";
+        if(currentIdentity === 'member') document.getElementById('phone').value = "";
+    } catch (e) { res.innerHTML = "❌ 錯誤: " + e.message; }
+}
 
-// 特別處理「店長」：強制將業績設定為全店技術總額
-updates[`salon/staff/店長姓名/perf`] = totalService; 
+// 4. 個人報表 (保留原樣)
+async function getDesignerReport() {
+    const target = document.getElementById('q_staff').value.trim().toUpperCase();
+    const res = document.getElementById('queryResult');
+    res.style.display = 'block'; res.innerHTML = "計算中...";
+    const snap = await rdb.ref('sales').once('value');
+    let tTech = 0, tProd = 0;
+    snap.forEach(c => {
+        const d = c.val();
+        if(d.staff && d.staff.toUpperCase() === target) {
+            tTech += Number(d.tech || 0); tProd += Number(d.prod || 0);
+        }
+    });
+    res.innerHTML = `<h3>${target} 業績</h3>技術：$${tTech}<br>產品：$${tProd}<br><b>總計：$${tTech+tProd}</b>`;
+}
 
-update(ref(db), updates);
-        let rankHtml = "";
-        Object.keys(staffPerf).sort((a,b) => staffPerf[b] - staffPerf[a]).forEach((s, i) => {
-            rankHtml += `<div class="item-row"><span>${i+1}. ${s}</span><span>$${staffPerf[s]}</span></div>`;
-        });
-        res.innerHTML = `<h3>📅 ${type==='today'?'今日':(type==='week'?'本週':'本月')}全店</h3>總營收：<b>$${total}</b><br>技術：$${tTech} | 產品：$${tProd}<hr>排行：<br>${rankHtml || "無數據"}`;
+// 5. 店務報表 + 薪資同步 (新增核心邏輯)
+async function getShopReport(type) {
+    const res = document.getElementById('shopResult');
+    res.style.display = 'block'; res.innerHTML = "彙整中...";
+    const now = new Date();
+    const snap = await rdb.ref('sales').once('value');
+    
+    let tTech = 0, tProd = 0, total = 0;
+    let staffPerf = {}; // 存個人總業績 (含產品)
+
+    const day = now.getDay() || 7;
+    const monday = new Date(now); monday.setHours(0,0,0,0); monday.setDate(now.getDate() - day + 1);
+
+    snap.forEach(c => {
+        const d = c.val();
+        const dDate = new Date(d.timestamp);
+        let match = false;
+        
+        // 時間過濾
+        if(type === 'today') match = d.date === now.toLocaleDateString('zh-TW', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '-');
+        else if(type === 'week') match = d.timestamp >= monday.getTime();
+        else if(type === 'month') match = dDate.getMonth() === now.getMonth() && dDate.getFullYear() === now.getFullYear();
+
+        if(match) {
+            const sT = Number(d.tech || 0); 
+            const sP = Number(d.prod || 0);
+            tTech += sT; 
+            tProd += sP; 
+            total += (sT + sP);
+            // 累加設計師個人的 總業績
+            staffPerf[d.staff] = (staffPerf[d.staff] || 0) + (sT + sP);
+        }
+    });
+
+    // --- 同步數據到員工名冊 ---
+    const updates = {};
+    
+    // 設計師們同步各自的總業績
+    Object.keys(staffPerf).forEach(name => {
+        if(name !== MANAGER_NAME) {
+            updates[`salon/staff/${name}/perf`] = staffPerf[name];
+        }
+    });
+
+    // 特別處理「店長」：將業績設定為全店「技術總額」(tTech)，扣除產品
+    if(MANAGER_NAME) {
+        updates[`salon/staff/${MANAGER_NAME}/perf`] = tTech; 
     }
+
+    // 執行同步更新 (使用相容版本寫法)
+    rdb.ref().update(updates);
+
+    // 渲染排行榜 (保留原樣)
+    let rankHtml = "";
+    Object.keys(staffPerf).sort((a,b) => staffPerf[b] - staffPerf[a]).forEach((s, i) => {
+        rankHtml += `<div class="item-row"><span>${i+1}. ${s}</span><span>$${staffPerf[s]}</span></div>`;
+    });
+    
+    res.innerHTML = `<h3>📅 ${type==='today'?'今日':(type==='week'?'本週':'本月')}全店</h3>
+        總營收：<b>$${total.toLocaleString()}</b><br>
+        技術總計：$${tTech.toLocaleString()} (店長抽成基準)<br>
+        產品總計：$${tProd.toLocaleString()}<hr>
+        個人排行 (技術+產品)：<br>${rankHtml || "無數據"}`;
+}
 </script>
 </body>
 </html>
+
 
