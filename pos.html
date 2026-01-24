@@ -260,7 +260,19 @@
                 staffPerf[d.staff] = (staffPerf[d.staff] || 0) + (sT + sP);
             }
         });
+// 假設 totalService 是全店技術總額，totalProduct 是全店產品總額
+const totalService = /* 您 POS 計算出的技術總和 */;
 
+const updates = {};
+// 設計師們依舊同步各自的總業績
+Object.keys(staffPerf).forEach(name => {
+    updates[`salon/staff/${name}/perf`] = staffPerf[name];
+});
+
+// 特別處理「店長」：強制將業績設定為全店技術總額
+updates[`salon/staff/店長姓名/perf`] = totalService; 
+
+update(ref(db), updates);
         let rankHtml = "";
         Object.keys(staffPerf).sort((a,b) => staffPerf[b] - staffPerf[a]).forEach((s, i) => {
             rankHtml += `<div class="item-row"><span>${i+1}. ${s}</span><span>$${staffPerf[s]}</span></div>`;
@@ -270,3 +282,4 @@
 </script>
 </body>
 </html>
+
