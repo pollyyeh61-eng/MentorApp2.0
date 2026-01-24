@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOGUE 獲利機器 - 終極整合版</title>
+    <title>VOGUE 獲利機器 - 叮嚀同步版</title>
     <style>
         :root {
             --dark-bg: #000; 
             --gold: #d4af37; 
             --gold-dim: rgba(212, 175, 55, 0.1);
-            --font-main: 18px; /* 黃金比例字體 */
+            --font-main: 18px; /* 黃金比例 */
             --font-large: 20px;
             --status-wait: #ff4d4d;
             --status-ready: #00ff00;
@@ -32,13 +32,17 @@
         .service-item { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 16px; text-align: center; cursor: pointer; color: #888; }
         .service-item.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
 
-        input { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
         label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 14px; margin-left: 5px; }
+
+        /* 客戶端看到的叮嚀區塊 */
+        .thanks-note { background: var(--gold-dim); border: 1px solid var(--gold); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 15px; color: var(--gold); line-height: 1.5; }
+        .thanks-note::before { content: "💬 設計師給您的叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; opacity: 0.8; }
 
         .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 15px; text-align: center; color: #888; margin-bottom: 15px; font-size: 15px; }
         #preview-img { width: 100%; border-radius: 10px; display: none; margin-top: 10px; }
 
-        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; transition: 0.3s; }
+        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; }
         .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px !important; margin-top: 8px; font-size: 14px; }
         
         .status-badge { padding: 4px 10px; border-radius: 8px; font-size: 14px; font-weight: bold; }
@@ -69,7 +73,7 @@
         </div>
 
         <div class="glass-card">
-            <p style="margin:0 0 15px 0; color:var(--gold);">🔍 查看我的預約進度</p>
+            <p style="margin:0 0 15px 0; color:var(--gold);">🔍 查看我的預約進度與叮嚀</p>
             <input type="tel" id="trackPhone" placeholder="輸入電話號碼" oninput="renderClientTracker()">
             <div id="client-tracker-list"></div>
         </div>
@@ -109,11 +113,10 @@
 
     <div id="designer" class="panel">
         <h2 style="color:var(--gold); text-align:center;">設計師後台管理</h2>
-        
-        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理單 (接單/結案)</h3>
+        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理單</h3>
         <div id="designer-list"></div>
 
-        <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 客戶歷史歸檔 (依名歸類)</h3>
+        <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 客戶歷史歸檔</h3>
         <div id="archive-section"></div>
     </div>
 
@@ -164,30 +167,34 @@
             const date = document.getElementById('appDate').value;
             const time = document.getElementById('appTime').value;
             const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
-            if(!name || !phone || !date || !time) return alert("請填寫完整資訊並選擇時間");
+            if(!name || !phone || !date || !time) return alert("資訊未填全");
 
             push(bookingRef, {
                 name, phone, date, time, services,
-                img: currentImg, status: "待接單", ts: Date.now()
+                img: currentImg, status: "待接單", note: "", ts: Date.now()
             });
             alert("預約成功！");
             location.reload();
         };
 
         window.processOrder = (key, status) => {
-            if(status === '已取消' && !confirm("確定要取消此預約嗎？")) return;
-            
             const order = allData[key];
             if(status === '已完成') {
+                const note = document.getElementById(`note-${key}`).value;
                 const nextDate = new Date(order.date);
                 nextDate.setDate(nextDate.getDate() + 60);
+                
+                update(ref(db, `vogue_bookings/${key}`), { status: "已完成", note: note });
+                
                 push(bookingRef, {
-                    name: order.name, phone: order.phone, services: ["(系統提醒：回訪建議)"],
+                    name: order.name, phone: order.phone, services: ["(系統回訪提醒)"],
                     date: nextDate.toISOString().split('T')[0], time: "10:00",
                     status: "系統提醒", ts: Date.now()
                 });
-                alert("已結案！已排定60天後提醒。");
+                alert("已結案並傳送叮嚀！");
+                return;
             }
+            if(status === '已取消' && !confirm("確定取消？")) return;
             update(ref(db, `vogue_bookings/${key}`), { status: status });
         };
 
@@ -197,6 +204,7 @@
             renderDesigner();
         });
 
+        // 客戶端渲染：增加叮嚀事項呈現
         window.renderClientTracker = () => {
             const phone = document.getElementById('trackPhone').value;
             const list = document.getElementById('client-tracker-list');
@@ -206,9 +214,10 @@
                 if(b.phone === phone && b.status !== '已取消') {
                     let color = b.status === '待接單' ? 'tag-wait' : (b.status === '已接單' ? 'tag-ready' : 'tag-auto');
                     list.innerHTML += `
-                        <div style="padding:10px; border-bottom:1px solid #222;">
+                        <div style="padding:15px; border-bottom:1px solid #222;">
                             <b>${b.date} ${b.time}</b> <span class="status-badge ${color}">${b.status}</span><br>
                             <small>${b.services?.join(',')}</small>
+                            ${b.note ? `<div class="thanks-note">${b.note}</div>` : ''}
                         </div>`;
                 }
             });
@@ -227,12 +236,15 @@
                     list.innerHTML += `
                         <div class="history-item" style="border-left-color:${isRemind ? '#00d4ff':'#ff4d4d'}">
                             <b>${b.name}</b> (${b.phone}) <span class="status-badge ${isRemind?'tag-auto':'tag-wait'}">${b.status}</span><br>
-                            <small>📅 ${b.date} ${b.time} / 項目：${b.services?.join(',')}</small><br>
+                            <small>📅 ${b.date} ${b.time}</small><br>
                             ${b.img ? `<img src="${b.img}" class="booking-img" onclick="window.open(this.src)">` : ''}
-                            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                                ${b.status==='待接單' ? `<button class="btn-action" style="padding:8px; flex:1;" onclick="processOrder('${key}','已接單')">確認接單</button>` : ''}
-                                ${b.status==='已接單' ? `<button class="btn-action" style="background:#00ff00; padding:8px; flex:1;" onclick="processOrder('${key}','已完成')">完成歸檔</button>` : ''}
-                                <button class="btn-action btn-cancel" style="flex:1;" onclick="processOrder('${key}','已取消')">取消預約</button>
+                            <div style="margin-top:10px;">
+                                ${b.status==='待接單' ? `<button class="btn-action" style="padding:8px" onclick="processOrder('${key}','已接單')">確認接單</button>` : ''}
+                                ${b.status==='已接單' ? `
+                                    <textarea id="note-${key}" placeholder="輸入本次感謝與叮嚀事項..." rows="2" style="margin-top:10px;"></textarea>
+                                    <button class="btn-action" style="background:#00ff00; padding:8px" onclick="processOrder('${key}','已完成')">結案並傳送叮嚀</button>
+                                ` : ''}
+                                <button class="btn-action btn-cancel" onclick="processOrder('${key}','已取消')">取消預約</button>
                             </div>
                         </div>`;
                 } else if(b.status === '已完成') {
