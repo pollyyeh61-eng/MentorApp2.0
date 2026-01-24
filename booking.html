@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOGUE 美業系統 - 獲利機器整合版</title>
+    <title>VOGUE 美業系統 - 完整功能版</title>
     <style>
         :root {
-            --dark-bg: #0a0a0a;
+            --dark-bg: #000000;
             --gold-dim: rgba(212, 175, 55, 0.15);
             --gold-bright: #d4af37;
             --gold-glow: rgba(212, 175, 55, 0.5);
             --status-wait: #ff4d4d;
             --status-done: #00ff00;
             --status-auto: #00d4ff;
-            /* 根據您的需求：字體尺寸以黃金比例 18-20px 為主 */
+            /* 黃金比例字體 */
             --font-main: 18px;
-            --font-title: 20px;
+            --font-large: 20px;
         }
 
         body {
@@ -26,86 +26,71 @@
             font-size: var(--font-main);
         }
 
-        .home-btn {
-            position: fixed; top: 15px; left: 15px; z-index: 10000;
-            background: #000; border: 2px solid var(--gold-bright);
-            color: var(--gold-bright); padding: 10px 18px;
-            border-radius: 12px; font-size: 14px; font-weight: bold;
-            cursor: pointer; display: none;
-        }
+        /* 頂部月份標題樣式 (對齊截圖) */
+        .header-date { color: var(--gold-bright); font-size: var(--font-large); margin: 20px 0; font-weight: bold; }
 
-        .panel { display: none; width: 92%; max-width: 420px; padding-top: 65px; }
+        .panel { display: none; width: 92%; max-width: 420px; padding-top: 20px; }
         .panel.active { display: block; }
 
-        .glass-card { background: linear-gradient(145deg, #111, #000); border: 1px solid var(--gold-dim); border-radius: 24px; padding: 22px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+        .glass-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         
-        h1, h2 { font-size: var(--font-title); letter-spacing: 5px; color: var(--gold-bright); text-align: center; }
+        /* 服務項目網格 (恢復完整10項) */
+        .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .service-item { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 15px; text-align: center; cursor: pointer; color: #888; }
+        .service-item.selected { border-color: var(--gold-bright); color: var(--gold-bright); background: var(--gold-dim); }
 
         select, input { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
         
-        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-gold { background: var(--gold-bright); color: #000; }
-        .btn-outline { background: transparent; border: 1.8px solid var(--gold-bright); color: var(--gold-bright); }
-        .btn-complete { background: var(--status-done); color: #000; }
-
-        /* 抽屜式歸檔樣式 */
-        .drawer { margin-top: 15px; border: 1px solid #333; border-radius: 15px; overflow: hidden; width: 100%; background: #111; }
-        .drawer-header { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--gold-bright); }
-        .drawer-content { display: none; background: #000; padding: 10px; max-height: 400px; overflow-y: auto; }
-        .drawer.open .drawer-content { display: block; }
-
-        .client-group { margin-bottom: 8px; border: 1px solid #222; border-radius: 10px; overflow: hidden; }
-        .client-group-header { padding: 12px; background: #161616; display: flex; justify-content: space-between; font-size: 16px; cursor: pointer; }
-        .client-history-list { display: none; background: #050505; padding: 10px; font-size: 14px; color: #aaa; }
+        
+        /* 抽屜式歸檔 (依姓名) */
+        .archive-drawer { margin-top: 20px; width: 100%; }
+        .drawer-box { background: #111; border-radius: 15px; margin-bottom: 10px; overflow: hidden; border: 1px solid #222; }
+        .drawer-btn { width: 100%; padding: 15px; background: #1a1a1a; border: none; color: var(--gold-bright); display: flex; justify-content: space-between; font-size: 16px; cursor: pointer; }
+        .drawer-content { display: none; padding: 15px; background: #000; border-top: 1px solid #222; }
 
         .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 4px solid var(--gold-bright); position: relative; }
         
         .tab-switcher { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; background: #111; border-radius: 50px; padding: 5px; width: 260px; border: 1px solid #333; z-index: 1000; }
         .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #666; font-size: 14px; cursor: pointer; }
         .tab-btn.active { background: var(--gold-bright); color: #000; border-radius: 40px; font-weight: bold; }
-
-        .status-badge { font-size: 12px; padding: 2px 8px; border-radius: 10px; border: 1px solid currentColor; margin-left: 5px; }
     </style>
 </head>
 <body>
 
-    <button id="main-home-btn" class="home-btn" onclick="window.location.href='index.html'">🏠 返回首頁</button>
-
     <div id="client" class="panel active">
-        <h1>VOGUE 預約</h1>
+        <h2 class="header-date">VOGUE 顧客預約</h2>
         <div class="glass-card">
-            <input type="text" id="custName" placeholder="您的姓名">
+            <input type="text" id="custName" placeholder="顧客姓名">
             <input type="tel" id="custPhone" placeholder="聯繫電話">
-            <select id="selService">
-                <option value="洗剪髮">洗剪髮</option>
-                <option value="染髮設計">染髮設計</option>
-                <option value="燙髮設計">燙髮設計</option>
-                <option value="頭皮護理">頭皮護理</option>
-            </select>
+            <div class="service-grid">
+                <div class="service-item" onclick="this.classList.toggle('selected')">洗髮</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">剪髮</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">洗加剪</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">單色染髮</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">雙色染髮</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">漂髮設計</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">熱塑燙髮</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">冷塑燙髮</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">頭皮護理</div>
+                <div class="service-item" onclick="this.classList.toggle('selected')">髮質護理</div>
+            </div>
             <div style="display:flex; gap:10px;">
                 <input type="date" id="appDate" style="flex:1">
                 <input type="time" id="appTime" style="flex:1">
             </div>
-            <button class="btn-action btn-outline" onclick="addBooking()">立即預約服務</button>
+            <button class="btn-action btn-gold" onclick="addBooking()">送出預約單</button>
         </div>
-        <h3 style="color:var(--gold-bright); font-size:18px;">我的預約狀態</h3>
-        <div id="my-list"></div>
     </div>
 
     <div id="designer" class="panel">
-        <h2>設計師管理後台</h2>
-        
-        <h3 style="color:var(--status-wait); font-size:18px; margin-left:10px;">⚠️ 待處理清單 (接單/結案)</h3>
-        <div id="designer-pending"></div>
+        <h2 class="header-date">2026年 1月</h2>
+        <h3 style="color:var(--status-wait); margin-left:10px; font-size:18px;">⚠️ 待處理單 (請接單/追蹤)</h3>
+        <div id="designer-list"></div>
 
-        <div class="drawer" id="archive-drawer">
-            <div class="drawer-header" onclick="this.parentElement.classList.toggle('open')">
-                <span>📁 客戶歷史檔案 (依名歸檔)</span>
-                <span style="font-size:12px;">點擊展開 ▾</span>
-            </div>
-            <div class="drawer-content" id="archive-content">
-                </div>
-        </div>
+        <h3 style="color:var(--gold-bright); margin-left:10px; margin-top:30px; font-size:18px;">📁 歷史歸檔 (依客戶歸類)</h3>
+        <div id="archive-section" class="archive-drawer"></div>
     </div>
 
     <div class="tab-switcher">
@@ -128,15 +113,10 @@
         const db = getDatabase(app);
         const bookingRef = ref(db, 'vogue_bookings');
 
-        let allBookings = {};
+        let allData = {};
 
         window.switchTab = (t) => {
-            if(t === 'designer') {
-                if(prompt("請輸入管理代碼") !== '0000') return;
-                document.getElementById('main-home-btn').style.display = 'block';
-            } else {
-                document.getElementById('main-home-btn').style.display = 'none';
-            }
+            if(t === 'designer' && prompt("管理碼") !== '0000') return;
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -148,106 +128,69 @@
             const phone = document.getElementById('custPhone').value;
             const date = document.getElementById('appDate').value;
             const time = document.getElementById('appTime').value;
-            const service = document.getElementById('selService').value;
-            if(!name || !phone || !date) return alert("請完整填寫預約資訊");
+            const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
+            if(!name || !phone || !date) return alert("資訊未填全");
 
-            push(bookingRef, {
-                name, phone, date, time, service,
-                status: "待接單",
-                timestamp: Date.now()
-            }).then(() => alert("預約成功！"));
+            push(bookingRef, { name, phone, date, time, services, status: "待接單", ts: Date.now() });
+            alert("預約成功！");
+            document.querySelectorAll('.service-item').forEach(el => el.classList.remove('selected'));
         };
 
-        // 核心邏輯：處理訂單與自動化追蹤
-        window.updateStatus = (key, nextStatus) => {
-            const order = allBookings[key];
-            
-            if(nextStatus === '已完成') {
-                // 1. 執行「美髮學堂」經營策略：自動生成 60 天後提醒
-                const futureDate = new Date(order.date);
-                futureDate.setDate(futureDate.getDate() + 60);
-                
+        window.processOrder = (key, status) => {
+            if(status === '已完成') {
+                const order = allData[key];
+                const d = new Date(order.date);
+                d.setDate(d.getDate() + 60);
                 push(bookingRef, {
-                    name: order.name,
-                    phone: order.phone,
-                    service: order.service + "(回訪提醒)",
-                    date: futureDate.toISOString().split('T')[0],
-                    time: order.time,
-                    status: "系統提醒",
-                    timestamp: Date.now()
+                    name: order.name, phone: order.phone, services: ["(回訪追蹤)"],
+                    date: d.toISOString().split('T')[0], time: order.time,
+                    status: "系統提醒", ts: Date.now()
                 });
-                alert("結案成功！系統已為您在 60 天後預排追蹤單。");
+                alert("已結案並排程60天後提醒！");
             }
-            
-            update(ref(db, `vogue_bookings/${key}`), { status: nextStatus });
+            update(ref(db, `vogue_bookings/${key}`), { status: status });
         };
 
         onValue(bookingRef, (snap) => {
-            allBookings = snap.val() || {};
-            renderClientList();
-            renderDesignerPanel();
+            allData = snap.val() || {};
+            renderDesigner();
         });
 
-        function renderClientList() {
-            const myList = document.getElementById('my-list');
-            const phone = document.getElementById('custPhone').value;
-            myList.innerHTML = "";
-            if(!phone) return;
-            Object.values(allBookings).reverse().forEach(b => {
-                if(b.phone === phone && b.status !== '系統提醒') {
-                    myList.innerHTML += `
-                        <div class="history-item">
-                            <b>${b.service}</b> <span class="status-badge">${b.status}</span><br>
-                            <small>${b.date} ${b.time}</small>
-                        </div>`;
-                }
-            });
-        }
+        function renderDesigner() {
+            const list = document.getElementById('designer-list');
+            const archive = document.getElementById('archive-section');
+            list.innerHTML = ""; archive.innerHTML = "";
+            const groups = {};
 
-        function renderDesignerPanel() {
-            const pendingDiv = document.getElementById('designer-pending');
-            const archiveDiv = document.getElementById('archive-content');
-            pendingDiv.innerHTML = "";
-            archiveDiv.innerHTML = "";
-
-            const groups = {}; // 用於歷史歸檔群組
-
-            Object.keys(allBookings).sort((a,b) => allBookings[b].timestamp - allBookings[a].timestamp).forEach(key => {
-                const b = allBookings[key];
-
-                // 待處理區 (待接單、已接單、系統提醒)
+            Object.keys(allData).reverse().forEach(key => {
+                const b = allData[key];
+                
+                // 待處理顯示
                 if(b.status !== '已完成') {
                     const isAuto = b.status === '系統提醒';
-                    pendingDiv.innerHTML += `
-                        <div class="history-item" style="border-left-color:${isAuto ? '#00d4ff':'#ff4d4d'}">
-                            <div style="display:flex; justify-content:space-between;">
-                                <b>${b.name}</b>
-                                <span style="color:${isAuto?'#00d4ff':'#ff4d4d'}">${b.status}</span>
-                            </div>
-                            <div style="font-size:15px; margin:5px 0;">項目：${b.service}</div>
-                            <small>${b.date} ${b.time} / ${b.phone}</small>
-                            ${b.status === '待接單' ? `<button class="btn-action btn-gold" onclick="updateStatus('${key}','已接單')">確認接單</button>` : ''}
-                            ${b.status === '已接單' ? `<button class="btn-action btn-complete" onclick="updateStatus('${key}','已完成')">完成服務 (啟動60天追蹤)</button>` : ''}
+                    list.innerHTML += `
+                        <div class="history-item" style="border-left-color:${isAuto?'#00d4ff':'#ff4d4d'}">
+                            <b>${b.name}</b> (${b.phone}) <span style="font-size:12px; color:#aaa;">${b.status}</span><br>
+                            <small>${b.date} ${b.time} / 項目：${b.services?.join(',') || '未選'}</small><br>
+                            ${b.status==='待接單'?`<button class="btn-action btn-gold" onclick="processOrder('${key}','已接單')">確認接單</button>`:''}
+                            ${b.status==='已接單'?`<button class="btn-action btn-gold" style="background:#00ff00" onclick="processOrder('${key}','已完成')">完成服務(啟動追蹤)</button>`:''}
                         </div>`;
-                }
-
-                // 歸檔區 (已完成)
-                if(b.status === '已完成') {
+                } else {
+                    // 已完成進行歸檔
                     if(!groups[b.name]) groups[b.name] = [];
                     groups[b.name].push(b);
                 }
             });
 
-            // 渲染歸檔抽屜內的小抽屜
+            // 渲染抽屜歸檔
             for(let name in groups) {
-                const historyHtml = groups[name].map(h => `<div>📅 ${h.date} - ${h.service}</div>`).join('');
-                archiveDiv.innerHTML += `
-                    <div class="client-group">
-                        <div class="client-group-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
-                            <span>👤 ${name}</span>
-                            <span>${groups[name].length} 次消費 ▾</span>
-                        </div>
-                        <div class="client-history-list">${historyHtml}</div>
+                const itemsHtml = groups[name].map(h => `<div style="padding:5px 0; border-bottom:1px solid #222;">📅 ${h.date} - ${h.services?.join(',')}</div>`).join('');
+                archive.innerHTML += `
+                    <div class="drawer-box">
+                        <button class="drawer-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
+                            <span>👤 ${name}</span> <span>${groups[name].length}次 ▾</span>
+                        </button>
+                        <div class="drawer-content">${itemsHtml}</div>
                     </div>`;
             }
         }
