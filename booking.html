@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOGUE 美業預約系統</title>
+    <title>VOGUE 美業預約系統 - 自動化經營版</title>
     <style>
         :root {
             --dark-bg: #0a0a0a;
@@ -12,6 +12,7 @@
             --gold-glow: rgba(212, 175, 55, 0.5);
             --status-wait: #ff4d4d;
             --status-done: #00ff00;
+            --status-auto: #00d4ff; /* 自動化腳本顏色 */
         }
 
         body {
@@ -54,6 +55,7 @@
         .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 1px solid currentColor; margin-left: 5px; }
         .status-wait { color: var(--status-wait); }
         .status-done { color: var(--status-done); }
+        .status-auto { color: var(--status-auto); border-color: var(--status-auto); }
 
         .calendar-container { margin-bottom: 20px; }
         .calendar-table { width: 100%; border-collapse: collapse; color: #ccc; }
@@ -62,6 +64,8 @@
         .calendar-table td:hover { background: var(--gold-dim); }
         .calendar-table td.today { border: 1px solid var(--gold-bright); }
         .calendar-table td.has-event::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background: var(--gold-bright); border-radius: 50%; box-shadow: 0 0 5px var(--gold-glow); }
+        /* 自動化提醒點點改為藍色 */
+        .calendar-table td.has-auto::after { background: var(--status-auto); box-shadow: 0 0 5px var(--status-auto); }
         .calendar-table td.selected-day { background: var(--gold-bright) !important; color: #000; font-weight: bold; }
 
         .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 4px solid var(--gold-bright); position: relative; }
@@ -136,25 +140,17 @@
             </table>
         </div>
         
-        <h3 id="selected-date-title" style="color:#ff4d4d; margin-left:10px;">⚠️ 待處理預約單 (請接單)</h3>
+        <h3 id="selected-date-title" style="color:#ff4d4d; margin-left:10px;">⚠️ 待處理單 (請接單/追蹤)</h3>
         <div id="designer-content"></div>
 
         <hr style="border:0; border-top:1px solid #333; margin:25px 0;">
 
         <div class="drawer" onclick="this.classList.toggle('open')">
             <div class="drawer-header">
-                <span style="color:var(--gold-bright); font-weight:bold;">🔮 未來行程表 (已確認)</span>
+                <span style="color:var(--gold-bright); font-weight:bold;">🔮 未來行程表 (含自動提醒)</span>
                 <span id="future-count" style="background:var(--gold-bright); color:#000; padding:2px 8px; border-radius:10px; font-size:12px;">0</span>
             </div>
             <div class="drawer-content" id="future-list-drawer"></div>
-        </div>
-
-        <div class="drawer" onclick="this.classList.toggle('open')">
-            <div class="drawer-header">
-                <span style="color:#888;">📁 歷史結案歸檔 (已完成)</span>
-                <span style="font-size:12px; color:#666;">展開 ▾</span>
-            </div>
-            <div class="drawer-content" id="history-archive-drawer"></div>
         </div>
     </div>
 
@@ -260,12 +256,18 @@
                     else {
                         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dateNum).padStart(2, '0')}`;
                         cell.innerText = dateNum;
+                        
+                        // 檢查是否有待處理訂單或自動提醒
                         const hasWait = Object.values(allBookings).some(b => b.date === dateStr && b.status === "待接單");
+                        const hasAuto = Object.values(allBookings).some(b => b.date === dateStr && b.status === "系統提醒");
+                        
                         if (hasWait) cell.classList.add('has-event');
+                        if (hasAuto) cell.classList.add('has-auto');
                         if (dateStr === selectedDate) cell.classList.add('selected-day');
+                        
                         cell.onclick = () => {
                             selectedDate = dateStr;
-                            document.getElementById('selected-date-title').innerText = `${dateStr} 待處理清單`;
+                            document.getElementById('selected-date-title').innerText = `${dateStr} 處理清單`;
                             renderCalendar(); updateDesignerList();
                         };
                         dateNum++;
@@ -282,40 +284,31 @@
             const custPhone = document.getElementById('custPhone').value.trim();
             myList.innerHTML = ""; 
             if (!custPhone) return;
-            const keys = Object.keys(allBookings).reverse();
-            keys.forEach(key => {
-                const b = allBookings[key];
-                if (b.phone === custPhone) {
+            Object.values(allBookings).reverse().forEach(b => {
+                if (b.phone === custPhone && b.status !== "系統提醒") {
                     const stClass = b.status === "已接單" ? "status-done" : "status-wait";
-                    myList.innerHTML += `<div class="history-item"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span><small>${b.date} ${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">項目：${b.services ? b.services.join(', ') : ''}</div></div>`;
+                    myList.innerHTML += `<div class="history-item"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge ${stClass}">${b.status}</span></span><small>${b.date} ${b.time}</small></div></div>`;
                 }
             });
         };
 
         function renderAdminDrawers() {
             const futureDrawer = document.getElementById('future-list-drawer');
-            const archiveDrawer = document.getElementById('history-archive-drawer');
             const futureCountEl = document.getElementById('future-count');
-            futureDrawer.innerHTML = ""; archiveDrawer.innerHTML = "";
+            futureDrawer.innerHTML = ""; 
             let futureCount = 0;
             const todayStr = new Date().toLocaleDateString('en-CA'); 
-            
-            // 安全排序：防止 date 為 undefined 導致 localeCompare 報錯
-            const keys = Object.keys(allBookings).sort((a,b) => {
-                const dateA = allBookings[a].date || "";
-                const dateB = allBookings[b].date || "";
-                return dateB.localeCompare(dateA);
-            });
 
-            keys.forEach(key => {
+            Object.keys(allBookings).sort((a,b) => allBookings[a].date.localeCompare(allBookings[b].date)).forEach(key => {
                 const b = allBookings[key];
-                if (b.status === "已接單" && b.date) {
-                    const itemHtml = `<div class="archive-item"><span style="color:#00ff00">●</span> <b>${b.date}</b> | ${b.name} (${b.phone})<br><small style="color:#888;">項目：${b.services ? b.services.join(', ') : '未填'}</small></div>`;
-                    if (b.date >= todayStr) {
-                        futureCount++; futureDrawer.innerHTML += itemHtml;
-                    } else {
-                        archiveDrawer.innerHTML += itemHtml;
-                    }
+                if (b.date >= todayStr) {
+                    const isAuto = b.status === "系統提醒";
+                    futureDrawer.innerHTML += `<div class="archive-item">
+                        <span style="color:${isAuto ? '#00d4ff':'#00ff00'}">●</span> 
+                        <b>${b.date}</b> | ${b.name} ${isAuto ? '(自動追蹤)' : ''}<br>
+                        <small style="color:#888;">項目：${b.services ? b.services.join(', ') : '未填'}</small>
+                    </div>`;
+                    futureCount++;
                 }
             });
             futureCountEl.innerText = futureCount;
@@ -324,18 +317,55 @@
         function updateDesignerList() {
             const designerList = document.getElementById('designer-content');
             designerList.innerHTML = "";
-            const filtered = Object.keys(allBookings).filter(key => 
-                allBookings[key].date === selectedDate && allBookings[key].status === "待接單"
-            );
+            const filtered = Object.keys(allBookings).filter(key => allBookings[key].date === selectedDate);
+            
             if(filtered.length === 0) {
-                designerList.innerHTML = `<p style="text-align:center; color:#666; margin-top:20px;">此日期無待處理預約</p>`;
+                designerList.innerHTML = `<p style="text-align:center; color:#666; margin-top:20px;">此日期無待處理事項</p>`;
                 return;
             }
+            
             filtered.forEach(key => {
                 const b = allBookings[key];
-                designerList.innerHTML += `<div class="history-item" style="border-left-color:#ff4d4d;"><div style="display:flex; justify-content:space-between;"><span><b>${b.name}</b> <span class="status-badge status-wait">待接單</span></span><small>${b.time}</small></div><div style="font-size:12px; color:#999; margin-top:5px;">電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>項目：${b.services ? b.services.join(', ') : ''}</div><button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold; color:#000;">確認預約 (移至未來行程)</button></div>`;
+                const isAuto = b.status === "系統提醒";
+                designerList.innerHTML += `
+                <div class="history-item" style="border-left-color:${isAuto ? '#00d4ff':'#ff4d4d'};">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span><b>${b.name}</b> <span class="status-badge ${isAuto?'status-auto':'status-wait'}">${b.status}</span></span>
+                        <small>${b.time}</small>
+                    </div>
+                    <div style="font-size:12px; color:#999; margin-top:5px;">
+                        電話：<a href="tel:${b.phone}" style="color:var(--gold-bright);">${b.phone}</a><br>
+                        項目：${b.services ? b.services.join(', ') : ''}
+                    </div>
+                    ${!isAuto ? `<button onclick="accept('${key}')" style="margin-top:10px; width:100%; background:var(--gold-bright); border:none; padding:8px; border-radius:8px; font-weight:bold; color:#000;">確認接單 (並排程60天後追蹤)</button>` : ''}
+                </div>`;
             });
         }
+
+        // 核心結合邏輯：接單時自動播種未來業績
+        window.accept = (key) => {
+            const order = allBookings[key];
+            // 1. 更新當前狀態
+            update(ref(db, `vogue_bookings/${key}`), { status: "已接單" });
+
+            // 2. 自動計算 60 天後 (自動化腳本)
+            const d = new Date(order.date);
+            d.setDate(d.getDate() + 60);
+            const futureDateStr = d.toISOString().split('T')[0];
+
+            // 3. 結合預約表：自動寫入一筆「系統提醒」
+            push(bookingRef, {
+                name: order.name,
+                phone: order.phone,
+                services: order.services,
+                date: futureDateStr,
+                time: order.time,
+                status: "系統提醒", // 識別為自動產生的腳本提醒
+                timestamp: Date.now()
+            }).then(() => {
+                alert("已接單！系統已自動在 60 天後的預約表為您標註追蹤提醒。");
+            });
+        };
 
         onValue(bookingRef, (snap) => {
             allBookings = snap.val() || {};
@@ -345,7 +375,6 @@
             if(document.getElementById('designer').classList.contains('active')) renderCalendar();
         });
 
-        window.accept = (key) => update(ref(db, `vogue_bookings/${key}`), { status: "已接單" });
         window.onload = () => { renderGallery(); };
     </script>
 </body>
