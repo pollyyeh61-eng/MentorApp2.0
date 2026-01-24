@@ -23,13 +23,11 @@
         .panel { display: none; width: 92%; max-width: 420px; padding-top: 20px; }
         .panel.active { display: block; }
 
-        /* 頂部範本滾動 */
         .sample-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; margin-bottom: 20px; }
         .sample-img { width: 110px; height: 150px; object-fit: cover; border-radius: 12px; border: 1px solid #333; flex-shrink: 0; }
 
         .glass-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         
-        /* 服務網格 */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .service-item { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 16px; text-align: center; cursor: pointer; color: #888; }
         .service-item.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
@@ -37,13 +35,12 @@
         input { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
         label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 14px; margin-left: 5px; }
 
-        /* 上傳區域 */
         .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 15px; text-align: center; color: #888; margin-bottom: 15px; font-size: 15px; }
         #preview-img { width: 100%; border-radius: 10px; display: none; margin-top: 10px; }
 
-        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; }
+        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; transition: 0.3s; }
+        .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px !important; margin-top: 8px; font-size: 14px; }
         
-        /* 狀態與進度 */
         .status-badge { padding: 4px 10px; border-radius: 8px; font-size: 14px; font-weight: bold; }
         .tag-wait { background: var(--status-wait); color: #fff; }
         .tag-ready { background: var(--status-ready); color: #000; }
@@ -52,7 +49,6 @@
         .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 5px solid var(--gold); }
         .booking-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 1px solid #444; }
 
-        /* 抽屜樣式 */
         .drawer-box { background: #111; border-radius: 15px; margin-bottom: 10px; overflow: hidden; border: 1px solid #222; }
         .drawer-btn { width: 100%; padding: 15px; background: #1a1a1a; border: none; color: var(--gold); display: flex; justify-content: space-between; font-size: 18px; cursor: pointer; }
         .drawer-content { display: none; padding: 15px; background: #000; }
@@ -143,7 +139,6 @@
         let allData = {};
         let currentImg = "";
 
-        // 圖片預覽
         window.previewFile = () => {
             const file = document.getElementById('fileInput').files[0];
             const reader = new FileReader();
@@ -155,7 +150,6 @@
             if(file) reader.readAsDataURL(file);
         };
 
-        // 切換面板
         window.switchTab = (t) => {
             if(t === 'designer' && prompt("管理碼") !== '0000') return;
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -164,7 +158,6 @@
             document.getElementById('btn-' + t).classList.add('active');
         };
 
-        // 新增預約
         window.addBooking = () => {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
@@ -177,12 +170,13 @@
                 name, phone, date, time, services,
                 img: currentImg, status: "待接單", ts: Date.now()
             });
-            alert("預約成功！請輸入電話追蹤進度。");
+            alert("預約成功！");
             location.reload();
         };
 
-        // 處理訂單與 60 天提醒
         window.processOrder = (key, status) => {
+            if(status === '已取消' && !confirm("確定要取消此預約嗎？")) return;
+            
             const order = allData[key];
             if(status === '已完成') {
                 const nextDate = new Date(order.date);
@@ -192,7 +186,7 @@
                     date: nextDate.toISOString().split('T')[0], time: "10:00",
                     status: "系統提醒", ts: Date.now()
                 });
-                alert("已結案！系統已自動排定 60 天後提醒回訪。");
+                alert("已結案！已排定60天後提醒。");
             }
             update(ref(db, `vogue_bookings/${key}`), { status: status });
         };
@@ -203,14 +197,13 @@
             renderDesigner();
         });
 
-        // 客戶進度追蹤
         window.renderClientTracker = () => {
             const phone = document.getElementById('trackPhone').value;
             const list = document.getElementById('client-tracker-list');
             list.innerHTML = "";
             if(phone.length < 4) return;
             Object.values(allData).reverse().forEach(b => {
-                if(b.phone === phone) {
+                if(b.phone === phone && b.status !== '已取消') {
                     let color = b.status === '待接單' ? 'tag-wait' : (b.status === '已接單' ? 'tag-ready' : 'tag-auto');
                     list.innerHTML += `
                         <div style="padding:10px; border-bottom:1px solid #222;">
@@ -221,7 +214,6 @@
             });
         };
 
-        // 設計師面板與抽屜歸檔
         function renderDesigner() {
             const list = document.getElementById('designer-list');
             const archive = document.getElementById('archive-section');
@@ -230,19 +222,20 @@
 
             Object.keys(allData).reverse().forEach(key => {
                 const b = allData[key];
-                if(b.status !== '已完成') {
+                if(b.status !== '已完成' && b.status !== '已取消') {
                     let isRemind = b.status === '系統提醒';
                     list.innerHTML += `
                         <div class="history-item" style="border-left-color:${isRemind ? '#00d4ff':'#ff4d4d'}">
                             <b>${b.name}</b> (${b.phone}) <span class="status-badge ${isRemind?'tag-auto':'tag-wait'}">${b.status}</span><br>
                             <small>📅 ${b.date} ${b.time} / 項目：${b.services?.join(',')}</small><br>
                             ${b.img ? `<img src="${b.img}" class="booking-img" onclick="window.open(this.src)">` : ''}
-                            <div style="margin-top:10px;">
-                                ${b.status==='待接單' ? `<button class="btn-action" style="padding:8px" onclick="processOrder('${key}','已接單')">確認接單</button>` : ''}
-                                ${b.status==='已接單' ? `<button class="btn-action" style="background:#00ff00; padding:8px" onclick="processOrder('${key}','已完成')">完成服務並歸檔</button>` : ''}
+                            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                                ${b.status==='待接單' ? `<button class="btn-action" style="padding:8px; flex:1;" onclick="processOrder('${key}','已接單')">確認接單</button>` : ''}
+                                ${b.status==='已接單' ? `<button class="btn-action" style="background:#00ff00; padding:8px; flex:1;" onclick="processOrder('${key}','已完成')">完成歸檔</button>` : ''}
+                                <button class="btn-action btn-cancel" style="flex:1;" onclick="processOrder('${key}','已取消')">取消預約</button>
                             </div>
                         </div>`;
-                } else {
+                } else if(b.status === '已完成') {
                     if(!groups[b.name]) groups[b.name] = [];
                     groups[b.name].push(b);
                 }
