@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOGUE 獲利機器 - 叮嚀同步版</title>
+    <title>VOGUE 獲利機器 - 全功能終極版</title>
     <style>
         :root {
-            --dark-bg: #000; 
-            --gold: #d4af37; 
-            --gold-dim: rgba(212, 175, 55, 0.1);
-            --font-main: 18px; /* 黃金比例 */
-            --font-large: 20px;
-            --status-wait: #ff4d4d;
-            --status-ready: #00ff00;
-            --status-auto: #00d4ff;
+            --dark-bg: #000; --gold: #d4af37; --gold-dim: rgba(212, 175, 55, 0.1);
+            --font-main: 18px; --font-large: 20px;
+            --status-wait: #ff4d4d; --status-ready: #00ff00; --status-auto: #00d4ff;
         }
         body {
             background: var(--dark-bg); color: #fff; font-family: 'PingFang TC', sans-serif;
@@ -23,28 +18,24 @@
         .panel { display: none; width: 92%; max-width: 420px; padding-top: 20px; }
         .panel.active { display: block; }
 
-        .sample-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; margin-bottom: 20px; }
-        .sample-img { width: 110px; height: 150px; object-fit: cover; border-radius: 12px; border: 1px solid #333; flex-shrink: 0; }
-
+        /* 卡片與輸入 */
         .glass-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
         
+        /* 服務項目網格 */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .service-item { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 5px; font-size: 16px; text-align: center; cursor: pointer; color: #888; }
         .service-item.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
 
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 12px; background: #080808; border: 1.5px solid #222; border-radius: 12px; color: #fff; box-sizing: border-box; font-size: 16px; outline: none; }
-        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 14px; margin-left: 5px; }
-
-        /* 客戶端看到的叮嚀區塊 */
+        /* 客戶端叮嚀區塊 */
         .thanks-note { background: var(--gold-dim); border: 1px solid var(--gold); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 15px; color: var(--gold); line-height: 1.5; }
-        .thanks-note::before { content: "💬 設計師給您的叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; opacity: 0.8; }
+        .thanks-note::before { content: "💬 設計師叮嚀："; display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
 
-        .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 15px; text-align: center; color: #888; margin-bottom: 15px; font-size: 15px; }
-        #preview-img { width: 100%; border-radius: 10px; display: none; margin-top: 10px; }
-
-        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; }
-        .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px !important; margin-top: 8px; font-size: 14px; }
+        /* 按鈕樣式 */
+        .btn-action { width: 100%; padding: 16px; border-radius: 15px; border: none; font-size: var(--font-main); font-weight: bold; cursor: pointer; background: var(--gold); color: #000; margin-top: 5px; }
+        .btn-cancel { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 10px !important; font-size: 14px; margin-top: 10px; }
         
+        /* 狀態標籤 */
         .status-badge { padding: 4px 10px; border-radius: 8px; font-size: 14px; font-weight: bold; }
         .tag-wait { background: var(--status-wait); color: #fff; }
         .tag-ready { background: var(--status-ready); color: #000; }
@@ -53,36 +44,35 @@
         .history-item { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 18px; margin-bottom: 12px; border-left: 5px solid var(--gold); }
         .booking-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 1px solid #444; }
 
+        /* 設計師端抽屜 */
         .drawer-box { background: #111; border-radius: 15px; margin-bottom: 10px; overflow: hidden; border: 1px solid #222; }
         .drawer-btn { width: 100%; padding: 15px; background: #1a1a1a; border: none; color: var(--gold); display: flex; justify-content: space-between; font-size: 18px; cursor: pointer; }
         .drawer-content { display: none; padding: 15px; background: #000; }
 
+        /* 底部切換 */
         .tab-switcher { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; background: #111; border-radius: 50px; padding: 5px; border: 1px solid #333; z-index: 1000; }
         .tab-btn { padding: 12px 25px; border: none; background: transparent; color: #666; font-size: 14px; cursor: pointer; }
         .tab-btn.active { background: var(--gold); color: #000; border-radius: 40px; font-weight: bold; }
+
+        /* 日曆區塊樣式 */
+        .calendar-section { margin-bottom: 30px; background: #0a0a0a; border-radius: 15px; padding: 10px; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <div id="client" class="panel active">
-        <h2 style="color:var(--gold); text-align:center;">VOGUE 造型範本</h2>
-        <div class="sample-scroll">
-            <img src="https://images.unsplash.com/photo-1560869713-7d0a294308ed?w=400" class="sample-img">
-            <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400" class="sample-img">
-            <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400" class="sample-img">
-        </div>
-
+        <h2 style="color:var(--gold); text-align:center;">VOGUE 客戶預約</h2>
+        
         <div class="glass-card">
-            <p style="margin:0 0 15px 0; color:var(--gold);">🔍 查看我的預約進度與叮嚀</p>
-            <input type="tel" id="trackPhone" placeholder="輸入電話號碼" oninput="renderClientTracker()">
+            <p style="margin:0 0 10px 0; color:var(--gold);">🔍 輸入電話查詢進度與叮嚀</p>
+            <input type="tel" id="trackPhone" placeholder="您的聯絡電話" oninput="renderClientTracker()">
             <div id="client-tracker-list"></div>
         </div>
 
         <div class="glass-card">
-            <p style="margin:0 0 15px 0; color:var(--gold);">✂️ 線上預約服務</p>
+            <p style="margin:0 0 10px 0; color:var(--gold);">✂️ 線上快速預約</p>
             <input type="text" id="custName" placeholder="顧客姓名">
             <input type="tel" id="custPhone" placeholder="聯繫電話">
-            
             <div class="service-grid">
                 <div class="service-item" onclick="this.classList.toggle('selected')">洗髮</div>
                 <div class="service-item" onclick="this.classList.toggle('selected')">剪髮</div>
@@ -95,33 +85,31 @@
                 <div class="service-item" onclick="this.classList.toggle('selected')">髮質護理</div>
                 <div class="service-item" onclick="this.classList.toggle('selected')">造型設計</div>
             </div>
-
-            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                <span>📷 點擊上傳參考圖片</span>
-                <input type="file" id="fileInput" hidden accept="image/*" onchange="previewFile()">
-                <img id="preview-img">
-            </div>
-
-            <label>點選預約日期</label>
+            <label style="font-size:14px; color:#666;">預約日期</label>
             <input type="date" id="appDate">
-            <label>點選預約時間</label>
+            <label style="font-size:14px; color:#666;">預約時間</label>
             <input type="time" id="appTime">
-
-            <button class="btn-action" onclick="addBooking()" style="margin-top:10px;">送出預約單</button>
+            <button class="btn-action" onclick="addBooking()">確認送出預約</button>
         </div>
     </div>
 
     <div id="designer" class="panel">
-        <h2 style="color:var(--gold); text-align:center;">設計師後台管理</h2>
-        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理單</h3>
+        <h2 style="color:var(--gold); text-align:center;">VOGUE 管理後台</h2>
+        
+        <div class="calendar-section">
+            <p style="color:var(--gold); margin:5px 0;">📅 日曆檢索 (查看特定日預約)</p>
+            <input type="date" id="calFilter" onchange="renderDesigner()">
+        </div>
+
+        <h3 style="color:var(--status-wait); margin-left:10px;">⚠️ 待處理單 (待接單/已接單)</h3>
         <div id="designer-list"></div>
 
-        <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 客戶歷史歸檔</h3>
+        <h3 style="color:var(--gold); margin-left:10px; margin-top:40px;">📁 歷史歸檔抽屜</h3>
         <div id="archive-section"></div>
     </div>
 
     <div class="tab-switcher">
-        <button class="tab-btn active" id="btn-client" onclick="switchTab('client')">客戶入口</button>
+        <button class="tab-btn active" id="btn-client" onclick="switchTab('client')">客戶端</button>
         <button class="tab-btn" id="btn-designer" onclick="switchTab('designer')">設計師端</button>
     </div>
 
@@ -140,21 +128,9 @@
         const bookingRef = ref(db, 'vogue_bookings');
 
         let allData = {};
-        let currentImg = "";
-
-        window.previewFile = () => {
-            const file = document.getElementById('fileInput').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                currentImg = reader.result;
-                document.getElementById('preview-img').src = currentImg;
-                document.getElementById('preview-img').style.display = 'block';
-            }
-            if(file) reader.readAsDataURL(file);
-        };
 
         window.switchTab = (t) => {
-            if(t === 'designer' && prompt("管理碼") !== '0000') return;
+            if(t === 'designer' && prompt("請輸入管理代碼") !== '0000') return;
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(t).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -167,35 +143,33 @@
             const date = document.getElementById('appDate').value;
             const time = document.getElementById('appTime').value;
             const services = Array.from(document.querySelectorAll('.service-item.selected')).map(el => el.innerText);
-            if(!name || !phone || !date || !time) return alert("資訊未填全");
+            if(!name || !phone || !date) return alert("資訊未填全");
 
-            push(bookingRef, {
-                name, phone, date, time, services,
-                img: currentImg, status: "待接單", note: "", ts: Date.now()
-            });
-            alert("預約成功！");
-            location.reload();
+            push(bookingRef, { name, phone, date, time, services, status: "待接單", note: "", ts: Date.now() });
+            alert("預約已送出！");
         };
 
-        window.processOrder = (key, status) => {
+        // 核心邏輯：結案服務、叮嚀同步、60天自動提醒
+        window.completeOrder = (key) => {
+            const noteText = document.getElementById(`note-${key}`).value;
             const order = allData[key];
-            if(status === '已完成') {
-                const note = document.getElementById(`note-${key}`).value;
-                const nextDate = new Date(order.date);
-                nextDate.setDate(nextDate.getDate() + 60);
-                
-                update(ref(db, `vogue_bookings/${key}`), { status: "已完成", note: note });
-                
-                push(bookingRef, {
-                    name: order.name, phone: order.phone, services: ["(系統回訪提醒)"],
-                    date: nextDate.toISOString().split('T')[0], time: "10:00",
-                    status: "系統提醒", ts: Date.now()
-                });
-                alert("已結案並傳送叮嚀！");
-                return;
-            }
-            if(status === '已取消' && !confirm("確定取消？")) return;
-            update(ref(db, `vogue_bookings/${key}`), { status: status });
+            const next60Days = new Date(order.date);
+            next60Days.setDate(next60Days.getDate() + 60);
+
+            // 1. 本單狀態改為已完成並存入叮嚀
+            update(ref(db, `vogue_bookings/${key}`), { status: "已完成", note: noteText });
+
+            // 2. 自動產生 60 天後的提醒單
+            push(bookingRef, {
+                name: order.name, phone: order.phone, services: ["(回訪建議提醒)"],
+                date: next60Days.toISOString().split('T')[0], time: "10:00",
+                status: "系統提醒", note: "該提醒客人回來服務了！", ts: Date.now()
+            });
+            alert("服務結案！已排定60天後提醒。");
+        };
+
+        window.cancelOrder = (key) => {
+            if(confirm("確定取消這筆預約嗎？")) update(ref(db, `vogue_bookings/${key}`), { status: "已取消" });
         };
 
         onValue(bookingRef, (snap) => {
@@ -204,7 +178,6 @@
             renderDesigner();
         });
 
-        // 客戶端渲染：增加叮嚀事項呈現
         window.renderClientTracker = () => {
             const phone = document.getElementById('trackPhone').value;
             const list = document.getElementById('client-tracker-list');
@@ -212,10 +185,10 @@
             if(phone.length < 4) return;
             Object.values(allData).reverse().forEach(b => {
                 if(b.phone === phone && b.status !== '已取消') {
-                    let color = b.status === '待接單' ? 'tag-wait' : (b.status === '已接單' ? 'tag-ready' : 'tag-auto');
+                    let badgeClass = b.status === '待接單' ? 'tag-wait' : (b.status === '已接單' ? 'tag-ready' : 'tag-auto');
                     list.innerHTML += `
                         <div style="padding:15px; border-bottom:1px solid #222;">
-                            <b>${b.date} ${b.time}</b> <span class="status-badge ${color}">${b.status}</span><br>
+                            <b>${b.date} ${b.time}</b> <span class="status-badge ${badgeClass}">${b.status}</span><br>
                             <small>${b.services?.join(',')}</small>
                             ${b.note ? `<div class="thanks-note">${b.note}</div>` : ''}
                         </div>`;
@@ -226,41 +199,49 @@
         function renderDesigner() {
             const list = document.getElementById('designer-list');
             const archive = document.getElementById('archive-section');
+            const calVal = document.getElementById('calFilter').value;
             list.innerHTML = ""; archive.innerHTML = "";
             const groups = {};
 
             Object.keys(allData).reverse().forEach(key => {
                 const b = allData[key];
+                
+                // 只有「非完成」且「非取消」的單子會顯示在待處理區
                 if(b.status !== '已完成' && b.status !== '已取消') {
-                    let isRemind = b.status === '系統提醒';
+                    // 如果有選日期日曆，則只過濾該日
+                    if(calVal && b.date !== calVal) return;
+
+                    let isAuto = b.status === '系統提醒';
                     list.innerHTML += `
-                        <div class="history-item" style="border-left-color:${isRemind ? '#00d4ff':'#ff4d4d'}">
-                            <b>${b.name}</b> (${b.phone}) <span class="status-badge ${isRemind?'tag-auto':'tag-wait'}">${b.status}</span><br>
-                            <small>📅 ${b.date} ${b.time}</small><br>
-                            ${b.img ? `<img src="${b.img}" class="booking-img" onclick="window.open(this.src)">` : ''}
+                        <div class="history-item" style="border-left-color:${isAuto?'#00d4ff':'var(--gold)'}">
+                            <b>${b.name}</b> (${b.phone}) <span class="status-badge ${isAuto?'tag-auto':(b.status==='待接單'?'tag-wait':'tag-ready')}">${b.status}</span><br>
+                            <small>📅 ${b.date} / ⏰ ${b.time}</small><br>
+                            <small>項目：${b.services?.join(',')}</small>
                             <div style="margin-top:10px;">
-                                ${b.status==='待接單' ? `<button class="btn-action" style="padding:8px" onclick="processOrder('${key}','已接單')">確認接單</button>` : ''}
+                                ${b.status==='待接單' ? `<button class="btn-action" onclick="update(ref(db, 'vogue_bookings/${key}'), {status:'已接單'})">確認接單</button>` : ''}
                                 ${b.status==='已接單' ? `
-                                    <textarea id="note-${key}" placeholder="輸入本次感謝與叮嚀事項..." rows="2" style="margin-top:10px;"></textarea>
-                                    <button class="btn-action" style="background:#00ff00; padding:8px" onclick="processOrder('${key}','已完成')">結案並傳送叮嚀</button>
+                                    <textarea id="note-${key}" placeholder="寫下給客人的感謝叮嚀..."></textarea>
+                                    <button class="btn-action" style="background:#00ff00" onclick="completeOrder('${key}')">服務完成(存叮嚀並排提醒)</button>
                                 ` : ''}
-                                <button class="btn-action btn-cancel" onclick="processOrder('${key}','已取消')">取消預約</button>
+                                <button class="btn-action btn-cancel" onclick="cancelOrder('${key}')">取消預約</button>
                             </div>
                         </div>`;
                 } else if(b.status === '已完成') {
+                    // 歸檔到抽屜
                     if(!groups[b.name]) groups[b.name] = [];
                     groups[b.name].push(b);
                 }
             });
 
+            // 渲染抽屜
             for(let name in groups) {
-                const history = groups[name].map(h => `<div style="padding:5px 0; border-bottom:1px solid #222;">📅 ${h.date} - ${h.services?.join(',')}</div>`).join('');
+                const historyHtml = groups[name].map(h => `<div style="padding:8px 0; border-bottom:1px solid #222; font-size:14px;">📅 ${h.date} - ${h.services?.join(',')}</div>`).join('');
                 archive.innerHTML += `
                     <div class="drawer-box">
                         <button class="drawer-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
                             <span>👤 ${name}</span> <span>${groups[name].length}次 ▾</span>
                         </button>
-                        <div class="drawer-content">${history}</div>
+                        <div class="drawer-content">${historyHtml}</div>
                     </div>`;
             }
         }
